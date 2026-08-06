@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-06T23:03:08.875449+00:00",
+ "generated": "2026-08-06T23:32:18.996048+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -9,15 +9,15 @@
    "category": "productivity",
    "summary": "Tip calculator, plus a receipt splitter that reads the line items.",
    "latest": {
-    "version": "1.3.18",
-    "versionCode": 18,
-    "apk": "https://github.com/gi-os/BrightTip/releases/download/v1.3.18/LightTip-v1.3.18.apk",
-    "size": 4250807,
-    "sha256": "b343d0158f85345f4d80dc5c4e82f974ff0c2f1fec4871f7558d8b13fb836013",
-    "published": "2026-08-05T23:25:49Z",
-    "notes": "**Full Changelog**: https://github.com/gi-os/LightTip/compare/v1.3.17...v1.3.18"
+    "version": "1.3.19",
+    "versionCode": 19,
+    "apk": "https://github.com/gi-os/BrightTip/releases/download/v1.3.19/LightTip-v1.3.19.apk",
+    "size": 4250803,
+    "sha256": "1124d4aabba44492cf3e0db3ba02d3b6d69f30861cb5c49bf8d396c20d11ff6a",
+    "published": "2026-08-06T23:27:57Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightTip/compare/v1.3.18...v1.3.19"
    },
-   "downloads": 16,
+   "downloads": 18,
    "firstSeen": "2026-08-06"
   },
   {
@@ -27,15 +27,15 @@
    "category": "media",
    "summary": "Twelve synthesised sounds, a two-layer mixer and a sleep timer.",
    "latest": {
-    "version": "1.1.9",
-    "versionCode": 9,
-    "apk": "https://github.com/gi-os/BrightNoise/releases/download/v1.1.9/LightNoise-v1.1.9.apk",
-    "size": 22593751,
-    "sha256": "7551b213799e03f6877c0dc9a7ccd39a373cb95ee7bfef21f343df053e219fef",
-    "published": "2026-08-03T04:32:35Z",
-    "notes": "**Full Changelog**: https://github.com/gi-os/LightNoise/compare/v1.0.8...v1.1.9"
+    "version": "1.1.10",
+    "versionCode": 10,
+    "apk": "https://github.com/gi-os/BrightNoise/releases/download/v1.1.10/LightNoise-v1.1.10.apk",
+    "size": 22593759,
+    "sha256": "271b98883bb8231ec6215aa04d216b96e45c7eaf0b7c8cbb6b82d18dc2429908",
+    "published": "2026-08-06T23:19:18Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightNoise/compare/v1.1.9...v1.1.10"
    },
-   "downloads": 8,
+   "downloads": 9,
    "firstSeen": "2026-08-06"
   },
   {
@@ -45,15 +45,15 @@
    "category": "utilities",
    "summary": "TOTP codes on the Light Phone III, in a PIN-wrapped vault.",
    "latest": {
-    "version": "1.2.10",
-    "versionCode": 10,
-    "apk": "https://github.com/gi-os/BrightAuthenticator/releases/download/v1.2.10/LightAuth-v1.2.10.apk",
+    "version": "1.2.11",
+    "versionCode": 11,
+    "apk": "https://github.com/gi-os/BrightAuthenticator/releases/download/v1.2.11/LightAuth-v1.2.11.apk",
     "size": 23012407,
-    "sha256": "dfbcb3e2035002c9e3b8338f573cc57c807febef61ab8c3a3eae536936a92779",
-    "published": "2026-08-05T18:35:24Z",
-    "notes": "**Full Changelog**: https://github.com/gi-os/LightAuth/compare/v1.2.9...v1.2.10"
+    "sha256": "21079fb3aa943920b3bda8a3426e9fb4406439d7a82058172fb0a6db06b68859",
+    "published": "2026-08-06T23:15:05Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightAuthenticator/compare/v1.2.10...v1.2.11"
    },
-   "downloads": 20,
+   "downloads": 21,
    "firstSeen": "2026-08-06"
   },
   {
@@ -63,15 +63,15 @@
    "category": "utilities",
    "summary": "Live scores and standings across thirteen leagues.",
    "latest": {
-    "version": "1.11.19",
-    "versionCode": 19,
-    "apk": "https://github.com/gi-os/BrightSports/releases/download/v1.11.19/LightSports-v1.11.19.apk",
+    "version": "1.11.20",
+    "versionCode": 20,
+    "apk": "https://github.com/gi-os/BrightSports/releases/download/v1.11.20/LightSports-v1.11.20.apk",
     "size": 19480245,
-    "sha256": "48c0824f2c1418906cce79de9e1ca41e50ce4b44d9d7cd2117c27304b5d32e34",
-    "published": "2026-08-03T04:32:37Z",
-    "notes": "**Full Changelog**: https://github.com/gi-os/LightSports/compare/v1.10.18...v1.11.19"
+    "sha256": "80c298188fc462227edb2fe2629fa82a8ce6a8eac9a88703d404a153ec7c581b",
+    "published": "2026-08-06T23:26:18Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightSports/compare/v1.11.19...v1.11.20"
    },
-   "downloads": 15,
+   "downloads": 16,
    "firstSeen": "2026-08-06"
   }
  ]
