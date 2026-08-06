@@ -1,0 +1,32 @@
+# The curated list. One entry per app; everything else in the index (versions,
+# download counts, sha256, release notes) is derived from the GitHub API by
+# scripts/build_index.py and must NOT be hand-edited here.
+#
+# `pkg` is the Android applicationId and is the app's permanent identity. It
+# deliberately still reads `light*` for apps that predate the Bright rename --
+# changing an applicationId is not an update, it's a second app, so these never
+# change. `name` is what users see and is free to differ.
+apps:
+  - pkg: com.gios.lighttip
+    name: BrightTip
+    repo: gi-os/BrightTip
+    category: productivity
+    summary: Tip calculator, plus a receipt splitter that reads the line items.
+
+  - pkg: com.gios.lightnoise
+    name: BrightNoise
+    repo: gi-os/BrightNoise
+    category: media
+    summary: Twelve synthesised sounds, a two-layer mixer and a sleep timer.
+
+  - pkg: com.gios.lightauth
+    name: BrightAuthenticator
+    repo: gi-os/BrightAuthenticator
+    category: utilities
+    summary: TOTP codes on the Light Phone III, in a PIN-wrapped vault.
+
+  - pkg: com.gios.lightsports
+    name: BrightSports
+    repo: gi-os/BrightSports
+    category: utilities
+    summary: Live scores and standings across thirteen leagues.

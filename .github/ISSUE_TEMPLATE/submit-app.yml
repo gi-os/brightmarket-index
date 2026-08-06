@@ -1,0 +1,25 @@
+name: Submit an app
+description: Add your app to BrightMarket
+title: "Submit: "
+labels: ["submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Easier option: use the [submission portal](https://gi-os.github.io/brightmarket-index/submit.html),
+        which signs you in with GitHub and fills this in for you.
+  - type: input
+    id: repo
+    attributes:
+      label: Repo
+      description: owner/name, or the full GitHub URL
+      placeholder: gi-os/BrightTip
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options: [reading, utilities, games, media, productivity, hardware]
+    validations:
+      required: true

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<!--
+  BrightMarket submission portal — a static page, served from GitHub Pages.
+
+  Styled after LightOS's actual design system (lightphone/light-sdk, sdk/ui — MIT
+  licensed), not just a generic dark theme:
+    - three colours only: background, content, contentSecondary. No accent colour,
+      no dividers, no card borders, no drop shadows.
+    - a 27-wide grid: horizontal inset, bar heights and icon sizes are all grid
+      units, not arbitrary px.
+    - the named type scale (title/subtitle/heading/subheading/copy/button/
+      paragraph/detail/fine/superfine), each with the SDK's own tracking.
+    - lightClickable: no ripple, no hover glow, an instant (not animated) press
+      state, plus a real 45ms haptic on finger-down where the browser allows it.
+    - LightTextField's underline-only treatment for the two selects.
+  The two glyphs below are redrawn in the same thin, single-colour outline style
+  as the SDK's ic_*_white.xml set -- not copied from it, so there's nothing to
+  attribute, but the visual vocabulary (stroke, no fill, no colour) is the same.
+
+  There is no backend here except the one Worker endpoint (see WORKER_URL below).
+  Nothing about this page can write to GitHub on its own: it gets a read-only
+  identity from the sign-in, and the only write anywhere (filing the submission
+  issue) happens inside the Worker using a credential this page never has access to.
+
+  Fill in CLIENT_ID and WORKER_URL below before deploying.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Submit an app — BrightMarket</title>
+<style>
+  /* ---- LightOS's three colours. Nothing else. ------------------------------ */
+  :root {
+    --background: #000000;
+    --content: #ffffff;
+    --content-secondary: #bbbbbb;
+
+    /* LightGrid: 27 columns wide. --unit is one column, recomputed against the
+       viewport the same way gridUnitsAsDp() does (screenWidthDp / 27 * units). */
+    --unit: calc(min(100vw, 480px) / 27);
+
+    /* Named type scale, design pixels from sdk/ui scaled against a 600-unit
+       baseline the way designVerticalPxToSp() does, rebased here to a 16px
+       "copy" so the SDK's own ratios hold on a screen instead of a phone. */
+    --text-title: 61px;
+    --text-subtitle: 28px;
+    --text-heading: 20px;
+    --text-subheading: 16px;
+    --text-copy: 16px;
+    --text-button: 16px;
+    --text-paragraph: 13px;
+    --text-fine: 13px;
+    --text-superfine: 9px;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    margin: 0;
+    background: var(--background);
+    color: var(--content);
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  main {
+    width: 100%;
+    max-width: 480px;
+  }
+
+  /* ---- LightGrid top bar: 3 units tall, 1-unit horizontal inset, icon 2 units,
+     title set in "fine". No border under it -- LightOS bars are not divided
+     from content by a line, only by empty space. ------------------------------ */
+  .top-bar {
+    height: calc(var(--unit) * 3);
+    display: flex;
+    align-items: center;
+    gap: calc(var(--unit) * 0.6);
+    padding: 0 var(--unit);
+  }
+  /* Hard px cap as a floor -- if --unit's calc() chain ever fails to compute
+     (weak WebView support for custom properties nested in calc/min), the icon
+     still can't blow up past this instead of filling its container. */
+  .icon { max-width: 28px; max-height: 28px; }
+  .top-bar .icon { width: calc(var(--unit) * 2); height: calc(var(--unit) * 2); }
+  .top-bar .wordmark {
+    font-size: var(--text-fine);
+    letter-spacing: 0.02em;
+    color: var(--content);
+  }
+
+  .content {
+    padding: calc(var(--unit) * 2) var(--unit) calc(var(--unit) * 4);
+  }
+
+  h1 {
+    font-size: var(--text-heading);
+    font-weight: 600;
+    margin: 0 0 8px;
+  }
+  p.sub {
+    font-size: var(--text-paragraph);
+    color: var(--content-secondary);
+    margin: 0 0 calc(var(--unit) * 2);
+    line-height: 1.5;
+  }
+
+  /* ---- lightClickable: no ripple, no shadow, no hover glow. The only feedback
+     is an instant (0ms, not transitioned) dim on the actual finger-down, plus
+     a real haptic tick where the browser supports it. ------------------------- */
+  button {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    background: transparent;
+    color: var(--content);
+    border: none;
+    padding: calc(var(--unit) * 1.2) 0;
+    font-size: var(--text-button);
+    font-weight: 600;
+    letter-spacing: 0.15em; /* the SDK's own button tracking */
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: calc(var(--unit) * 0.7);
+    cursor: pointer;
+  }
+  button:active { background: var(--content); color: var(--background); }
+  button:disabled { color: var(--content-secondary); cursor: default; }
+  button:disabled:active { background: transparent; color: var(--content-secondary); }
+  button .icon { width: calc(var(--unit) * 2); height: calc(var(--unit) * 2); flex-shrink: 0; }
+  button span { min-width: 0; overflow-wrap: break-word; }
+
+  label {
+    display: block;
+    font-size: var(--text-subheading);
+    letter-spacing: 0.03em; /* subheading tracking */
+    color: var(--content-secondary);
+    margin-top: calc(var(--unit) * 2);
+    margin-bottom: 6px;
+  }
+
+  /* ---- LightTextField: underline only, 80% width, no filled container. ----- */
+  select {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 80%;
+    background: transparent;
+    color: var(--content);
+    border: none;
+    border-bottom: 3px solid var(--content-secondary);
+    border-radius: 0;
+    padding: 8px 0;
+    font-size: var(--text-copy);
+  }
+  select:focus { outline: none; border-bottom-color: var(--content); }
+
+  .identity {
+    font-size: var(--text-paragraph);
+    color: var(--content-secondary);
+    margin-bottom: calc(var(--unit) * 1.5);
+  }
+  .identity strong { color: var(--content); font-weight: 600; }
+
+  .message { font-size: var(--text-paragraph); margin-top: calc(var(--unit) * 1.5); line-height: 1.6; }
+  .message a { color: var(--content); text-decoration: underline; }
+
+  .hint {
+    font-size: var(--text-superfine);
+    color: var(--content-secondary);
+    margin-top: calc(var(--unit) * 2);
+    line-height: 1.6;
+  }
+  code {
+    font-size: var(--text-superfine);
+    color: var(--content);
+  }
+
+  #error { color: var(--content); } /* no red -- errors are said in words, not colour */
+</style>
+</head>
+<body>
+<main>
+  <div class="top-bar">
+    <svg class="icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5">
+      <rect x="3" y="3" width="18" height="18" rx="2"/>
+      <path d="M3 9h18M9 21V9"/>
+    </svg>
+    <span class="wordmark">BRIGHTMARKET</span>
+  </div>
+
+  <div class="content">
+    <h1>Submit an app</h1>
+    <p class="sub">Sign in with GitHub to list your own public repos. Nothing else on your account is touched.</p>
+
+    <div id="signed-out">
+      <button id="login-btn">
+        <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5">
+          <path d="M12 2C6.5 2 2 6.5 2 12c0 4.4 2.9 8.2 6.8 9.5.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.1-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-4.9 0-1.1.4-1.9 1-2.6-.1-.3-.4-1.4.1-2.9 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.5.2 2.6.1 2.9.6.7 1 1.6 1 2.6 0 3.8-2.3 4.6-4.6 4.9.4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 22 12c0-5.5-4.5-10-10-10Z"/>
+        </svg>
+        <span>Sign in with GitHub</span>
+      </button>
+      <p class="hint">
+        This only asks for <code>read:user</code> — enough to see your username and your own
+        public repos. It cannot write anything, read private repos, or act on your behalf
+        anywhere else.
+      </p>
+    </div>
+
+    <div id="signed-in" style="display:none;">
+      <div class="identity">Signed in as <strong id="login-name"></strong></div>
+
+      <label for="repo-select">Which of your repos?</label>
+      <select id="repo-select"></select>
+
+      <label for="category-select">Category</label>
+      <select id="category-select">
+        <option value="reading">Reading</option>
+        <option value="utilities">Utilities</option>
+        <option value="games">Games</option>
+        <option value="media">Media</option>
+        <option value="productivity">Productivity</option>
+        <option value="hardware">Hardware / integrations</option>
+      </select>
+
+      <button id="submit-btn" style="margin-top: calc(var(--unit) * 2.5);">
+        <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5">
+          <path d="M5 12h14M13 6l6 6-6 6"/>
+        </svg>
+        <span>Submit</span>
+      </button>
+      <div id="result"></div>
+    </div>
+
+    <div id="error" class="message" style="display:none;"></div>
+  </div>
+</main>
+
+<script>
+  // ---- fill these in before deploying --------------------------------------
+  const CLIENT_ID = "YOUR_OAUTH_APP_CLIENT_ID";
+  const WORKER_URL = "https://brightmarket-portal.YOUR_SUBDOMAIN.workers.dev";
+  // ---------------------------------------------------------------------------
+
+  const REDIRECT_URI = location.origin + location.pathname;
+
+  const el = (id) => document.getElementById(id);
+  const showError = (msg) => { el("error").style.display = "block"; el("error").textContent = msg; };
+
+  // lightClickable's 45ms finger-down haptic. Most desktop browsers have no
+  // Vibration API and this is a silent no-op there, which is correct.
+  const buzz = () => { if (navigator.vibrate) navigator.vibrate(45); };
+  document.querySelectorAll("button").forEach((b) => b.addEventListener("pointerdown", buzz));
+
+  el("login-btn").addEventListener("click", () => {
+    // A random state, checked on return, is the CSRF guard for this whole flow.
+    const state = crypto.randomUUID();
+    sessionStorage.setItem("oauth_state", state);
+    const authUrl = new URL("https://github.com/login/oauth/authorize");
+    authUrl.searchParams.set("client_id", CLIENT_ID);
+    authUrl.searchParams.set("redirect_uri", REDIRECT_URI);
+    authUrl.searchParams.set("scope", "read:user"); // the entire permission ask -- nothing else
+    authUrl.searchParams.set("state", state);
+    location.href = authUrl.toString();
+  });
+
+  let session = null; // the signed, stateless session from the Worker -- not a GitHub token
+
+  async function completeLogin(code, state) {
+    const expected = sessionStorage.getItem("oauth_state");
+    sessionStorage.removeItem("oauth_state");
+    if (!expected || state !== expected) {
+      showError("Login didn't verify (state mismatch) — try signing in again.");
+      return;
+    }
+    // Clean the code/state out of the URL so a refresh doesn't replay it.
+    history.replaceState({}, "", REDIRECT_URI);
+
+    try {
+      const res = await fetch(`${WORKER_URL}/exchange`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, state }),
+      });
+      const data = await res.json();
+      if (!res.ok) { showError(data.error || "login failed"); return; }
+
+      session = data.session;
+      el("login-name").textContent = data.login;
+      const select = el("repo-select");
+      select.innerHTML = "";
+      if (data.repos.length === 0) {
+        select.innerHTML = `<option disabled selected>No public repos found on your account</option>`;
+        el("submit-btn").disabled = true;
+      } else {
+        for (const repo of data.repos) {
+          const opt = document.createElement("option");
+          opt.value = repo.full_name;
+          opt.textContent = repo.full_name + (repo.description ? ` — ${repo.description}` : "");
+          select.appendChild(opt);
+        }
+      }
+      el("signed-out").style.display = "none";
+      el("signed-in").style.display = "block";
+    } catch (err) {
+      showError("Could not reach the submission service. Try again shortly.");
+    }
+  }
+
+  el("submit-btn").addEventListener("click", async () => {
+    el("submit-btn").disabled = true;
+    el("result").innerHTML = "";
+    try {
+      const res = await fetch(`${WORKER_URL}/submit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          session,
+          repo: el("repo-select").value,
+          category: el("category-select").value,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        el("result").innerHTML = `<div class="message">${data.error || "submission failed"}</div>`;
+        el("submit-btn").disabled = false;
+        return;
+      }
+      el("result").innerHTML =
+        `<div class="message">Submitted. <a href="${data.issueUrl}" target="_blank">Track it here</a> — ` +
+        `a bot will validate the release and open a PR automatically.</div>`;
+    } catch (err) {
+      el("result").innerHTML = `<div class="message">Network error — try again.</div>`;
+      el("submit-btn").disabled = false;
+    }
+  });
+
+  // On load: are we mid-flow, coming back from GitHub with ?code=&state=?
+  (function init() {
+    const params = new URLSearchParams(location.search);
+    const code = params.get("code");
+    const state = params.get("state");
+    if (code && state) completeLogin(code, state);
+  })();
+</script>
+</body>
+</html>
