@@ -344,9 +344,10 @@
       n.addEventListener("click", () => {
         sel = +n.dataset.i;
         render();
-        // Selecting from the grid is the "open to learn more" step; bring the
-        // panel it fills back into view.
-        document.querySelector(".hero-wrap").scrollIntoView({ behavior: "smooth", block: "start" });
+        // No scrollIntoView here. It existed when the hero scrolled away with
+        // the page; now that the hero is anchored the panel is always visible,
+        // and scrolling to it just shunts the grid down under your cursor on
+        // every single click.
       }));
   }
 
