@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T21:17:30.713731+00:00",
+ "generated": "2026-08-07T21:19:58.818444+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -297,13 +297,13 @@
    "category": "hardware",
    "summary": "The wheel and camera button, working phone-wide.",
    "latest": {
-    "version": "2.0.56",
-    "versionCode": 56,
-    "apk": "https://github.com/gi-os/BrightControl/releases/download/v2.0.56/LightControl-v2.0.56.apk",
+    "version": "2.1.58",
+    "versionCode": 58,
+    "apk": "https://github.com/gi-os/BrightControl/releases/download/v2.1.58/LightControl-v2.1.58.apk",
     "size": 18365257,
-    "sha256": "fd6c2d50a51caf2507c39fccb08855a5fd64ff8f574a5031c1a49e62014b9600",
-    "published": "2026-08-07T03:38:06Z",
-    "notes": "**Full Changelog**: https://github.com/gi-os/BrightControl/compare/v2.0.55...v2.0.56"
+    "sha256": "aa552d552ac27fdde47cdd1f663d43256ca4431e37d229f1155895a01d2859b9",
+    "published": "2026-08-07T21:19:15Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightControl/compare/v2.0.56...v2.1.58"
    },
    "deprecated": false,
    "supersededBy": "",
