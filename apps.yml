@@ -79,31 +79,12 @@ apps:
   repo: gi-os/BrightPasses
   category: utilities
   summary: Photograph a ticket, keep the stub.
-- pkg: com.gios.lightbeer
-  name: LightBeer
-  repo: gi-os/LightBeer
-  category: utilities
-  summary: Untappd companion.
-- pkg: com.gios.lightglance
-  name: LightGlance
-  repo: gi-os/LightGlance
-  category: utilities
-  summary: Ambient notification dots.
-- pkg: com.gios.lightpods
-  name: LightPods
-  repo: gi-os/LightPods
-  category: hardware
-  summary: AirPods battery, in-ear and lid status.
-- pkg: com.gios.lightvoice
-  name: LightVoice
-  repo: gi-os/LightVoice
-  category: utilities
-  summary: Voice assistant with global push-to-talk.
 - pkg: app.lightphonekeyboard
   name: LightKeyboard
   repo: gi-os/LightKeyboard
   category: hardware
-  summary: Swipe typing with a bundled dictionary.
+  summary: A fork of the Light Phone keyboard, adding swipe typing and autocorrect from a bundled dictionary.
+    Works offline.
 - pkg: com.gios.lightfog
   name: FogLight
   repo: gi-os/FogLight

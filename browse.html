@@ -50,7 +50,7 @@
   .col { width:100%; max-width:1240px; min-height:100vh; display:flex; flex-direction:column;
          border-left:1px solid var(--line); border-right:1px solid var(--line); }
 
-  .bar { flex-shrink:0; height:60px; display:flex; align-items:center; justify-content:space-between;
+  .bar { position:sticky; top:0; z-index:20; background:var(--bg); flex-shrink:0; height:60px; display:flex; align-items:center; justify-content:space-between;
          padding:0 26px; border-bottom:1px solid var(--line); }
   .logo { width:26px; height:26px; border-radius:8px; background:var(--fg); color:#000;
           display:flex; align-items:center; justify-content:center; font-family:var(--round); font-size:15px; }
@@ -62,7 +62,11 @@
                letter-spacing:.18em; transition:.15s; }
   .pill-link:hover { background:var(--fg); color:#000; box-shadow:inset 0 0 0 1px var(--fg); }
 
-  .hero-wrap { position:relative; flex-shrink:0; overflow:hidden; border-bottom:1px solid var(--line); }
+  .hero-wrap { position:sticky; top:60px; z-index:10; background:var(--bg); flex-shrink:0;
+    overflow:hidden; border-bottom:1px solid var(--line); }
+  /* On a short window a sticky hero would leave no room for the grid, so below
+     that height it scrolls away normally. */
+  @media (max-height: 720px) { .hero-wrap { position:relative; top:auto; } }
   .hero-scan { position:absolute; left:0; right:0; top:0; height:80px; pointer-events:none;
     background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.04) 60%,rgba(255,255,255,0) 100%);
     animation:scan 8s linear infinite; }
@@ -98,7 +102,7 @@
   .wire-tag { flex-shrink:0; font-family:var(--mono); font-size:9px; letter-spacing:.26em;
     padding:3px 8px; border-radius:4px; background:#1a1a1e; }
   .wire-track { flex:1; overflow:hidden; position:relative; height:14px; }
-  .wire-run { position:absolute; display:flex; gap:34px; white-space:nowrap; animation:marquee 34s linear infinite;
+  .wire-run { position:absolute; display:flex; gap:34px; white-space:nowrap; animation:marquee 150s linear infinite;
     font-family:var(--mono); font-size:9.5px; letter-spacing:.2em; color:var(--dimmer); }
   .nav { cursor:pointer; width:32px; height:24px; border-radius:6px; box-shadow:inset 0 0 0 1px var(--edge);
     color:#8a8a90; display:flex; align-items:center; justify-content:center; font-size:11px; transition:.15s; }
@@ -161,11 +165,6 @@
   <div class="wire">
     <div class="wire-tag">WIRE</div>
     <div class="wire-track"><div class="wire-run" id="wire"></div></div>
-    <div style="flex-shrink:0; display:flex; align-items:center; gap:9px;">
-      <div class="nav" id="prev">◀</div>
-      <div class="nav" id="next">▶</div>
-      <div class="status" id="pos"></div>
-    </div>
   </div>
 
   <div class="filters">
@@ -224,6 +223,12 @@
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const mb = (n) => (n / 1e6).toFixed(1) + " MB";
+  // Who published it. Taken from the repo's owner rather than a hand-written
+  // field, so it can't drift and is right for submissions from anyone.
+  const dev = (a) => String(a.repo || "").split("/")[0] || "unknown";
+  // Not every repo tags vX.Y.Z -- BrightLibrary ships "build-50" -- so only
+  // prefix a "v" when the string actually starts with a number.
+  const ver = (v) => (/^\d/.test(String(v)) ? "v" + v : String(v));
   const day = (iso) => {
     const d = new Date(iso);
     return isNaN(d) ? "—" : d.toLocaleDateString("en-GB", { day: "2-digit", month: "short" }).toUpperCase();
@@ -275,9 +280,14 @@
           <div class="cat-pill">${esc((app.category || "").toUpperCase())}</div>
           <div style="font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:var(--dimmer);">${esc(app.pkg)}</div>
         </div>
+        <div style="display:flex; align-items:center; gap:8px; margin-top:-8px;">
+          <div style="font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:#6a6a70;">BY</div>
+          <a href="https://github.com/${esc(dev(app))}" target="_blank" rel="noopener"
+             style="font-family:var(--mono); font-size:11px; letter-spacing:.08em; border-bottom:1px solid var(--edge);">${esc(dev(app))}</a>
+        </div>
         <div style="font-size:15px; line-height:1.55; color:#d8d8dc; max-width:52ch;">${esc(app.summary)}</div>
         <div class="stats">
-          <div class="stat"><b>VERSION</b><i>${esc(app.latest.version)}</i></div>
+          <div class="stat"><b>VERSION</b><i>${esc(ver(app.latest.version))}</i></div>
           <div class="stat"><b>SIZE</b><i>${mb(app.latest.size)}</i></div>
           <div class="stat"><b>GETS</b><i>${app.downloads || 0}</i></div>
           <div class="stat"><b>UPDATED</b><i>${day(app.latest.published)}</i></div>
@@ -305,7 +315,6 @@
 
     $("count").textContent = list.length === apps.length
       ? `${apps.length} APPS` : `${list.length} OF ${apps.length}`;
-    $("pos").textContent = list.length ? `${sel + 1}/${list.length}` : "0/0";
     $("empty").style.display = list.length ? "none" : "block";
 
     $("grid").innerHTML = list.map((a, i) => `
@@ -314,7 +323,8 @@
           <div class="tile-icon">${esc(a.name[0])}</div>
           <div style="min-width:0; flex:1;">
             <div class="tile-name">${esc(a.name)}</div>
-            <div class="tile-meta">v${esc(a.latest.version)} · ${mb(a.latest.size)}</div>
+            <div class="tile-meta">${esc(ver(a.latest.version))} · ${mb(a.latest.size)}</div>
+            <div class="tile-meta">BY ${esc(dev(a).toUpperCase())}</div>
           </div>
         </div>
         <div class="tile-sum">${esc(a.summary)}</div>
@@ -360,8 +370,6 @@
     render();
   }
 
-  $("prev").addEventListener("click", () => move(-1));
-  $("next").addEventListener("click", () => move(1));
   $("q").addEventListener("input", (e) => { query = e.target.value; sel = 0; render(); });
   window.addEventListener("keydown", (e) => {
     if (e.target && /input|textarea/i.test(e.target.tagName)) return;
@@ -378,7 +386,7 @@
       apps = data.apps || [];
       $("status").textContent = `${apps.length} APPS · UPDATED ${day(data.generated)}`;
       $("wire").innerHTML = [0, 1].map(() =>
-        `<span>${apps.map((a) => `${esc(a.name.toUpperCase())} v${esc(a.latest.version)}`).join("</span><span>")}</span>`
+        `<span>${apps.map((a) => `${esc(a.name.toUpperCase())} ${esc(ver(a.latest.version))}`).join("</span><span>")}</span>`
       ).join("");
       renderChips();
       render();

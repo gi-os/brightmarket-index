@@ -2,8 +2,11 @@ name: Build index
 
 on:
   schedule:
-    # Hourly, off the hour, so it isn't competing with everyone else's :00 cron.
-    - cron: '17 * * * *'
+    # Every 15 minutes, offset off the quarter so it isn't competing with
+    # everyone else's :00. Download counts come from GitHub and only refresh
+    # when this runs, so an hourly build meant a number that could sit an hour
+    # behind -- which reads as the count being broken rather than stale.
+    - cron: '7,22,37,52 * * * *'
   push:
     branches: [main]
     paths: ['apps.yml', 'scripts/build_index.py', 'icons/**']
