@@ -220,21 +220,15 @@
       <div style="flex:1; min-width:300px;">
         <div style="font-family:var(--round); font-size:15px;">Focus mode</div>
         <div style="font-size:12px; line-height:1.55; color:var(--dim); margin-top:6px; max-width:52ch;">
-          Turns phone browsing off, leaving your installed apps and their updates.
-          You can also change this in the app's own Settings.
+          Turn it on in the app's own Settings. Once it's on, this code is the
+          only way back — which is the point: the thing you'd have to go and
+          find is a different screen in a different room.
         </div>
       </div>
-      <div style="display:flex; gap:14px;">
-        <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
-          <div id="qr-on" style="width:78px; height:78px; background:#fff; border-radius:8px;
-               display:flex; align-items:center; justify-content:center;"></div>
-          <div class="status">ON</div>
-        </div>
-        <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
-          <div id="qr-off" style="width:78px; height:78px; background:#fff; border-radius:8px;
-               display:flex; align-items:center; justify-content:center;"></div>
-          <div class="status">OFF</div>
-        </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div id="qr-off" style="width:180px; height:180px; background:#fff; border-radius:10px;
+             display:flex; align-items:center; justify-content:center;"></div>
+        <div class="status">SCAN TO TURN FOCUS MODE OFF</div>
       </div>
     </div>
   </div>
@@ -548,8 +542,7 @@
   });
 
   (async function init() {
-    qrInto($("qr-on"), "brightmarket://focus/on", 2);
-    qrInto($("qr-off"), "brightmarket://focus/off", 2);
+    qrInto($("qr-off"), "brightmarket://focus/off", 5);
     try {
       const res = await fetch(INDEX, { cache: "no-store" });
       const data = await res.json();
