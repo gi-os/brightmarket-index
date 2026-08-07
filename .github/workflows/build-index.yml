@@ -28,7 +28,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install pyyaml
+      - run: pip install pyyaml pyaxmlparser
 
       - name: Build index
         env:

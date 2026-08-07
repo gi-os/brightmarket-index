@@ -29,7 +29,14 @@ import urllib.request
 import urllib.error
 import urllib.parse
 
+import tempfile
+
 import yaml
+
+try:
+    from pyaxmlparser import APK
+except ImportError:  # keeps the script runnable without the optional dep
+    APK = None
 
 API = "https://api.github.com"
 TOKEN = os.environ.get("GH_TOKEN", "")
@@ -61,12 +68,45 @@ def get_bytes(url: str) -> bytes:
         return resp.read()
 
 
-def parse_version_code(tag: str) -> int | None:
-    """v1.3.18 -> 18. Returns None if the tag doesn't fit the convention."""
+def version_code_from_tag(tag: str) -> int | None:
+    """v1.3.18 -> 18. Only a fallback; see read_apk."""
     try:
         return int(tag.lstrip("v").rsplit(".", 1)[-1])
     except (ValueError, IndexError):
         return None
+
+
+def read_apk(blob: bytes) -> tuple[int, str] | None:
+    """Read the real (versionCode, applicationId) out of an APK.
+
+    This is the authoritative source and the tag is not. The client compares
+    the index's versionCode against PackageManager's longVersionCode, so it has
+    to be the number actually compiled into the APK.
+
+    Deriving it from the tag only works for repos whose CI stamps a monotonic
+    run number. Across the wider portfolio tags look like `build-50`,
+    `v1.2.0-build.21` and plain semver -- and for plain semver the trailing
+    segment goes BACKWARDS on a minor bump (1.2.2 -> 2, then 1.3.0 -> 0), which
+    would tell every user they were already up to date, permanently.
+    """
+    if APK is None:
+        return None
+    path = None
+    try:
+        with tempfile.NamedTemporaryFile(suffix=".apk", delete=False) as f:
+            f.write(blob)
+            path = f.name
+        apk = APK(path)
+        code = int(apk.version_code)
+        pkg = apk.package
+        if not pkg:
+            return None
+        return code, pkg
+    except Exception:
+        return None
+    finally:
+        if path and os.path.exists(path):
+            os.unlink(path)
 
 
 # Checked in order; the first that exists and has images wins. docs/screenshots
@@ -164,11 +204,6 @@ def main() -> int:
             continue
         asset = latest_assets[0]
 
-        version_code = parse_version_code(latest_release["tag_name"])
-        if version_code is None:
-            warn(f"{pkg}: tag {latest_release['tag_name']!r} isn't v<name>.<run> -- skipped")
-            continue
-
         prev = previous.get(pkg, {})
 
         # One extra API call per app; cheap, and it means a developer adding a
@@ -179,12 +214,31 @@ def main() -> int:
         except urllib.error.HTTPError:
             screenshots = prev.get("screenshots", [])
 
-        # Hash what we actually serve, so the client can verify the download.
+        # Download once: the same bytes give us the hash the client verifies and
+        # the versionCode it compares against.
         try:
-            sha256 = hashlib.sha256(get_bytes(asset["browser_download_url"])).hexdigest()
+            blob = get_bytes(asset["browser_download_url"])
         except urllib.error.HTTPError as e:
-            warn(f"{pkg}: could not download APK to hash it ({e.code}) -- skipped")
+            warn(f"{pkg}: could not download the APK ({e.code}) -- skipped")
             continue
+        sha256 = hashlib.sha256(blob).hexdigest()
+
+        parsed = read_apk(blob)
+        if parsed is None:
+            version_code = version_code_from_tag(latest_release["tag_name"])
+            if version_code is None:
+                warn(f"{pkg}: couldn't read versionCode from the APK or the tag -- skipped")
+                continue
+            warn(f"{pkg}: fell back to the tag for versionCode ({version_code})")
+        else:
+            version_code, apk_pkg = parsed
+            # apps.yml is hand-written and the APK is not. If they disagree the
+            # APK wins, because that is the identity Android will actually use --
+            # and a mismatch means the client would compare against a package
+            # that isn't installed and offer an eternal "update".
+            if apk_pkg != pkg:
+                warn(f"{pkg}: apps.yml disagrees with the APK ({apk_pkg}) -- using the APK")
+                pkg = apk_pkg
 
         out.append(
             {

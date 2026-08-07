@@ -1,38 +1,111 @@
-# The curated list. One entry per app; everything else in the index (versions,
-# download counts, sha256, release notes) is derived from the GitHub API by
-# scripts/build_index.py and must NOT be hand-edited here.
-#
-# `pkg` is the Android applicationId and is the app's permanent identity. It
-# deliberately still reads `light*` for apps that predate the Bright rename --
-# changing an applicationId is not an update, it's a second app, so these never
-# change. `name` is what users see and is free to differ.
 apps:
-  - pkg: com.gios.lighttip
-    name: BrightTip
-    repo: gi-os/BrightTip
-    category: productivity
-    summary: Tip calculator, plus a receipt splitter that reads the line items.
-
-  - pkg: com.gios.lightnoise
-    name: BrightNoise
-    repo: gi-os/BrightNoise
-    category: media
-    summary: Twelve synthesised sounds, a two-layer mixer and a sleep timer.
-
-  - pkg: com.gios.lightauth
-    name: BrightAuthenticator
-    repo: gi-os/BrightAuthenticator
-    category: utilities
-    summary: TOTP codes on the Light Phone III, in a PIN-wrapped vault.
-
-  - pkg: com.gios.lightsports
-    name: BrightSports
-    repo: gi-os/BrightSports
-    category: utilities
-    summary: Live scores and standings across thirteen leagues.
-
-  - pkg: com.gios.brightmarket
-    name: BrightMarket
-    repo: gi-os/BrightMarket
-    category: utilities
-    summary: The marketplace itself. Browse, install and update Light Phone apps.
+- pkg: com.gios.lighttip
+  name: BrightTip
+  repo: gi-os/BrightTip
+  category: productivity
+  summary: Tip calculator, plus a receipt splitter that reads the line items.
+- pkg: com.gios.lightnoise
+  name: BrightNoise
+  repo: gi-os/BrightNoise
+  category: media
+  summary: Twelve synthesised sounds, a two-layer mixer and a sleep timer.
+- pkg: com.gios.lightauth
+  name: BrightAuthenticator
+  repo: gi-os/BrightAuthenticator
+  category: utilities
+  summary: TOTP codes on the Light Phone III, in a PIN-wrapped vault.
+- pkg: com.gios.lightsports
+  name: BrightSports
+  repo: gi-os/BrightSports
+  category: utilities
+  summary: Live scores and standings across thirteen leagues.
+- pkg: com.gios.brightmarket
+  name: BrightMarket
+  repo: gi-os/BrightMarket
+  category: utilities
+  summary: The marketplace itself. Browse, install and update Light Phone apps.
+- pkg: com.lightfastread
+  name: BrightLibrary
+  repo: gi-os/BrightLibrary
+  category: reading
+  summary: EPUB, comics and Calibre, with a cover shelf and a page view.
+- pkg: com.gios.lightremote
+  name: BrightRemote
+  repo: gi-os/BrightRemote
+  category: utilities
+  summary: Apple TV remote, speaking the Companion protocol natively.
+- pkg: com.gios.lightchat
+  name: BrightChat
+  repo: gi-os/BrightChat
+  category: utilities
+  summary: iMessage over a self-hosted BlueBubbles server.
+- pkg: com.gios.lightcontrol
+  name: BrightControl
+  repo: gi-os/BrightControl
+  category: hardware
+  summary: The wheel and camera button, working phone-wide.
+- pkg: com.gios.lightsync
+  name: BrightSync
+  repo: gi-os/BrightSync
+  category: utilities
+  summary: Backs your apps up to your own server, nightly.
+- pkg: com.gios.lightnotebook
+  name: BrightNotebook
+  repo: gi-os/BrightNotebook
+  category: productivity
+  summary: Notes and a calendar, with your day gathered in one place.
+- pkg: com.gios.lightnonogram
+  name: BrightNonogram
+  repo: gi-os/BrightNonogram
+  category: games
+  summary: Picross, plus a generator that only ships solvable puzzles.
+- pkg: com.thelightphone.solitaire
+  name: BrightSolitaire
+  repo: gi-os/BrightSolitaire
+  category: games
+  summary: Klondike, draw one, unlimited redeals.
+- pkg: com.thelightphone.lightnycsubway
+  name: BrightTransit
+  repo: gi-os/BrightTransit
+  category: utilities
+  summary: Live MTA subway arrivals.
+- pkg: com.lightrss.reader
+  name: BrightNews
+  repo: gi-os/BrightNews
+  category: reading
+  summary: RSS, Atom and Gmail newsletters in one reader.
+- pkg: com.gios.lightpass
+  name: BrightPasses
+  repo: gi-os/BrightPasses
+  category: utilities
+  summary: Photograph a ticket, keep the stub.
+- pkg: com.gios.lightbeer
+  name: LightBeer
+  repo: gi-os/LightBeer
+  category: utilities
+  summary: Untappd companion.
+- pkg: com.gios.lightglance
+  name: LightGlance
+  repo: gi-os/LightGlance
+  category: utilities
+  summary: Ambient notification dots.
+- pkg: com.gios.lightpods
+  name: LightPods
+  repo: gi-os/LightPods
+  category: hardware
+  summary: AirPods battery, in-ear and lid status.
+- pkg: com.gios.lightvoice
+  name: LightVoice
+  repo: gi-os/LightVoice
+  category: utilities
+  summary: Voice assistant with global push-to-talk.
+- pkg: app.lightphonekeyboard
+  name: LightKeyboard
+  repo: gi-os/LightKeyboard
+  category: hardware
+  summary: Swipe typing with a bundled dictionary.
+- pkg: com.gios.lightfog
+  name: FogLight
+  repo: gi-os/FogLight
+  category: utilities
+  summary: 'Fog of World companion: record where you go, watch the fog clear.'
