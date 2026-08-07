@@ -539,6 +539,10 @@
   // -------------------------------------------------------------------------
   let myApps = [];
   let editing = null;
+  // Repos with a request already filed this session. A change isn't live until
+  // its PR is merged, so the row keeps showing the old text -- without this the
+  // list looks like the save silently did nothing.
+  const pending = new Map();
 
   function showTab(which) {
     const managing = which === "manage";
@@ -593,7 +597,10 @@
       nm.textContent = app.name;
       const sm = document.createElement("div");
       sm.className = "sum";
-      sm.textContent = app.summary || "no description";
+      const open_ = pending.get(app.repo);
+      sm.textContent = open_
+        ? `${open_.kind} requested — waiting to be merged`
+        : (app.summary || "no description");
       wrap.appendChild(nm); wrap.appendChild(sm);
       row.appendChild(wrap);
       row.addEventListener("click", () => {
@@ -604,7 +611,16 @@
         el("edit-category").value = app.category || "utilities";
         el("edit-count").textContent = `${(app.summary || "").length} / 140`;
         el("manage-form").style.display = "block";
-        el("manage-result").innerHTML = "";
+        // Re-armed on every selection. Both are disabled while a request is in
+        // flight, and a successful one used to leave them disabled for good --
+        // so the first save you made was the last one the page would accept.
+        el("save-btn").disabled = false;
+        el("remove-btn").disabled = false;
+        const open_ = pending.get(app.repo);
+        el("manage-result").innerHTML = open_
+          ? `<div class="message">A ${open_.kind} request for this one is already open. ` +
+            `<a href="${open_.url}" target="_blank">Track it</a> — saving again files a second.</div>`
+          : "";
         renderMyApps();
       });
       list.appendChild(row);
@@ -630,13 +646,19 @@
       });
       const data = await res.json();
       if (!res.ok) {
-        el("manage-result").innerHTML = `<div class="message">${data.error || "that didn't work"}</div>`;
+        // 401 is the only failure a retry can't fix, and it is the one most
+        // likely to be read as "the button is broken".
+        el("manage-result").innerHTML = res.status === 401
+          ? `<div class="message">Your sign-in expired. Reload the page and sign in again — nothing you already filed is affected.</div>`
+          : `<div class="message">${data.error || "that didn't work"}</div>`;
         button.disabled = false;
         return;
       }
+      pending.set(editing.repo, { kind: path === "/remove" ? "removal" : "edit", url: data.issueUrl });
       el("manage-result").innerHTML =
         `<div class="message">Filed. <a href="${data.issueUrl}" target="_blank">Track it here</a> — ` +
-        `the change lands in the catalogue once it's merged.</div>`;
+        `the change lands in the catalogue once it's merged. Pick another app to keep going.</div>`;
+      renderMyApps();
     } catch {
       el("manage-result").innerHTML = '<div class="message">Network error — try again.</div>';
       button.disabled = false;
