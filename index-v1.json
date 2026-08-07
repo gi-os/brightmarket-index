@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T17:02:11.037426+00:00",
+ "generated": "2026-08-07T17:22:13.146253+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -36,7 +36,7 @@
      "size": 55824
     }
    ],
-   "downloads": 66,
+   "downloads": 68,
    "firstSeen": "2026-08-06"
   },
   {
@@ -73,7 +73,7 @@
      "size": 49896
     }
    ],
-   "downloads": 54,
+   "downloads": 56,
    "firstSeen": "2026-08-06"
   },
   {
@@ -94,7 +94,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 70,
+   "downloads": 72,
    "firstSeen": "2026-08-06"
   },
   {
@@ -131,7 +131,7 @@
      "size": 55168
     }
    ],
-   "downloads": 64,
+   "downloads": 66,
    "firstSeen": "2026-08-06"
   },
   {
@@ -141,18 +141,34 @@
    "category": "utilities",
    "summary": "The marketplace itself. Browse, install and update Light Phone apps.",
    "latest": {
-    "version": "1.9.23",
-    "versionCode": 23,
-    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.9.23/BrightMarket-v1.9.23.apk",
-    "size": 22663294,
-    "sha256": "8d35a61fc8f2b64ff7d0600f0d1c1edcc9af9b05b22f8899bf5149a2d518b7d4",
-    "published": "2026-08-07T16:57:37Z",
-    "notes": "\n**The catalogue has its own address: `brightmarket.gzl.dev`.** The old\n`gi-os.github.io/brightmarket-index` links still work and always will \u2014 GitHub\nredirects them \u2014 but the app now fetches the index from the short domain\ndirectly rather than through a redirect, and the \"turn Focus mode off\" screen\ntells you the address you'd actually type.\n\nThe install link is `brightmarket.gzl.dev/apk`, which always points at the\ncurrent signed release. That is what the setup QR encodes now, so a code printed\nin a README doesn't go stale the next time this ships.\n\n"
+    "version": "1.10.24",
+    "versionCode": 24,
+    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.10.24/BrightMarket-v1.10.24.apk",
+    "size": 22667386,
+    "sha256": "7c41654f552efa29404c18c85f77b5e08123119e1d340eac77b8c274aaa3a578",
+    "published": "2026-08-07T17:21:26Z",
+    "notes": "\n**You have to reinstall this one.** Sorry. Every build up to v1.9 was signed with a\nkey that lived in this repository with its password written three lines under it,\nwhich meant anybody could produce an APK that Android would happily accept as an\nupdate to BrightMarket. That was fine when the only person installing it was me. It\nis not fine for an app whose entire job is installing software.\n\nThe key is now a CI secret and the replacement has never been in the tree. Android\nidentifies an app by package name *and* signing certificate and refuses to install\nacross a change of either, so this one time the update has to be an uninstall and a\nfresh install. Your installed apps are not touched \u2014 only BrightMarket's own\nsettings, which is Focus mode and your tracked repos.\n\nBuilding locally still works and still gives you an installable APK; it is signed\nwith your debug key and won't install over a release, which is the correct outcome\nrather than an inconvenience.\n\nAlso: a licence file, at last (MIT, same as the rest), and the store's own listing\nfinally has screenshots.\n\n"
    },
    "deprecated": false,
    "supersededBy": "",
-   "screenshots": [],
-   "downloads": 61,
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightMarket/main/docs/screenshots/01-browse.png",
+     "name": "01-browse.png",
+     "size": 82180
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightMarket/main/docs/screenshots/02-installed.png",
+     "name": "02-installed.png",
+     "size": 73076
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightMarket/main/docs/screenshots/03-settings.png",
+     "name": "03-settings.png",
+     "size": 57213
+    }
+   ],
+   "downloads": 64,
    "firstSeen": "2026-08-06"
   },
   {
@@ -194,7 +210,7 @@
      "size": 212473
     }
    ],
-   "downloads": 93,
+   "downloads": 95,
    "firstSeen": "2026-08-06"
   },
   {
@@ -215,7 +231,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 59,
+   "downloads": 61,
    "firstSeen": "2026-08-06"
   },
   {
@@ -242,7 +258,7 @@
      "size": 88062
     }
    ],
-   "downloads": 78,
+   "downloads": 80,
    "firstSeen": "2026-08-06"
   },
   {
@@ -263,7 +279,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 73,
+   "downloads": 75,
    "firstSeen": "2026-08-06"
   },
   {
@@ -284,7 +300,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 32,
+   "downloads": 34,
    "firstSeen": "2026-08-06"
   },
   {
@@ -305,7 +321,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 88,
+   "downloads": 90,
    "firstSeen": "2026-08-06"
   },
   {
@@ -326,7 +342,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 60,
+   "downloads": 62,
    "firstSeen": "2026-08-06"
   },
   {
@@ -353,7 +369,7 @@
      "size": 42506
     }
    ],
-   "downloads": 52,
+   "downloads": 54,
    "firstSeen": "2026-08-06"
   },
   {
@@ -385,7 +401,7 @@
      "size": 66903
     }
    ],
-   "downloads": 54,
+   "downloads": 56,
    "firstSeen": "2026-08-06"
   },
   {
@@ -432,7 +448,7 @@
      "size": 47577
     }
    ],
-   "downloads": 79,
+   "downloads": 81,
    "firstSeen": "2026-08-06"
   },
   {
@@ -469,7 +485,7 @@
      "size": 208010
     }
    ],
-   "downloads": 43,
+   "downloads": 45,
    "firstSeen": "2026-08-06"
   },
   {
@@ -490,7 +506,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 48,
+   "downloads": 50,
    "firstSeen": "2026-08-06"
   },
   {
@@ -511,7 +527,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 74,
+   "downloads": 76,
    "firstSeen": "2026-08-06"
   },
   {
@@ -563,7 +579,7 @@
      "size": 89898
     }
    ],
-   "downloads": 154,
+   "downloads": 155,
    "firstSeen": "2026-08-06"
   },
   {
@@ -595,7 +611,7 @@
      "size": 17692
     }
    ],
-   "downloads": 41,
+   "downloads": 42,
    "firstSeen": "2026-08-06"
   }
  ]
