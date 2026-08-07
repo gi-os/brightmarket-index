@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T21:28:47.741574+00:00",
+ "generated": "2026-08-07T21:29:54.733496+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -269,13 +269,13 @@
    "category": "utilities",
    "summary": "iMessage over a self-hosted BlueBubbles server.",
    "latest": {
-    "version": "2.9.39",
-    "versionCode": 39,
-    "apk": "https://github.com/gi-os/BrightChat/releases/download/v2.9.39/LightChat-v2.9.39.apk",
+    "version": "2.9.40",
+    "versionCode": 40,
+    "apk": "https://github.com/gi-os/BrightChat/releases/download/v2.9.40/LightChat-v2.9.40.apk",
     "size": 3917240,
-    "sha256": "a41397b4b698d6260d44d21a419130eb48c1b2f11e87062f98e2176335a9dfb2",
-    "published": "2026-08-07T03:39:20Z",
-    "notes": "**Full Changelog**: https://github.com/gi-os/BrightChat/compare/v2.9.38...v2.9.39"
+    "sha256": "94e709419890b618b8bf445f8b5aaa92b693cc109286018981aadfd2f183f994",
+    "published": "2026-08-07T21:29:25Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightChat/compare/v2.9.39...v2.9.40"
    },
    "deprecated": false,
    "supersededBy": "",
