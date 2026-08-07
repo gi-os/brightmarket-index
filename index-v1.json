@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T22:12:25.950775+00:00",
+ "generated": "2026-08-07T22:20:42.491124+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -36,7 +36,7 @@
      "size": 55824
     }
    ],
-   "downloads": 94,
+   "downloads": 95,
    "firstSeen": "2026-08-06",
    "signer": "eece33e8486e95a327518bb7798df9ae99c683a2a80c4439fe0b7bf30ae1a5d7"
   },
@@ -74,7 +74,7 @@
      "size": 49896
     }
    ],
-   "downloads": 82,
+   "downloads": 83,
    "firstSeen": "2026-08-06",
    "signer": "4d2a3bb63292bc7cdfec383a3b041da3b4a483058cfa0575a33d06fb88c9973a"
   },
@@ -96,7 +96,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 98,
+   "downloads": 99,
    "firstSeen": "2026-08-06",
    "signer": "4662590c434c98e8642244cbb1ebe5818ca63ae692eff8f3cab2f8407cf4d386"
   },
@@ -134,7 +134,7 @@
      "size": 55168
     }
    ],
-   "downloads": 93,
+   "downloads": 94,
    "firstSeen": "2026-08-06",
    "signer": "4ea28ba461cfa1d5d8cee38e71ce8eacfab570afee83f248c5fec8c5cca4cb5f"
   },
@@ -145,12 +145,12 @@
    "category": "utilities",
    "summary": "The marketplace itself. Browse, install and update Light Phone apps.",
    "latest": {
-    "version": "1.16.33",
-    "versionCode": 33,
-    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.16.33/BrightMarket-v1.16.33.apk",
+    "version": "1.17.34",
+    "versionCode": 34,
+    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.17.34/BrightMarket-v1.17.34.apk",
     "size": 22700182,
-    "sha256": "1ce5a04fbfd1476b516145bede2208ba234af4757587c70a2de097867124aa5b",
-    "published": "2026-08-07T22:11:32Z",
+    "sha256": "0423c0a569731b8fda3ebdd6a26ba2d12caac4722d64d5256087e48a74d1f3f8",
+    "published": "2026-08-07T22:19:47Z",
     "notes": "\n**Uninstall actually works.** It needed `REQUEST_DELETE_PACKAGES` in the\nmanifest, which wasn't there. Without it Android refuses the request before any\nUI appears, so the button did nothing regardless of how big it was \u2014 v1.12 made\nthe tap target larger, which was a real problem but not this one. The permission\ngrants no power to remove anything: the system still shows its own confirmation\nand you still have to agree. It only buys the right to ask.\n\nIt's also gone from the downloads list. One place to uninstall from, and it's\nthe app's own page \u2014 a destructive action repeated down every row of a list you\nscroll is asking for it.\n\n"
    },
    "deprecated": false,
@@ -172,7 +172,7 @@
      "size": 57213
     }
    ],
-   "downloads": 105,
+   "downloads": 107,
    "firstSeen": "2026-08-06",
    "signer": "c15078bcb72a89c67efb54d1a9fc1b00cc88da578891f8e96233a7d279550df6",
    "preview": {
@@ -234,7 +234,7 @@
      "size": 51624
     }
    ],
-   "downloads": 125,
+   "downloads": 126,
    "firstSeen": "2026-08-06",
    "signer": "32ec6e7a87ee30c5c50ae7a245fc2e34f6b6f8d9f7b3394e8a14dc65ae9fecbc"
   },
@@ -267,7 +267,7 @@
      "size": 36611
     }
    ],
-   "downloads": 91,
+   "downloads": 92,
    "firstSeen": "2026-08-06",
    "signer": "88fa9df840f139a9079aaf8ab8a54f64022a9da276bacac99227a464c0b1eeda"
   },
@@ -295,7 +295,7 @@
      "size": 88062
     }
    ],
-   "downloads": 108,
+   "downloads": 109,
    "firstSeen": "2026-08-06",
    "signer": "0829436c50e0f0904edcc1719f25e1237281303691c6406d2b06dc9a521c64eb"
   },
@@ -317,7 +317,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 105,
+   "downloads": 106,
    "firstSeen": "2026-08-06",
    "signer": "a38858d990bb61057ef53d1f8aa3c5854d01f68585b34f115793b06298b593e8"
   },
@@ -355,7 +355,7 @@
      "size": 809265
     }
    ],
-   "downloads": 118,
+   "downloads": 119,
    "firstSeen": "2026-08-06",
    "signer": "ceca3d378bf9709bc0d0b3eea84cc8bf7994777a628e5df8079a619cf7a7bda8"
   },
@@ -393,7 +393,7 @@
      "size": 40635
     }
    ],
-   "downloads": 88,
+   "downloads": 89,
    "firstSeen": "2026-08-06",
    "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28",
    "preview": {
@@ -430,7 +430,7 @@
      "size": 42506
     }
    ],
-   "downloads": 81,
+   "downloads": 82,
    "firstSeen": "2026-08-06",
    "signer": "386edb7091947707a812587af8c37b0873bb2cde88963e9520574cc45bc0128c"
   },
