@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T20:52:01.173618+00:00",
+ "generated": "2026-08-07T20:55:18.636613+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -37,7 +37,8 @@
     }
    ],
    "downloads": 78,
-   "firstSeen": "2026-08-06"
+   "firstSeen": "2026-08-06",
+   "signer": "eece33e8486e95a327518bb7798df9ae99c683a2a80c4439fe0b7bf30ae1a5d7"
   },
   {
    "pkg": "com.gios.lightnoise",
@@ -74,7 +75,8 @@
     }
    ],
    "downloads": 66,
-   "firstSeen": "2026-08-06"
+   "firstSeen": "2026-08-06",
+   "signer": "4d2a3bb63292bc7cdfec383a3b041da3b4a483058cfa0575a33d06fb88c9973a"
   },
   {
    "pkg": "com.gios.lightauth",
@@ -95,7 +97,8 @@
    "supersededBy": "",
    "screenshots": [],
    "downloads": 82,
-   "firstSeen": "2026-08-06"
+   "firstSeen": "2026-08-06",
+   "signer": "4662590c434c98e8642244cbb1ebe5818ca63ae692eff8f3cab2f8407cf4d386"
   },
   {
    "pkg": "com.gios.lightsports",
@@ -132,7 +135,8 @@
     }
    ],
    "downloads": 77,
-   "firstSeen": "2026-08-06"
+   "firstSeen": "2026-08-06",
+   "signer": "4ea28ba461cfa1d5d8cee38e71ce8eacfab570afee83f248c5fec8c5cca4cb5f"
   },
   {
    "pkg": "com.gios.brightmarket",
@@ -169,7 +173,8 @@
     }
    ],
    "downloads": 80,
-   "firstSeen": "2026-08-06"
+   "firstSeen": "2026-08-06",
+   "signer": "c15078bcb72a89c67efb54d1a9fc1b00cc88da578891f8e96233a7d279550df6"
   },
   {
    "pkg": "com.lightfastread",
@@ -221,7 +226,8 @@
     }
    ],
    "downloads": 107,
-   "firstSeen": "2026-08-06"
+   "firstSeen": "2026-08-06",
+   "signer": "32ec6e7a87ee30c5c50ae7a245fc2e34f6b6f8d9f7b3394e8a14dc65ae9fecbc"
   },
   {
    "pkg": "com.gios.lightremote",
@@ -253,7 +259,8 @@
     }
    ],
    "downloads": 74,
-   "firstSeen": "2026-08-06"
+   "firstSeen": "2026-08-06",
+   "signer": "88fa9df840f139a9079aaf8ab8a54f64022a9da276bacac99227a464c0b1eeda"
   },
   {
    "pkg": "com.gios.lightchat",
@@ -280,7 +287,8 @@
     }
    ],
    "downloads": 90,
-   "firstSeen": "2026-08-06"
+   "firstSeen": "2026-08-06",
+   "signer": "0829436c50e0f0904edcc1719f25e1237281303691c6406d2b06dc9a521c64eb"
   },
   {
    "pkg": "com.gios.lightcontrol",
@@ -301,7 +309,8 @@
    "supersededBy": "",
    "screenshots": [],
    "downloads": 85,
-   "firstSeen": "2026-08-06"
+   "firstSeen": "2026-08-06",
+   "signer": "a38858d990bb61057ef53d1f8aa3c5854d01f68585b34f115793b06298b593e8"
   },
   {
    "pkg": "com.gios.lightnotebook",
@@ -338,7 +347,8 @@
     }
    ],
    "downloads": 101,
-   "firstSeen": "2026-08-06"
+   "firstSeen": "2026-08-06",
+   "signer": "ceca3d378bf9709bc0d0b3eea84cc8bf7994777a628e5df8079a619cf7a7bda8"
   },
   {
    "pkg": "com.gios.lightnonogram",
@@ -375,7 +385,8 @@
     }
    ],
    "downloads": 72,
-   "firstSeen": "2026-08-06"
+   "firstSeen": "2026-08-06",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
   },
   {
    "pkg": "com.thelightphone.solitaire",
@@ -402,7 +413,8 @@
     }
    ],
    "downloads": 64,
-   "firstSeen": "2026-08-06"
+   "firstSeen": "2026-08-06",
+   "signer": "386edb7091947707a812587af8c37b0873bb2cde88963e9520574cc45bc0128c"
   },
   {
    "pkg": "com.thelightphone.lightnycsubway",
@@ -434,7 +446,8 @@
     }
    ],
    "downloads": 66,
-   "firstSeen": "2026-08-06"
+   "firstSeen": "2026-08-06",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
   },
   {
    "pkg": "com.lightrss.reader",
@@ -471,7 +484,8 @@
     }
    ],
    "downloads": 91,
-   "firstSeen": "2026-08-06"
+   "firstSeen": "2026-08-06",
+   "signer": "c6902aa1870b4ffa2fd0cd627643dc8ddee7cc0fdbd1752febb3d911092d8ec5"
   },
   {
    "pkg": "com.gios.lightpass",
@@ -508,7 +522,8 @@
     }
    ],
    "downloads": 56,
-   "firstSeen": "2026-08-06"
+   "firstSeen": "2026-08-06",
+   "signer": "f32ea67db48b7d40573ce88f03b3da33e0f3e814e1f08e9f5f4007ff7bea6e9f"
   },
   {
    "pkg": "app.lightphonekeyboard",
@@ -529,7 +544,8 @@
    "supersededBy": "",
    "screenshots": [],
    "downloads": 61,
-   "firstSeen": "2026-08-06"
+   "firstSeen": "2026-08-06",
+   "signer": "7844d8cc52fc12b5a2b5879b028605d90391a0a06cc4d87ef92a59350226d203"
   },
   {
    "pkg": "com.gios.lightfog",
@@ -550,7 +566,8 @@
    "supersededBy": "",
    "screenshots": [],
    "downloads": 86,
-   "firstSeen": "2026-08-06"
+   "firstSeen": "2026-08-06",
+   "signer": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c"
   },
   {
    "pkg": "com.gios.lightcamera",
@@ -602,7 +619,8 @@
     }
    ],
    "downloads": 166,
-   "firstSeen": "2026-08-06"
+   "firstSeen": "2026-08-06",
+   "signer": "d11cf9eecbfd5b482946e317f1dbf785a594234e313d7aa92042be3616b66dc3"
   },
   {
    "pkg": "com.gios.lightqr",
@@ -634,7 +652,8 @@
     }
    ],
    "downloads": 52,
-   "firstSeen": "2026-08-06"
+   "firstSeen": "2026-08-06",
+   "signer": "8e8dee395ca68f83870fa5fc9e62d723ff7e960f2c94f93427e6c62513236420"
   },
   {
    "pkg": "com.thelightphone.sanntid",
@@ -671,7 +690,8 @@
     }
    ],
    "downloads": 2,
-   "firstSeen": "2026-08-07"
+   "firstSeen": "2026-08-07",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
   }
  ]
 }
