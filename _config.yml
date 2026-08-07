@@ -1,0 +1,4 @@
+# Pages runs Jekyll by default, which turns README.md into the site index and
+# would win over index.html. Nothing here is templated -- these are plain
+# static files -- so it has one job: leave them alone.
+include: [".well-known"]
