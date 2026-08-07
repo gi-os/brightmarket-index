@@ -162,6 +162,26 @@
     font-size: var(--text-copy);
   }
   select:focus, input[type="text"]:focus { outline: none; border-bottom-color: var(--content); }
+
+  /* Tabs: the SDK has no tab component, so this borrows the bottom bar's
+     treatment -- a label, and a rule under the one you're on. No pill, no
+     fill, nothing that reads as a button when it isn't. */
+  .tabs { display: flex; gap: calc(var(--unit) * 2); margin-bottom: calc(var(--unit) * 2); }
+  .tab { background: none; border: none; padding: 0 0 6px 0; cursor: pointer;
+    font-family: inherit; font-size: 12px; letter-spacing: .16em;
+    color: var(--content-secondary); border-bottom: 3px solid transparent; }
+  .tab[aria-selected="true"] { color: var(--content); border-bottom-color: var(--content); }
+
+  .opt { color: var(--content-secondary); letter-spacing: 0; font-size: 11px; }
+
+  /* Outlined, not filled. A destructive action that looks like the primary
+     button gets pressed by people who meant to press the primary button. */
+  .danger { margin-top: var(--unit); background: transparent; color: var(--content);
+    box-shadow: inset 0 0 0 1px var(--content-secondary); }
+  .danger:hover { box-shadow: inset 0 0 0 1px var(--content); }
+
+  .app-row { display: flex; flex-direction: column; gap: 2px; }
+  .app-row .sum { color: var(--content-secondary); font-size: 12px; }
   input[type="text"]::placeholder { color: var(--content-secondary); }
 
   .identity {
@@ -236,8 +256,15 @@
   </div>
 
   <div class="content">
-    <h1>Submit an app</h1>
+    <h1 id="page-title">Submit an app</h1>
     <p class="sub">Sign in with GitHub to list your own public repos. Nothing else on your account is touched.</p>
+
+    <!-- Hidden until sign-in: both tabs need the same session, so offering the
+         choice first would just be two doors to the same locked room. -->
+    <div id="tabs" class="tabs" style="display:none;">
+      <button class="tab" id="tab-submit" aria-selected="true">ADD AN APP</button>
+      <button class="tab" id="tab-manage" aria-selected="false">YOUR APPS</button>
+    </div>
 
     <div id="signed-out">
       <button id="login-btn">
@@ -271,6 +298,17 @@
         <option value="hardware">Hardware / integrations</option>
       </select>
 
+      <!-- These two are what the catalogue actually shows. Left blank they
+           fall back to the repo's own name and description, which is what
+           happened before and was often not what anyone wanted: an app listed
+           under whatever the repository happened to be called. -->
+      <label for="name-input">Name <span class="opt">optional — defaults to the repo name</span></label>
+      <input id="name-input" type="text" maxlength="40" placeholder="How it should appear" autocomplete="off" />
+
+      <label for="summary-input">Description <span class="opt">optional — one line, defaults to the repo description</span></label>
+      <input id="summary-input" type="text" maxlength="140" placeholder="What it does, in a sentence" autocomplete="off" />
+      <div class="count" id="summary-count">0 / 140</div>
+
       <button id="submit-btn" style="margin-top: calc(var(--unit) * 2.5);">
         <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5">
           <path d="M5 12h14M13 6l6 6-6 6"/>
@@ -278,6 +316,54 @@
         <span>Submit</span>
       </button>
       <div id="result"></div>
+    </div>
+
+    <!-- Managing what you already listed. Same sign-in, same ownership proof:
+         the server filters the catalogue against the signed repo list, so this
+         can only ever show you entries you have already been shown to own. -->
+    <div id="manage-panel" style="display:none;">
+      <div class="identity">Signed in as <strong id="manage-login"></strong></div>
+      <div id="manage-empty" class="hint" style="display:none;">
+        Nothing of yours is in the catalogue yet. Submit something first.
+      </div>
+      <div id="manage-list" class="picker" role="listbox" aria-label="Your listed apps"></div>
+
+      <div id="manage-form" style="display:none;">
+        <label for="edit-name">Name</label>
+        <input id="edit-name" type="text" maxlength="40" autocomplete="off" />
+
+        <label for="edit-summary">Description</label>
+        <input id="edit-summary" type="text" maxlength="140" autocomplete="off" />
+        <div class="count" id="edit-count">0 / 140</div>
+
+        <label for="edit-category">Category</label>
+        <select id="edit-category">
+          <option value="reading">Reading</option>
+          <option value="utilities">Utilities</option>
+          <option value="games">Games</option>
+          <option value="media">Media</option>
+          <option value="productivity">Productivity</option>
+          <option value="hardware">Hardware / integrations</option>
+        </select>
+
+        <button id="save-btn" style="margin-top: calc(var(--unit) * 2.5);">
+          <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5">
+            <path d="M5 12l5 5L20 7"/>
+          </svg>
+          <span>Save changes</span>
+        </button>
+
+        <!-- Deliberately plain and deliberately last. It asks once before it
+             files anything, because there is no undo short of submitting the
+             app again from scratch. -->
+        <button id="remove-btn" class="danger">
+          <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/>
+          </svg>
+          <span>Remove from BrightMarket</span>
+        </button>
+        <div id="manage-result"></div>
+      </div>
     </div>
 
     <div id="error" class="message" style="display:none;"></div>
@@ -343,6 +429,7 @@
       renderRepos("");
       el("signed-out").style.display = "none";
       el("signed-in").style.display = "block";
+      el("tabs").style.display = "flex";
     } catch (err) {
       showError("Could not reach the submission service. Try again shortly.");
     }
@@ -428,6 +515,8 @@
           session,
           repo: selectedRepo,
           category: el("category-select").value,
+          name: el("name-input").value,
+          summary: el("summary-input").value,
         }),
       });
       const data = await res.json();
@@ -443,6 +532,134 @@
       el("result").innerHTML = `<div class="message">Network error — try again.</div>`;
       el("submit-btn").disabled = false;
     }
+  });
+
+  // -------------------------------------------------------------------------
+  // Managing what you already listed.
+  // -------------------------------------------------------------------------
+  let myApps = [];
+  let editing = null;
+
+  function showTab(which) {
+    const managing = which === "manage";
+    el("tab-submit").setAttribute("aria-selected", String(!managing));
+    el("tab-manage").setAttribute("aria-selected", String(managing));
+    el("signed-in").style.display = managing ? "none" : "block";
+    el("manage-panel").style.display = managing ? "block" : "none";
+    el("page-title").textContent = managing ? "Your apps" : "Submit an app";
+    if (managing && myApps.length === 0) loadMyApps();
+  }
+
+  el("tab-submit").addEventListener("click", () => { buzz(); showTab("submit"); });
+  el("tab-manage").addEventListener("click", () => { buzz(); showTab("manage"); });
+
+  async function loadMyApps() {
+    el("manage-list").innerHTML = '<div class="hint">Loading…</div>';
+    try {
+      const res = await fetch(`${WORKER_URL}/manage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        el("manage-list").innerHTML = `<div class="message">${data.error || "couldn't load"}</div>`;
+        return;
+      }
+      myApps = data.apps || [];
+      el("manage-login").textContent = data.login;
+      renderMyApps();
+    } catch {
+      el("manage-list").innerHTML = '<div class="message">Network error — try again.</div>';
+    }
+  }
+
+  function renderMyApps() {
+    const list = el("manage-list");
+    el("manage-empty").style.display = myApps.length ? "none" : "block";
+    list.innerHTML = "";
+    myApps.forEach((app) => {
+      const row = document.createElement("div");
+      row.className = "repo";
+      row.setAttribute("role", "option");
+      row.setAttribute("aria-selected", String(editing && editing.repo === app.repo));
+      // textContent, not innerHTML with an escaper: names and summaries come
+      // from the catalogue, which anyone can submit to, and the rest of this
+      // file already builds nodes rather than strings.
+      const wrap = document.createElement("div");
+      wrap.className = "app-row";
+      const nm = document.createElement("div");
+      nm.className = "name";
+      nm.textContent = app.name;
+      const sm = document.createElement("div");
+      sm.className = "sum";
+      sm.textContent = app.summary || "no description";
+      wrap.appendChild(nm); wrap.appendChild(sm);
+      row.appendChild(wrap);
+      row.addEventListener("click", () => {
+        buzz();
+        editing = app;
+        el("edit-name").value = app.name || "";
+        el("edit-summary").value = app.summary || "";
+        el("edit-category").value = app.category || "utilities";
+        el("edit-count").textContent = `${(app.summary || "").length} / 140`;
+        el("manage-form").style.display = "block";
+        el("manage-result").innerHTML = "";
+        renderMyApps();
+      });
+      list.appendChild(row);
+    });
+  }
+
+  el("summary-input").addEventListener("input", (e) => {
+    el("summary-count").textContent = `${e.target.value.length} / 140`;
+  });
+  el("edit-summary").addEventListener("input", (e) => {
+    el("edit-count").textContent = `${e.target.value.length} / 140`;
+  });
+
+  async function fileChange(path, payload, button, confirmText) {
+    if (confirmText && !window.confirm(confirmText)) return;
+    button.disabled = true;
+    el("manage-result").innerHTML = "";
+    try {
+      const res = await fetch(`${WORKER_URL}${path}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session, repo: editing.repo, ...payload }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        el("manage-result").innerHTML = `<div class="message">${data.error || "that didn't work"}</div>`;
+        button.disabled = false;
+        return;
+      }
+      el("manage-result").innerHTML =
+        `<div class="message">Filed. <a href="${data.issueUrl}" target="_blank">Track it here</a> — ` +
+        `the change lands in the catalogue once it's merged.</div>`;
+    } catch {
+      el("manage-result").innerHTML = '<div class="message">Network error — try again.</div>';
+      button.disabled = false;
+    }
+  }
+
+  el("save-btn").addEventListener("click", () => {
+    buzz();
+    fileChange("/edit", {
+      name: el("edit-name").value,
+      summary: el("edit-summary").value,
+      category: el("edit-category").value,
+    }, el("save-btn"));
+  });
+
+  el("remove-btn").addEventListener("click", () => {
+    buzz();
+    // Asked here rather than only server-side, because the server has no way to
+    // tell a mis-click from a decision and there is no undo short of submitting
+    // the whole thing again.
+    fileChange("/remove", {}, el("remove-btn"),
+      `Remove ${editing.name} from BrightMarket? Anyone who has it installed keeps it, ` +
+      `but it stops appearing in the catalogue and stops offering updates.`);
   });
 
   // On load: are we mid-flow, coming back from GitHub with ?code=&state=?
