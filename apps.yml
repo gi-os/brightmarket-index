@@ -99,3 +99,8 @@ apps:
   summary: QR scanner and generator. Folded into Roll, which now has a QR mode.
   deprecated: true
   supersededBy: Roll
+- pkg: com.thelightphone.sdk
+  name: Sanntid
+  repo: barry7007/LightNorwayTransit
+  category: utilities
+  summary: Live departure times for public transport in Norway
