@@ -292,6 +292,10 @@ def main() -> int:
                 '<html lang="en"><head><meta charset="utf-8" />\n'
                 f'<meta http-equiv="refresh" content="0; url={apk_url}" />\n'
                 f'<link rel="canonical" href="{apk_url}" />\n'
+                # Root-relative, because this page lives one level down.
+                '<link rel="icon" href="/favicon.svg" type="image/svg+xml" />\n'
+                '<link rel="alternate icon" href="/favicon.ico" />\n'
+                '<meta name="theme-color" content="#000000" />\n'
                 "<title>BrightMarket " + version + "</title>\n"
                 "<style>body{background:#000;color:#fff;font-family:sans-serif;"
                 "padding:40px;text-align:center}a{color:#fff}</style></head>\n"

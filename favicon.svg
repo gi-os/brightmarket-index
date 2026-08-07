@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- The market stall mark: scalloped awning on two posts over a counter,
+       with a sign below. Same drawing as the app's launcher icon, thickened
+       because a favicon is rendered at 16px and thin strokes disappear. -->
+  <rect width="64" height="64" rx="12" fill="#000"/>
+  <g fill="none" stroke="#fff" stroke-width="4"
+     stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 28 a4 4 0 0 1 8 0 a4 4 0 0 1 8 0 a4 4 0 0 1 8 0 a4 4 0 0 1 8 0 L42 16 L22 16 Z"/>
+    <path d="M21 28 v9"/>
+    <path d="M43 28 v9"/>
+    <path d="M38 46 h-12 v10 h12 z"/>
+  </g>
+  <rect x="15" y="37" width="34" height="4" rx="1.5" fill="#fff"/>
+</svg>
