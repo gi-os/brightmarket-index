@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T15:47:58.546922+00:00",
+ "generated": "2026-08-07T16:02:30.390995+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -36,7 +36,7 @@
      "size": 55824
     }
    ],
-   "downloads": 60,
+   "downloads": 61,
    "firstSeen": "2026-08-06"
   },
   {
@@ -73,7 +73,7 @@
      "size": 49896
     }
    ],
-   "downloads": 48,
+   "downloads": 49,
    "firstSeen": "2026-08-06"
   },
   {
@@ -94,7 +94,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 64,
+   "downloads": 65,
    "firstSeen": "2026-08-06"
   },
   {
@@ -131,7 +131,7 @@
      "size": 55168
     }
    ],
-   "downloads": 58,
+   "downloads": 59,
    "firstSeen": "2026-08-06"
   },
   {
@@ -152,7 +152,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 55,
+   "downloads": 56,
    "firstSeen": "2026-08-06"
   },
   {
@@ -162,13 +162,13 @@
    "category": "reading",
    "summary": "EPUB, comics and Calibre, with a cover shelf and a page view.",
    "latest": {
-    "version": "build-54",
-    "versionCode": 54,
-    "apk": "https://github.com/gi-os/BrightLibrary/releases/download/build-54/LightFastread-1.14.3-light.1-b54.apk",
-    "size": 26846977,
-    "sha256": "a3774eb2fad9dab662633de6fe788b5e38cb818858c70a4b44e780e28a705000",
-    "published": "2026-08-07T15:40:09Z",
-    "notes": "Automatic build of `7c283fdfb7c8747b3d23492ca06f53eba865616e`.\n\n```\nadb install -r LightFastread-1.14.3-light.1-b54.apk\n```\n\n`versionCode` is the workflow run number (`54`) and\nevery build is signed with the same key, so this updates in place \u2014 via\n`adb`, or via Obtainium.\n\nSigning certificate SHA-256 is pinned in\n[`signing-fingerprint.txt`](https://github.com/gi-os/LightFastread/blob/main/signing-fingerprint.txt);\nCI fails if it ever changes.\n"
+    "version": "build-56",
+    "versionCode": 56,
+    "apk": "https://github.com/gi-os/BrightLibrary/releases/download/build-56/LightFastread-1.15.0-light.1-b56.apk",
+    "size": 26848361,
+    "sha256": "24ab0acc12d6410255245af20d1a206a46e9de5ffd7085202389de0d17520c54",
+    "published": "2026-08-07T16:01:36Z",
+    "notes": "Automatic build of `f371976eea87dd9ee1050877171b72594cd16885`.\n\n```\nadb install -r LightFastread-1.15.0-light.1-b56.apk\n```\n\n`versionCode` is the workflow run number (`56`) and\nevery build is signed with the same key, so this updates in place \u2014 via\n`adb`, or via Obtainium.\n\nSigning certificate SHA-256 is pinned in\n[`signing-fingerprint.txt`](https://github.com/gi-os/LightFastread/blob/main/signing-fingerprint.txt);\nCI fails if it ever changes.\n"
    },
    "deprecated": false,
    "supersededBy": "",
@@ -194,7 +194,7 @@
      "size": 212473
     }
    ],
-   "downloads": 84,
+   "downloads": 87,
    "firstSeen": "2026-08-06"
   },
   {
@@ -215,7 +215,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 53,
+   "downloads": 54,
    "firstSeen": "2026-08-06"
   },
   {
@@ -242,7 +242,7 @@
      "size": 88062
     }
    ],
-   "downloads": 72,
+   "downloads": 73,
    "firstSeen": "2026-08-06"
   },
   {
@@ -263,7 +263,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 67,
+   "downloads": 68,
    "firstSeen": "2026-08-06"
   },
   {
@@ -284,7 +284,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 26,
+   "downloads": 27,
    "firstSeen": "2026-08-06"
   },
   {
@@ -305,7 +305,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 82,
+   "downloads": 83,
    "firstSeen": "2026-08-06"
   },
   {
@@ -326,7 +326,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 54,
+   "downloads": 55,
    "firstSeen": "2026-08-06"
   },
   {
@@ -353,7 +353,7 @@
      "size": 42506
     }
    ],
-   "downloads": 46,
+   "downloads": 47,
    "firstSeen": "2026-08-06"
   },
   {
@@ -385,7 +385,7 @@
      "size": 66903
     }
    ],
-   "downloads": 48,
+   "downloads": 49,
    "firstSeen": "2026-08-06"
   },
   {
@@ -432,7 +432,7 @@
      "size": 47577
     }
    ],
-   "downloads": 73,
+   "downloads": 74,
    "firstSeen": "2026-08-06"
   },
   {
@@ -469,7 +469,7 @@
      "size": 208010
     }
    ],
-   "downloads": 37,
+   "downloads": 38,
    "firstSeen": "2026-08-06"
   },
   {
@@ -490,7 +490,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 42,
+   "downloads": 43,
    "firstSeen": "2026-08-06"
   },
   {
@@ -511,7 +511,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 68,
+   "downloads": 69,
    "firstSeen": "2026-08-06"
   },
   {
@@ -563,7 +563,7 @@
      "size": 89898
     }
    ],
-   "downloads": 147,
+   "downloads": 148,
    "firstSeen": "2026-08-06"
   },
   {
@@ -595,7 +595,7 @@
      "size": 17692
     }
    ],
-   "downloads": 34,
+   "downloads": 35,
    "firstSeen": "2026-08-06"
   }
  ]
