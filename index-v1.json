@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T22:40:07.834509+00:00",
+ "generated": "2026-08-07T22:47:31.470176+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -172,7 +172,7 @@
      "size": 57213
     }
    ],
-   "downloads": 109,
+   "downloads": 111,
    "firstSeen": "2026-08-06",
    "signer": "c15078bcb72a89c67efb54d1a9fc1b00cc88da578891f8e96233a7d279550df6",
    "preview": {
@@ -748,6 +748,28 @@
    "downloads": 21,
    "firstSeen": "2026-08-07",
    "signer": "9276d2b4ec2e238059119a23459164bd15201e9183180029fb30de2632f6fd21"
+  },
+  {
+   "pkg": "com.lightphone.spotify",
+   "name": "BrightMusic",
+   "repo": "gi-os/BrightMusic",
+   "category": "media",
+   "summary": "Spotify, NTSradio + Radio, Podcasts + more! Forked from Jonathancaudill/phono",
+   "latest": {
+    "version": "build-66",
+    "versionCode": 66,
+    "apk": "https://github.com/gi-os/BrightMusic/releases/download/build-66/LightPhono-v0.21.66.apk",
+    "size": 24203583,
+    "sha256": "055cd35f32d5829ec47ef6a75b4e98ac05f31e4b7ecc6375900c583276a9cd8f",
+    "published": "2026-08-07T22:38:58Z",
+    "notes": "Automated build from `be3b8b587231871c70adbd9d2f93717c8ae44eec`.\n\n`versionCode` is the workflow run number (66), so this\nupgrades an installed build in place.\n\n**First install needs one adb grant** for colour album art:\n\n```\nadb shell pm grant com.lightphone.spotify android.permission.WRITE_SECURE_SETTINGS\n```\n\nWithout it covers stay greyscale \u2014 nothing else changes. Text entry also needs a\nsystem IME on the device (`adb shell ime list -s`); see the README.\n"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "downloads": 55,
+   "firstSeen": "2026-08-07",
+   "signer": "ee7dc895039a92fe58dc0836730ab70f516ddb7eab7813faec98b3aef14680ec"
   }
  ]
 }
