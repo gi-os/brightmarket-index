@@ -38,10 +38,40 @@ jobs:
           ISSUE_BODY: ${{ github.event.issue.body }}
         run: python3 scripts/validate_submission.py
 
-      # Passing opens a PR rather than committing straight to main: a submission
-      # is a stranger's repo entering the index, so it gets one human look.
+      # An edit or a removal is the verified owner changing the text of a listing
+      # that is already here -- ownership was proved by OAuth before the issue
+      # was filed, and no new repo enters the catalogue. Holding those behind a
+      # manual merge is friction with nothing on the other side of it: the first
+      # thing that happened when this went live was someone editing their own
+      # app and watching nothing change.
+      #
+      # A new listing still gets the human look, because that is a repo nobody
+      # has looked at entering a list people install software from.
+      - name: Apply an edit or removal directly
+        if: steps.validate.outputs.status == 'pass' && steps.validate.outputs.action != 'submit'
+        run: |
+          git config user.name  "brightmarket-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add apps.yml
+          if git diff --staged --quiet; then
+            echo "nothing changed"
+          else
+            git commit -m "index: ${{ steps.validate.outputs.action }} ${{ steps.validate.outputs.name }} (closes #${{ github.event.issue.number }})"
+            git push
+          fi
+
+      - name: Close the request
+        if: steps.validate.outputs.status == 'pass' && steps.validate.outputs.action != 'submit'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.update({
+              issue_number: context.issue.number,
+              owner: context.repo.owner, repo: context.repo.repo, state: 'closed'
+            });
+
       - name: Open PR
-        if: steps.validate.outputs.status == 'pass'
+        if: steps.validate.outputs.status == 'pass' && steps.validate.outputs.action == 'submit'
         uses: peter-evans/create-pull-request@v6
         with:
           # One branch per app per action, so an edit and a removal for the same
@@ -68,6 +98,7 @@ jobs:
         env:
           STATUS: ${{ steps.validate.outputs.status }}
           REASON: ${{ steps.validate.outputs.reason }}
+          ACTION: ${{ steps.validate.outputs.action }}
         with:
           script: |
             const ok = process.env.STATUS === 'pass';
@@ -77,7 +108,13 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: ok
-                ? "Checks passed — a PR is open to add this to the index. Nothing more needed from you."
+                ? (process.env.ACTION && process.env.ACTION !== 'submit'
+                    // Deliberately not "immediately": a push made with
+                    // GITHUB_TOKEN does not trigger another workflow, so the
+                    // index waits for its next scheduled run rather than
+                    // rebuilding off this commit.
+                    ? "Done — applied to the catalogue. The index rebuilds on a 15 minute schedule, so give it that long to appear."
+                    : "Checks passed — a PR is open to add this to the index. Nothing more needed from you.")
                 : broke
                   ? "Something went wrong on our side, not yours — the checks didn't finish. This is being looked at; you don't need to do anything."
                   : `Can't add this yet:\n\n> ${process.env.REASON}\n\nFix that and reopen this issue to re-run the checks.`
