@@ -106,17 +106,38 @@ async function handleExchange(request, env, cors) {
   const me = await meRes.json();
   if (!me.login) return json({ error: "could not read github identity" }, 400, cors);
 
-  // affiliation=owner is the whole point: this is what stops someone submitting
-  // a repo that isn't theirs. type=public because BrightMarket only ever indexes
-  // public releases -- there is no reason to ever touch a private repo here.
-  const reposRes = await fetch(
-    "https://api.github.com/user/repos?affiliation=owner&type=public&per_page=100&sort=updated",
-    { headers: ghHeaders }
-  );
-  const reposData = await reposRes.json();
-  const repos = Array.isArray(reposData)
-    ? reposData.map((r) => ({ full_name: r.full_name, name: r.name, description: r.description }))
-    : [];
+  // Deliberately the PUBLIC /users/{login}/repos endpoint, not /user/repos.
+  // /user/repos requires the `repo` scope; with only `read:user` it returns an
+  // empty list, which reads to the user as "you have no repos". This endpoint
+  // needs no scope beyond identifying them, so the permission ask stays at
+  // read:user -- and since it is keyed on THEIR login it can only ever return
+  // repos they own, which is the ownership guarantee we actually want.
+  //
+  // type=owner excludes forks-of-others and org repos they merely collaborate
+  // on. Paginated because 100 is a real ceiling for an active account.
+  const repos = [];
+  for (let page = 1; page <= 5; page++) {
+    const res = await fetch(
+      `https://api.github.com/users/${encodeURIComponent(me.login)}/repos` +
+        `?type=owner&per_page=100&sort=updated&page=${page}`,
+      { headers: ghHeaders }
+    );
+    if (!res.ok) break;
+    const batch = await res.json();
+    if (!Array.isArray(batch) || batch.length === 0) break;
+    for (const r of batch) {
+      // Archived repos can't ship updates, so the validator would reject them
+      // anyway -- filter here so they never appear as a choice.
+      if (r.archived || r.private) continue;
+      repos.push({
+        full_name: r.full_name,
+        name: r.name,
+        description: r.description,
+        updated_at: r.pushed_at || r.updated_at,
+      });
+    }
+    if (batch.length < 100) break;
+  }
 
   // The user token's job ends here. It is never written to a response, a log,
   // or a store of any kind -- it goes out of scope when this function returns.

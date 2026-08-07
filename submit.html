@@ -149,7 +149,7 @@
   }
 
   /* ---- LightTextField: underline only, 80% width, no filled container. ----- */
-  select {
+  select, input[type="text"] {
     -webkit-appearance: none;
     appearance: none;
     width: 80%;
@@ -161,7 +161,8 @@
     padding: 8px 0;
     font-size: var(--text-copy);
   }
-  select:focus { outline: none; border-bottom-color: var(--content); }
+  select:focus, input[type="text"]:focus { outline: none; border-bottom-color: var(--content); }
+  input[type="text"]::placeholder { color: var(--content-secondary); }
 
   .identity {
     font-size: var(--text-paragraph);
@@ -182,6 +183,43 @@
   code {
     font-size: var(--text-superfine);
     color: var(--content);
+  }
+
+  /* ---- Repo picker: a filterable list, not a <select>. A dropdown on a
+     narrow panel hides everything but one line and can't be searched, which is
+     unusable once someone has more than a handful of repos. ---------------- */
+  .picker {
+    max-height: 46vh;
+    overflow-y: auto;
+    margin-top: calc(var(--unit) * 0.5);
+  }
+  .repo {
+    padding: calc(var(--unit) * 0.7) 0;
+    cursor: pointer;
+  }
+  .repo:active { background: var(--content); color: var(--background); }
+  .repo .name {
+    font-size: var(--text-copy);
+    color: var(--content);
+  }
+  .repo .desc {
+    font-size: var(--text-superfine);
+    color: var(--content-secondary);
+    margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  /* Selection is shown by a leading marker rather than a colour, since the
+     palette has no accent to spend on it. */
+  .repo[aria-selected="true"] .name::before { content: "> "; }
+  .repo[aria-selected="true"] .name { font-weight: 600; }
+  .repo[aria-selected="false"] .name::before { content: "  "; }
+
+  .count {
+    font-size: var(--text-superfine);
+    color: var(--content-secondary);
+    margin-top: calc(var(--unit) * 0.4);
   }
 
   #error { color: var(--content); } /* no red -- errors are said in words, not colour */
@@ -218,8 +256,10 @@
     <div id="signed-in" style="display:none;">
       <div class="identity">Signed in as <strong id="login-name"></strong></div>
 
-      <label for="repo-select">Which of your repos?</label>
-      <select id="repo-select"></select>
+      <label for="repo-filter">Which of your repos?</label>
+      <input id="repo-filter" type="text" placeholder="Filter" autocomplete="off" />
+      <div class="count" id="repo-count"></div>
+      <div class="picker" id="repo-list" role="listbox" aria-label="Your repositories"></div>
 
       <label for="category-select">Category</label>
       <select id="category-select">
@@ -294,26 +334,80 @@
       if (!res.ok) { showError(data.error || "login failed"); return; }
 
       session = data.session;
+      allRepos = data.repos || [];
       el("login-name").textContent = data.login;
-      const select = el("repo-select");
-      select.innerHTML = "";
-      if (data.repos.length === 0) {
-        select.innerHTML = `<option disabled selected>No public repos found on your account</option>`;
-        el("submit-btn").disabled = true;
-      } else {
-        for (const repo of data.repos) {
-          const opt = document.createElement("option");
-          opt.value = repo.full_name;
-          opt.textContent = repo.full_name + (repo.description ? ` — ${repo.description}` : "");
-          select.appendChild(opt);
-        }
-      }
+      renderRepos("");
       el("signed-out").style.display = "none";
       el("signed-in").style.display = "block";
     } catch (err) {
       showError("Could not reach the submission service. Try again shortly.");
     }
   }
+
+  let allRepos = [];
+  let selectedRepo = null;
+
+  function renderRepos(filter) {
+    const q = filter.trim().toLowerCase();
+    const list = el("repo-list");
+    const matches = allRepos.filter(
+      (r) =>
+        !q ||
+        r.full_name.toLowerCase().includes(q) ||
+        (r.description || "").toLowerCase().includes(q)
+    );
+
+    list.innerHTML = "";
+    if (allRepos.length === 0) {
+      el("repo-count").textContent =
+        "No public repos found on your account. BrightMarket only indexes public repos.";
+      el("submit-btn").disabled = true;
+      return;
+    }
+    if (matches.length === 0) {
+      el("repo-count").textContent = "Nothing matches that.";
+      el("submit-btn").disabled = true;
+      return;
+    }
+
+    el("repo-count").textContent =
+      matches.length === allRepos.length
+        ? `${allRepos.length} repos`
+        : `${matches.length} of ${allRepos.length}`;
+
+    for (const repo of matches) {
+      const row = document.createElement("div");
+      row.className = "repo";
+      row.setAttribute("role", "option");
+      row.setAttribute("aria-selected", String(repo.full_name === selectedRepo));
+
+      const name = document.createElement("div");
+      name.className = "name";
+      name.textContent = repo.name;
+      row.appendChild(name);
+
+      if (repo.description) {
+        const desc = document.createElement("div");
+        desc.className = "desc";
+        desc.textContent = repo.description;
+        row.appendChild(desc);
+      }
+
+      row.addEventListener("pointerdown", buzz);
+      row.addEventListener("click", () => {
+        selectedRepo = repo.full_name;
+        renderRepos(el("repo-filter").value);
+      });
+      list.appendChild(row);
+    }
+
+    // Nothing can be submitted until a repo is actually chosen -- there is no
+    // implicit "first one in the list", which is how a dropdown quietly
+    // submits the wrong repo.
+    el("submit-btn").disabled = selectedRepo === null;
+  }
+
+  el("repo-filter").addEventListener("input", (e) => renderRepos(e.target.value));
 
   el("submit-btn").addEventListener("click", async () => {
     el("submit-btn").disabled = true;
@@ -324,7 +418,7 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           session,
-          repo: el("repo-select").value,
+          repo: selectedRepo,
           category: el("category-select").value,
         }),
       });
