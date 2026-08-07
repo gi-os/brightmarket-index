@@ -95,3 +95,10 @@ apps:
   repo: gi-os/Roll
   category: media
   summary: 'Camera and album: a film-roll viewfinder, real-time filters, face detection and a QR mode.'
+- pkg: com.gios.lightqr
+  name: LightQR
+  repo: gi-os/LightQR
+  category: utilities
+  summary: QR scanner and generator. Folded into Roll, which now has a QR mode.
+  deprecated: true
+  supersededBy: Roll

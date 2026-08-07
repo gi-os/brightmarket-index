@@ -256,6 +256,10 @@ def main() -> int:
                     "published": latest_release["published_at"],
                     "notes": (latest_release["body"] or "")[:4000],
                 },
+                # Carried through so the UI can mark an app that is kept for
+                # its history but shouldn't be installed fresh.
+                "deprecated": bool(app.get("deprecated", False)),
+                "supersededBy": app.get("supersededBy", ""),
                 "screenshots": screenshots,
                 "downloads": downloads,
                 # Carried forward, never recomputed -- see module docstring.
