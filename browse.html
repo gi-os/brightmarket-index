@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<!--
+  The desktop catalogue.
+
+  This is the other half of the phone's focus mode: browsing happens here, on a
+  screen where browsing is fine, and only a decision travels to the phone. Each
+  app gets a QR carrying a brightmarket:// link; scanning it with the phone's
+  own QR scanner (Roll) opens that app's page in BrightMarket.
+
+  Everything is client-side. It reads the same index-v1.json the phone reads, so
+  there is exactly one source of truth and nothing to keep in sync.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BrightMarket — browse</title>
+<style>
+  :root {
+    --background: #000000;
+    --content: #ffffff;
+    --content-secondary: #bbbbbb;
+    --unit: calc(min(100vw, 1100px) / 27);
+    --text-heading: 20px;
+    --text-copy: 16px;
+    --text-paragraph: 13px;
+    --text-fine: 13px;
+    --text-superfine: 10px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--background); color: var(--content); }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    display: flex; justify-content: center;
+    min-height: 100vh;
+  }
+  main { width: 100%; max-width: 1100px; }
+
+  .top-bar {
+    height: calc(var(--unit) * 3);
+    display: flex; align-items: center; gap: calc(var(--unit) * 0.6);
+    padding: 0 var(--unit);
+  }
+  .wordmark { font-size: var(--text-fine); letter-spacing: 0.02em; }
+  .content { padding: calc(var(--unit) * 1.5) var(--unit) calc(var(--unit) * 4); }
+
+  h1 { font-size: var(--text-heading); font-weight: 600; margin: 0 0 6px; }
+  p.sub { font-size: var(--text-paragraph); color: var(--content-secondary); margin: 0 0 20px; line-height: 1.6; }
+
+  input[type="text"] {
+    -webkit-appearance: none; appearance: none;
+    width: 60%; background: transparent; color: var(--content);
+    border: none; border-bottom: 3px solid var(--content-secondary);
+    border-radius: 0; padding: 8px 0; font-size: var(--text-copy);
+    margin-bottom: 8px;
+  }
+  input[type="text"]:focus { outline: none; border-bottom-color: var(--content); }
+  input[type="text"]::placeholder { color: var(--content-secondary); }
+
+  .cats { display: flex; flex-wrap: wrap; gap: 16px; margin: 12px 0 24px; }
+  .cat { font-size: var(--text-paragraph); color: var(--content-secondary); cursor: pointer; }
+  .cat[aria-selected="true"] { color: var(--content); font-weight: 600; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 28px; }
+  .app { display: flex; gap: 16px; align-items: flex-start; }
+  .app .qr { flex-shrink: 0; }
+  .app h2 { font-size: var(--text-copy); font-weight: 600; margin: 0 0 4px; }
+  .app .meta, .app .desc {
+    font-size: var(--text-superfine); color: var(--content-secondary);
+    margin: 0 0 4px; line-height: 1.5;
+  }
+  .app .shots { display: flex; gap: 6px; margin-top: 8px; }
+  .app .shots img { height: 90px; border: none; }
+  .count { font-size: var(--text-superfine); color: var(--content-secondary); margin-bottom: 20px; }
+  .focus-row { margin-top: 40px; padding-top: 20px; }
+  .focus-row h2 { font-size: var(--text-copy); font-weight: 600; margin: 0 0 6px; }
+  a { color: var(--content); }
+</style>
+</head>
+<body>
+<main>
+  <div class="top-bar"><span class="wordmark">BRIGHTMARKET</span></div>
+  <div class="content">
+    <h1>Browse</h1>
+    <p class="sub">
+      Scan an app's code with your phone's QR scanner to open it in BrightMarket.
+      Nothing installs until you tap Install on the phone.
+    </p>
+
+    <input id="filter" type="text" placeholder="Filter" autocomplete="off" />
+    <div class="cats" id="cats"></div>
+    <div class="count" id="count"></div>
+    <div class="grid" id="grid"></div>
+
+    <div class="focus-row">
+      <h2>Focus mode</h2>
+      <p class="sub">
+        Turns phone browsing off, leaving your installed apps and their updates.
+        You can also change this in the app's own Settings.
+      </p>
+      <div style="display:flex; gap:32px; flex-wrap:wrap;">
+        <div><div id="qr-on"></div><div class="meta">Turn focus mode ON</div></div>
+        <div><div id="qr-off"></div><div class="meta">Turn focus mode OFF</div></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script>
+  const INDEX = "https://gi-os.github.io/brightmarket-index/index-v1.json";
+  const el = (id) => document.getElementById(id);
+
+  let apps = [];
+  let category = "All";
+
+  function qr(text, size) {
+    // Type 0 = auto-fit the smallest version that holds the payload; 'L' is the
+    // lowest error correction, which keeps the code sparse and easy for a phone
+    // camera to read off a bright monitor.
+    const q = qrcode(0, "L");
+    q.addData(text);
+    q.make();
+    return q.createSvgTag({ cellSize: size, margin: 2, scalable: false });
+  }
+
+  function render() {
+    const q = el("filter").value.trim().toLowerCase();
+    const matches = apps.filter((a) => {
+      const catOk = category === "All" || (a.category || "").toLowerCase() === category.toLowerCase();
+      const qOk = !q ||
+        a.name.toLowerCase().includes(q) ||
+        (a.summary || "").toLowerCase().includes(q) ||
+        (a.category || "").toLowerCase().includes(q) ||
+        a.pkg.toLowerCase().includes(q);
+      return catOk && qOk;
+    });
+
+    el("count").textContent =
+      matches.length === apps.length ? `${apps.length} apps` : `${matches.length} of ${apps.length}`;
+
+    el("grid").innerHTML = matches.map((a) => {
+      const shots = (a.screenshots || []).slice(0, 3)
+        .map((s) => `<img src="${s.url}" alt="" loading="lazy" />`).join("");
+      const mb = (a.latest.size / 1e6).toFixed(1);
+      return `
+        <div class="app">
+          <div class="qr">${qr("brightmarket://app/" + a.pkg, 3)}</div>
+          <div>
+            <h2>${a.name}</h2>
+            <p class="meta">v${a.latest.version} · ${mb}MB · ${a.downloads} downloads · ${a.category}</p>
+            <p class="desc">${a.summary || ""}</p>
+            ${shots ? `<div class="shots">${shots}</div>` : ""}
+          </div>
+        </div>`;
+    }).join("");
+  }
+
+  function renderCats() {
+    const cats = ["All", ...[...new Set(apps.map((a) => a.category).filter(Boolean))].sort()];
+    el("cats").innerHTML = cats.map((c) =>
+      `<span class="cat" data-cat="${c}" aria-selected="${c === category}">${c[0].toUpperCase() + c.slice(1)}</span>`
+    ).join("");
+    el("cats").querySelectorAll(".cat").forEach((n) =>
+      n.addEventListener("click", () => { category = n.dataset.cat; renderCats(); render(); })
+    );
+  }
+
+  el("filter").addEventListener("input", render);
+
+  (async function init() {
+    el("qr-on").innerHTML = qr("brightmarket://focus/on", 4);
+    el("qr-off").innerHTML = qr("brightmarket://focus/off", 4);
+    try {
+      const res = await fetch(INDEX, { cache: "no-store" });
+      const data = await res.json();
+      apps = data.apps || [];
+      renderCats();
+      render();
+    } catch (err) {
+      el("count").textContent = "Couldn't load the index.";
+    }
+  })();
+</script>
+</body>
+</html>
