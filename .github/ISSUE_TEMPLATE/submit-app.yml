@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Easier option: use the [submission portal](https://gi-os.github.io/brightmarket-index/submit.html),
+        Easier option: use the [submission portal](https://brightmarket.gzl.dev/submit.html),
         which signs you in with GitHub and fills this in for you.
   - type: input
     id: repo

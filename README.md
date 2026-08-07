@@ -11,7 +11,7 @@ no server: this repo *is* the backend.
 ## How an app gets in
 
 Either open a [submission issue](../../issues/new?template=submit-app.yml), or use
-the [portal](https://gi-os.github.io/brightmarket-index/submit.html), which signs
+the [portal](https://brightmarket.gzl.dev/submit.html), which signs
 you in with GitHub and only lets you pick repos you actually own.
 
 Either way `scripts/validate_submission.py` runs and checks the repo is public and

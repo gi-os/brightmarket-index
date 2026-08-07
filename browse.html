@@ -306,6 +306,7 @@
 
   function renderHero(app) {
     if (!app) { $("hero").innerHTML = ""; return; }
+    const self_ = app.pkg === "com.gios.brightmarket";
     const shots = (app.screenshots || []).slice(0, 3);
     $("hero").innerHTML = `
       <div style="flex-shrink:0; display:flex; flex-direction:column; gap:12px; align-items:center; width:172px;">
@@ -341,14 +342,23 @@
       <div style="flex-shrink:0; width:176px; display:flex; flex-direction:column; gap:10px;">
         <div class="qr-card">
           <div id="hero-qr" style="width:136px; height:136px; display:flex; align-items:center; justify-content:center;"></div>
-          <div class="qr-cap">SCAN WITH YOUR PHONE<br />TO OPEN IT THERE</div>
+          <div class="qr-cap">${self_ ? "SCAN TO INSTALL<br />BRIGHTMARKET" : "SCAN WITH YOUR PHONE<br />TO OPEN IT THERE"}</div>
         </div>
         <a class="btn" href="${esc(app.latest.apk)}" target="_blank" rel="noopener">GET APK ↓</a>
-        <div class="btn btn-ghost" id="readme-btn" style="cursor:pointer;">README</div>
+        <div class="btn btn-ghost" id="readme-btn" style="cursor:pointer;">${self_ ? "HOW TO SET UP" : "README"}</div>
         <a class="btn btn-ghost" href="https://github.com/${esc(app.repo)}" target="_blank" rel="noopener">SOURCE</a>
       </div>`;
-    qrInto($("hero-qr"), "brightmarket://app/" + app.pkg, 4);
-    $("readme-btn").addEventListener("click", () => openReadme(app));
+    // The deep link assumes BrightMarket is already installed, which for
+    // BrightMarket's own listing is the one case where it isn't. Send that one
+    // to the install page instead -- a QR that does nothing on a fresh phone is
+    // worse than no QR.
+    if (self_) {
+      qrInto($("hero-qr"), new URL("./apk/", location.href).href, 4);
+      $("readme-btn").addEventListener("click", openSetup);
+    } else {
+      qrInto($("hero-qr"), "brightmarket://app/" + app.pkg, 4);
+      $("readme-btn").addEventListener("click", () => openReadme(app));
+    }
     $("hero").querySelectorAll(".shots img").forEach((n, i) => {
       n.addEventListener("click", () => openShot(app, i));
       // Images arrive after layout and change the hero's height; without this
