@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T13:53:03.221495+00:00",
+ "generated": "2026-08-07T14:10:36.768689+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -36,7 +36,7 @@
      "size": 55824
     }
    ],
-   "downloads": 56,
+   "downloads": 57,
    "firstSeen": "2026-08-06"
   },
   {
@@ -73,7 +73,7 @@
      "size": 49896
     }
    ],
-   "downloads": 45,
+   "downloads": 46,
    "firstSeen": "2026-08-06"
   },
   {
@@ -94,7 +94,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 60,
+   "downloads": 61,
    "firstSeen": "2026-08-06"
   },
   {
@@ -131,7 +131,7 @@
      "size": 55168
     }
    ],
-   "downloads": 54,
+   "downloads": 55,
    "firstSeen": "2026-08-06"
   },
   {
@@ -141,18 +141,18 @@
    "category": "utilities",
    "summary": "The marketplace itself. Browse, install and update Light Phone apps.",
    "latest": {
-    "version": "1.6.20",
-    "versionCode": 20,
-    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.6.20/BrightMarket-v1.6.20.apk",
-    "size": 22663266,
-    "sha256": "722806c8e32dffad0d231497d72f9342162b93805c5d624e26a35e9278728c62",
-    "published": "2026-08-07T13:42:05Z",
-    "notes": "\n**Installed apps really do move into the installed section now.** The previous\nfix listened for the package event but registered the listener only while the\napp was on screen \u2014 and the system installer is a full screen, so BrightMarket\nis stopped for the entire install. The listener was unregistered at exactly the\nmoment the event fired. It now lives for as long as the screen does.\n\n"
+    "version": "1.7.21",
+    "versionCode": 21,
+    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.7.21/BrightMarket-v1.7.21.apk",
+    "size": 22663294,
+    "sha256": "3907cf603b7e5cb38ab7bc03859e1a3df9fbbdf1ec5b6cb58c6b484bbbb0875d",
+    "published": "2026-08-07T14:09:50Z",
+    "notes": "\n**Fixes the installed list properly.** Since Android 11 an app cannot see other\ninstalled packages at all unless it says so in its manifest \u2014 every lookup threw\nand was quietly read as \"not installed\". That is why nothing ever joined the\ninstalled section, why apps plainly sitting on the phone were listed as not\ninstalled, and why no update was ever offered for anything. BrightMarket now\ndeclares the visibility it needs.\n\nThe two previous attempts at this were fixing the wrong thing: the app was\nasking the right question at the right moment and being refused an answer.\n\n"
    },
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 48,
+   "downloads": 49,
    "firstSeen": "2026-08-06"
   },
   {
@@ -194,7 +194,7 @@
      "size": 212473
     }
    ],
-   "downloads": 81,
+   "downloads": 82,
    "firstSeen": "2026-08-06"
   },
   {
@@ -215,7 +215,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 50,
+   "downloads": 51,
    "firstSeen": "2026-08-06"
   },
   {
@@ -242,7 +242,7 @@
      "size": 88062
     }
    ],
-   "downloads": 69,
+   "downloads": 70,
    "firstSeen": "2026-08-06"
   },
   {
@@ -263,7 +263,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 64,
+   "downloads": 65,
    "firstSeen": "2026-08-06"
   },
   {
@@ -284,7 +284,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 23,
+   "downloads": 24,
    "firstSeen": "2026-08-06"
   },
   {
@@ -305,7 +305,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 78,
+   "downloads": 80,
    "firstSeen": "2026-08-06"
   },
   {
@@ -326,7 +326,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 50,
+   "downloads": 52,
    "firstSeen": "2026-08-06"
   },
   {
@@ -353,7 +353,7 @@
      "size": 42506
     }
    ],
-   "downloads": 42,
+   "downloads": 44,
    "firstSeen": "2026-08-06"
   },
   {
@@ -385,7 +385,7 @@
      "size": 66903
     }
    ],
-   "downloads": 44,
+   "downloads": 46,
    "firstSeen": "2026-08-06"
   },
   {
@@ -432,7 +432,7 @@
      "size": 47577
     }
    ],
-   "downloads": 69,
+   "downloads": 71,
    "firstSeen": "2026-08-06"
   },
   {
@@ -469,7 +469,7 @@
      "size": 208010
     }
    ],
-   "downloads": 33,
+   "downloads": 35,
    "firstSeen": "2026-08-06"
   },
   {
@@ -490,7 +490,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 38,
+   "downloads": 40,
    "firstSeen": "2026-08-06"
   },
   {
@@ -511,7 +511,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 63,
+   "downloads": 65,
    "firstSeen": "2026-08-06"
   },
   {
@@ -563,7 +563,7 @@
      "size": 89898
     }
    ],
-   "downloads": 143,
+   "downloads": 145,
    "firstSeen": "2026-08-06"
   },
   {
@@ -595,7 +595,7 @@
      "size": 17692
     }
    ],
-   "downloads": 30,
+   "downloads": 32,
    "firstSeen": "2026-08-06"
   }
  ]
