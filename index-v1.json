@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T02:10:26.146442+00:00",
+ "generated": "2026-08-07T02:20:49.421563+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -36,7 +36,7 @@
      "size": 55824
     }
    ],
-   "downloads": 38,
+   "downloads": 40,
    "firstSeen": "2026-08-06"
   },
   {
@@ -73,7 +73,7 @@
      "size": 49896
     }
    ],
-   "downloads": 28,
+   "downloads": 30,
    "firstSeen": "2026-08-06"
   },
   {
@@ -94,7 +94,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 40,
+   "downloads": 42,
    "firstSeen": "2026-08-06"
   },
   {
@@ -131,7 +131,7 @@
      "size": 55168
     }
    ],
-   "downloads": 35,
+   "downloads": 37,
    "firstSeen": "2026-08-06"
   },
   {
@@ -141,18 +141,18 @@
    "category": "utilities",
    "summary": "The marketplace itself. Browse, install and update Light Phone apps.",
    "latest": {
-    "version": "1.0.12",
-    "versionCode": 12,
-    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.0.12/BrightMarket-v1.0.12.apk",
-    "size": 19139713,
-    "sha256": "bfaa15bd831e726f6def278d97a1dd20586537e9420df092a79faaaeafc96225",
-    "published": "2026-08-07T01:19:19Z",
-    "notes": "**Full Changelog**: https://github.com/gi-os/BrightMarket/compare/v1.0.10...v1.0.12"
+    "version": "1.1.13",
+    "versionCode": 13,
+    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.1.13/BrightMarket-v1.1.13.apk",
+    "size": 22499774,
+    "sha256": "ed6dfa6f09a2b95264f7a6c1063ef3345678f6db427fd4865a03efe0b8a4c12c",
+    "published": "2026-08-07T02:20:12Z",
+    "notes": "\n**Scan a QR to install.** The camera is in, carried over from LightQR \u2014 ZXing\ndecoding the luminance plane, which works on LightOS because it needs no Google\nPlay Services. SCAN sits in the top bar rather than the bottom, because\nLightBottomBar allows at most three items when any of them is text and\nBrowse/Updates/Settings already fills it.\n\nTwo kinds of code work:\n\n- a `brightmarket://` link from the desktop catalogue, which opens that app\n- **any GitHub repo URL**, which starts tracking it for updates\n\n**Apps that aren't in BrightMarket.** That second one is the point: plenty of\nwhat people sideload will never be in a curated index \u2014 a fork, a personal\nbuild, something nobody has submitted. Those now appear under **NOT IN\nBRIGHTMARKET** and get update checks like anything else.\n\nThey are deliberately marked rather than blended in. An indexed app has passed\nthe submission checks and ships with a hash this app verifies before installing.\nA tracked repo has had none of that, and **its download cannot be verified** \u2014\nnothing generated a hash for it. Presenting the two identically would imply a\nguarantee only one of them has.\n\n**Obtainium import now imports everything.** It used to report a count of what\ndidn't match and drop the rest, which is the worst kind of migration: it looks\nfinished. Everything in the export is now kept, listed as unlisted where\nBrightMarket doesn't index it.\n\n**Also in this release**\n\n- Updates tab: what's installed, what's newer, and Update All\n- Focus mode, chosen on first launch, for browsing on a desktop instead\n- Screenshots on the detail page\n- The marketplace can update itself, and does so last in a batch \u2014 installing it\n  kills the process, so anything queued behind it would silently never run\n\n"
    },
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 19,
+   "downloads": 22,
    "firstSeen": "2026-08-06"
   },
   {
@@ -194,7 +194,7 @@
      "size": 212473
     }
    ],
-   "downloads": 63,
+   "downloads": 65,
    "firstSeen": "2026-08-06"
   },
   {
@@ -215,7 +215,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 32,
+   "downloads": 34,
    "firstSeen": "2026-08-06"
   },
   {
@@ -242,7 +242,7 @@
      "size": 88062
     }
    ],
-   "downloads": 51,
+   "downloads": 53,
    "firstSeen": "2026-08-06"
   },
   {
@@ -263,7 +263,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 45,
+   "downloads": 47,
    "firstSeen": "2026-08-06"
   },
   {
@@ -284,7 +284,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 6,
+   "downloads": 8,
    "firstSeen": "2026-08-06"
   },
   {
@@ -305,7 +305,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 58,
+   "downloads": 60,
    "firstSeen": "2026-08-06"
   },
   {
@@ -326,7 +326,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 34,
+   "downloads": 36,
    "firstSeen": "2026-08-06"
   },
   {
@@ -353,7 +353,7 @@
      "size": 42506
     }
    ],
-   "downloads": 26,
+   "downloads": 28,
    "firstSeen": "2026-08-06"
   },
   {
@@ -385,7 +385,7 @@
      "size": 66903
     }
    ],
-   "downloads": 28,
+   "downloads": 30,
    "firstSeen": "2026-08-06"
   },
   {
@@ -432,7 +432,7 @@
      "size": 47577
     }
    ],
-   "downloads": 53,
+   "downloads": 55,
    "firstSeen": "2026-08-06"
   },
   {
@@ -469,7 +469,7 @@
      "size": 208010
     }
    ],
-   "downloads": 17,
+   "downloads": 19,
    "firstSeen": "2026-08-06"
   },
   {
@@ -490,7 +490,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 21,
+   "downloads": 23,
    "firstSeen": "2026-08-06"
   },
   {
@@ -511,7 +511,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 47,
+   "downloads": 49,
    "firstSeen": "2026-08-06"
   },
   {
@@ -563,7 +563,7 @@
      "size": 89898
     }
    ],
-   "downloads": 119,
+   "downloads": 121,
    "firstSeen": "2026-08-06"
   },
   {
@@ -595,7 +595,7 @@
      "size": 17692
     }
    ],
-   "downloads": 13,
+   "downloads": 15,
    "firstSeen": "2026-08-06"
   }
  ]
