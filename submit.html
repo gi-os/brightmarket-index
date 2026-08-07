@@ -22,7 +22,9 @@
   identity from the sign-in, and the only write anywhere (filing the submission
   issue) happens inside the Worker using a credential this page never has access to.
 
-  Fill in CLIENT_ID and WORKER_URL below before deploying.
+  CLIENT_ID and WORKER_URL are both live. The client ID is public by design --
+  it appears in the authorize URL every user sees. The client SECRET is not here
+  and must never be: it exists only as a Cloudflare Worker secret.
 -->
 <html lang="en">
 <head>
@@ -245,7 +247,7 @@
 <script>
   // ---- fill these in before deploying --------------------------------------
   const CLIENT_ID = "Ov23liUz650T0P6VGU5B";
-  const WORKER_URL = "https://brightmarket-portal.YOUR_SUBDOMAIN.workers.dev";
+  const WORKER_URL = "https://brightmarket-portal.gman6849.workers.dev";
   // ---------------------------------------------------------------------------
 
   const REDIRECT_URI = location.origin + location.pathname;
