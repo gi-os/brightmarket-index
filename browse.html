@@ -171,6 +171,9 @@
   .sheet-body table { border-collapse:collapse; width:100%; font-size:13px; display:block; overflow:auto; }
   .sheet-body th, .sheet-body td { border:1px solid var(--line-2); padding:6px 9px; text-align:left; }
   .sheet-body blockquote { margin:14px 0; padding:2px 0 2px 14px; border-left:2px solid var(--edge); color:var(--dim); }
+  .sheet-body ul { padding-left:20px; margin:8px 0; }
+  .sheet-body li { margin:4px 0; }
+  .sheet-body p { margin:8px 0; }
   .sheet-body hr { border:none; border-top:1px solid var(--line); margin:22px 0; }
 </style>
 </head>
@@ -183,6 +186,7 @@
       <div class="wordmark">BRIGHTMARKET</div>
     </div>
     <div style="display:flex; align-items:center; gap:12px;">
+      <div class="pill-link" id="setup-btn" style="cursor:pointer;">HOW TO SET UP</div>
       <a class="pill-link" href="./submit.html"><span style="font-size:14px; line-height:1;">＋</span>ADD YOUR APP</a>
     </div>
   </div>
@@ -256,7 +260,8 @@
   const dev = (a) => String(a.repo || "").split("/")[0] || "unknown";
   // Not every repo tags vX.Y.Z -- BrightLibrary ships "build-50" -- so only
   // prefix a "v" when the string actually starts with a number.
-  const ver = (v) => (/^\d/.test(String(v)) ? "v" + v : String(v));
+  const ver_ = (v) => (/^\d/.test(String(v)) ? "v" + v : String(v));
+  const ver = ver_;
   const day = (iso) => {
     const d = new Date(iso);
     return isNaN(d) ? "—" : d.toLocaleDateString("en-GB", { day: "2-digit", month: "short" }).toUpperCase();
@@ -392,6 +397,95 @@
     });
     window.addEventListener("keydown", onKey);
     paint();
+  }
+
+  /**
+   * Setup guide.
+   *
+   * The QR is the APK itself rather than a page about the APK: the phone has a
+   * browser and a QR scanner, so scanning starts the download directly and
+   * skips typing a URL on a keyboard nobody wants to use.
+   */
+  function openSetup() {
+    const market = apps.find((a) => a.pkg === "com.gios.brightmarket");
+    const apk = market ? market.latest.apk
+      : "https://github.com/gi-os/BrightMarket/releases/latest";
+    const ver = market ? ver_(market.latest.version) : "latest";
+
+    const veil = document.createElement("div");
+    veil.className = "veil";
+    veil.innerHTML = `
+      <div class="sheet">
+        <div class="sheet-bar">
+          <div style="font-family:var(--round); font-size:16px;">Setting up BrightMarket</div>
+          <div class="chip" data-close="1" style="cursor:pointer;">CLOSE</div>
+        </div>
+        <div class="sheet-body">
+          <div style="display:flex; gap:26px; flex-wrap:wrap; align-items:flex-start;">
+            <div style="background:#fff; border-radius:10px; padding:12px;">
+              <div id="setup-qr" style="width:190px; height:190px; display:flex;
+                   align-items:center; justify-content:center;"></div>
+              <div class="qr-cap" style="margin-top:8px;">SCAN TO DOWNLOAD<br />${esc(ver)}</div>
+            </div>
+            <div style="flex:1; min-width:260px;">
+              <p style="margin-top:0;">Scan that with the phone and the download starts.
+                 No typing, no cable.</p>
+              <p><a href="${esc(apk)}">Or download the APK here</a> and move it across
+                 however you like.</p>
+            </div>
+          </div>
+
+          <h2>1 · Let the phone install it</h2>
+          <p>Android blocks installs from outside a store until you allow it, once, for
+             whichever app is doing the installing. When the browser asks, allow it —
+             Settings → Apps → Special access → Install unknown apps.</p>
+          <p>Prefer a cable? <code>adb install -r BrightMarket-${esc(ver)}.apk</code></p>
+
+          <h2>2 · Open it and pick how you want to use it</h2>
+          <p>First launch asks once, because it changes what the app is:</p>
+          <ul>
+            <li><b>Browse here</b> — search and discover on the phone.</li>
+            <li><b>Focus mode</b> — no browsing on the phone at all. You browse this page
+                instead and send apps over by QR. Your installed apps and their updates
+                stay available.</li>
+          </ul>
+          <p>Focus mode can be turned on later in Settings. Turning it back <i>off</i> is
+             only possible by scanning the code at the bottom of this page — that is the
+             point of it. It is a commitment device, not a lock: the code is an ordinary
+             link and anyone determined can make one.</p>
+
+          <h2>3 · Install an app</h2>
+          <p>Pick anything on this page and scan its code, or browse on the phone if you
+             left focus mode off. Nothing installs until you tap Install there.</p>
+
+          <h2>4 · Apps that aren't listed here</h2>
+          <p>Scan <b>any GitHub repo URL</b> that publishes APK releases and BrightMarket
+             will track it for updates alongside everything else. Those are marked
+             <b>UNLISTED</b>, because their downloads cannot be checked against a
+             published hash the way indexed apps are.</p>
+
+          <h2>5 · Coming from Obtainium</h2>
+          <p>Export from Obtainium, then Settings → Import from Obtainium. Apps listed
+             here become normal entries; the rest are tracked as unlisted. Anything
+             without a GitHub repo behind it is reported rather than dropped, since there
+             is nothing to check for updates against.</p>
+
+          <h2>Keeping up to date</h2>
+          <p>The Updates tab compares what's installed against the newest release and
+             offers Update All. BrightMarket updates itself the same way, and always
+             last in a batch — installing it closes the app, so anything queued behind it
+             would never run.</p>
+        </div>
+      </div>`;
+    document.body.appendChild(veil);
+
+    const close = () => { veil.remove(); window.removeEventListener("keydown", onKey); };
+    const onKey = (e) => { if (e.key === "Escape") close(); };
+    veil.addEventListener("click", (e) => {
+      if (e.target === veil || e.target.dataset.close) close();
+    });
+    window.addEventListener("keydown", onKey);
+    qrInto(veil.querySelector("#setup-qr"), apk, 4);
   }
 
   // Cached per repo: reopening shouldn't refetch, and READMEs here run to 45KB.
@@ -533,6 +627,7 @@
     render();
   }
 
+  $("setup-btn").addEventListener("click", openSetup);
   $("q").addEventListener("input", (e) => { query = e.target.value; sel = 0; render(); });
   window.addEventListener("resize", syncStickyOffsets);
   window.addEventListener("keydown", (e) => {
