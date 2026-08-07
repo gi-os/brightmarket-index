@@ -44,11 +44,6 @@ apps:
   repo: gi-os/BrightControl
   category: hardware
   summary: The wheel and camera button, working phone-wide.
-- pkg: com.gios.lightsync
-  name: BrightSync
-  repo: gi-os/BrightSync
-  category: utilities
-  summary: Backs your apps up to your own server, nightly.
 - pkg: com.gios.lightnotebook
   name: BrightNotebook
   repo: gi-os/BrightNotebook

@@ -69,18 +69,19 @@
   .pill-link:hover { background:var(--fg); color:#000; box-shadow:inset 0 0 0 1px var(--fg); }
 
   .hero-wrap { position:sticky; top:59px; z-index:10; background:var(--bg); flex-shrink:0;
-    overflow:hidden; border-bottom:1px solid var(--line); }
-  /* On a short window a sticky hero would leave no room for the grid, so below
-     that height it scrolls away normally. */
-  /* All this stacked chrome can leave no room for the grid it exists to help
-     you browse, so past a point it scrolls away instead of sticking. That used
-     to be a fixed `max-height: 820px`, which stopped being the right number the
-     moment the hero grew: an app with three screenshots is ~160px taller than
-     one with none, so the same window could hold the whole thing for one app
-     and not for the next. The script measures and sets .no-stick instead. */
-  .no-stick .hero-wrap, .no-stick .wire { position:relative; top:auto; }
-  @media (max-height: 560px) {
-    .hero-wrap, .wire { position:relative; top:auto; }
+    overflow:hidden; border-bottom:1px solid var(--line);
+    /* Capped so the bar, the hero and the ticker always fit in the window
+       together, which is what makes "always anchored" true rather than usually
+       true. Before this the hero could grow past the point where there was room
+       to pin it -- an app with screenshots is ~160px taller than one without --
+       and the browser quietly let it scroll away, taking the header with it
+       while the ticker, positioned off the hero's measured height, stayed
+       pinned over the gap the hero left behind. */
+    max-height: calc(100vh - 170px); }
+  /* Only genuine phone-in-landscape territory, where there would be no grid
+     left to look at underneath. */
+  @media (max-height: 480px) {
+    .hero-wrap, .wire { position:relative; top:auto; max-height:none; }
   }
   .hero-scan { position:absolute; left:0; right:0; top:0; height:80px; pointer-events:none;
     background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.04) 60%,rgba(255,255,255,0) 100%);
@@ -598,16 +599,8 @@
     const px = Math.max(0, Math.floor(h.getBoundingClientRect().height) - 1);
     document.documentElement.style.setProperty("--hero-h", px + "px");
 
-    // Sticky is all-or-nothing here: the ticker is positioned off the hero's
-    // measured height, so a hero that scrolls away while the ticker stays put
-    // leaves the ticker pinned to a gap. Either the bar, hero and ticker all
-    // hold, or only the bar does.
-    const bar = document.querySelector(".bar");
-    const wire = document.querySelector(".wire");
-    const stack = (bar ? bar.offsetHeight : 0) + px + (wire ? wire.offsetHeight : 0);
-    // Half the window is the budget: below that there is still a screen of grid
-    // visible underneath, which is the whole point of pinning the controls.
-    document.body.classList.toggle("no-stick", stack > window.innerHeight * 0.5);
+    // No JS decision about whether to stick any more: the hero is bounded in
+    // CSS, so the stack fits by construction.
   }
 
   function render() {
