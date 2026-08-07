@@ -1,184 +1,391 @@
 <!DOCTYPE html>
 <!--
-  The desktop catalogue.
+  BrightMarket — the desktop catalogue.
 
-  This is the other half of the phone's focus mode: browsing happens here, on a
-  screen where browsing is fine, and only a decision travels to the phone. Each
-  app gets a QR carrying a brightmarket:// link; scanning it with the phone's
-  own QR scanner (Roll) opens that app's page in BrightMarket.
+  The other half of the phone's focus mode: browsing happens here, on a screen
+  where browsing is fine, and only a decision travels to the phone as a QR.
 
-  Everything is client-side. It reads the same index-v1.json the phone reads, so
-  there is exactly one source of truth and nothing to keep in sync.
+  The QR belongs to the SELECTED app only — the tile grid deliberately has none.
+  A wall of codes is unreadable and invites scanning the wrong one; you pick an
+  app, read about it, and then there is exactly one code on screen to point a
+  phone at.
+
+  Reads the same index-v1.json the phone reads, so there is one source of truth.
+  Everything else is inline: no build step, no framework, one file to deploy.
 -->
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>BrightMarket — browse</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BrightMarket</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --background: #000000;
-    --content: #ffffff;
-    --content-secondary: #bbbbbb;
-    --unit: calc(min(100vw, 1100px) / 27);
-    --text-heading: 20px;
-    --text-copy: 16px;
-    --text-paragraph: 13px;
-    --text-fine: 13px;
-    --text-superfine: 10px;
+    --bg: #000; --fg: #fff;
+    --line: #1c1c21; --line-2: #26262b; --edge: #2e2e34;
+    --dim: #7a7a80; --dimmer: #5a5a60; --dimmest: #3e3e44;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+    --round: 'Varela Round', sans-serif;
   }
   * { box-sizing: border-box; }
-  html, body { margin: 0; background: var(--background); color: var(--content); }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    display: flex; justify-content: center;
-    min-height: 100vh;
-  }
-  main { width: 100%; max-width: 1100px; }
+  html, body { margin: 0; background: var(--bg); }
+  body { font-family: var(--sans); color: var(--fg); }
+  a { color: var(--fg); text-decoration: none; }
+  input { font: inherit; }
+  input::placeholder { color: #6a6a6e; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-thumb { background: var(--edge); border-radius: 999px; }
 
-  .top-bar {
-    height: calc(var(--unit) * 3);
-    display: flex; align-items: center; gap: calc(var(--unit) * 0.6);
-    padding: 0 var(--unit);
-  }
-  .wordmark { font-size: var(--text-fine); letter-spacing: 0.02em; }
-  .content { padding: calc(var(--unit) * 1.5) var(--unit) calc(var(--unit) * 4); }
+  @keyframes bob { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-4px);} }
+  @keyframes sheen { 0% { transform: translateX(-130%);} 100% { transform: translateX(330%);} }
+  @keyframes blink { 0%,100% { opacity: 1;} 50% { opacity: .2;} }
+  @keyframes marquee { 0% { transform: translateX(0);} 100% { transform: translateX(-50%);} }
+  @keyframes scan { 0% { transform: translateY(-100%);} 100% { transform: translateY(900%);} }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
 
-  h1 { font-size: var(--text-heading); font-weight: 600; margin: 0 0 6px; }
-  p.sub { font-size: var(--text-paragraph); color: var(--content-secondary); margin: 0 0 20px; line-height: 1.6; }
+  .shell { min-height:100vh; display:flex; justify-content:center; }
+  .col { width:100%; max-width:1240px; min-height:100vh; display:flex; flex-direction:column;
+         border-left:1px solid var(--line); border-right:1px solid var(--line); }
 
-  input[type="text"] {
-    -webkit-appearance: none; appearance: none;
-    width: 60%; background: transparent; color: var(--content);
-    border: none; border-bottom: 3px solid var(--content-secondary);
-    border-radius: 0; padding: 8px 0; font-size: var(--text-copy);
-    margin-bottom: 8px;
-  }
-  input[type="text"]:focus { outline: none; border-bottom-color: var(--content); }
-  input[type="text"]::placeholder { color: var(--content-secondary); }
+  .bar { flex-shrink:0; height:60px; display:flex; align-items:center; justify-content:space-between;
+         padding:0 26px; border-bottom:1px solid var(--line); }
+  .logo { width:26px; height:26px; border-radius:8px; background:var(--fg); color:#000;
+          display:flex; align-items:center; justify-content:center; font-family:var(--round); font-size:15px; }
+  .wordmark { font-family:var(--mono); font-size:12px; letter-spacing:.34em; color:#8a8a8e; }
+  .live { width:7px; height:7px; border-radius:50%; background:var(--fg); animation:blink 2.4s ease-in-out infinite; }
+  .status { font-family:var(--mono); font-size:9px; letter-spacing:.22em; color:#4a4a50; }
+  .pill-link { display:flex; align-items:center; gap:9px; height:36px; padding:0 17px; border-radius:999px;
+               box-shadow:inset 0 0 0 1px #3a3a40; font-family:var(--mono); font-size:10px;
+               letter-spacing:.18em; transition:.15s; }
+  .pill-link:hover { background:var(--fg); color:#000; box-shadow:inset 0 0 0 1px var(--fg); }
 
-  .cats { display: flex; flex-wrap: wrap; gap: 16px; margin: 12px 0 24px; }
-  .cat { font-size: var(--text-paragraph); color: var(--content-secondary); cursor: pointer; }
-  .cat[aria-selected="true"] { color: var(--content); font-weight: 600; }
+  .hero-wrap { position:relative; flex-shrink:0; overflow:hidden; border-bottom:1px solid var(--line); }
+  .hero-scan { position:absolute; left:0; right:0; top:0; height:80px; pointer-events:none;
+    background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.04) 60%,rgba(255,255,255,0) 100%);
+    animation:scan 8s linear infinite; }
+  .hero { display:flex; gap:30px; padding:26px; }
+  .hero-icon { position:relative; width:172px; height:172px; border-radius:16px; overflow:hidden;
+    border:2px solid var(--fg); animation:bob 5s ease-in-out infinite; display:flex;
+    align-items:center; justify-content:center; background:#000; font-family:var(--round); font-size:72px; }
+  .hero-icon .sh { position:absolute; inset:0; animation:sheen 5s ease-in-out infinite;
+    background:linear-gradient(115deg,rgba(255,255,255,0) 42%,rgba(255,255,255,.22) 50%,rgba(255,255,255,0) 58%); }
+  .cat-pill { padding:3px 10px; border-radius:999px; background:var(--fg); color:#000;
+    font-family:var(--mono); font-size:10px; font-weight:600; letter-spacing:.12em; }
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line-2);
+    border:1px solid var(--line-2); border-radius:8px; overflow:hidden; max-width:520px; }
+  .stat { background:#000; padding:9px 12px; }
+  .stat b { display:block; font-family:var(--mono); font-size:9px; letter-spacing:.14em; color:#6a6a70; font-weight:400; }
+  .stat i { display:block; font-family:var(--mono); font-size:13px; font-style:normal; margin-top:3px; }
+  .shots { display:flex; gap:10px; flex-wrap:wrap; }
+  .shots img { height:158px; border-radius:6px; border:1px solid var(--line-2); background:#000; }
+  .noshots { display:flex; align-items:center; padding:0 16px; height:52px; max-width:340px;
+    border:1px dashed var(--edge); border-radius:8px; font-family:var(--mono); font-size:11px;
+    letter-spacing:.1em; color:#6a6a70; }
+  .qr-card { border-radius:12px; padding:12px; display:flex; flex-direction:column; align-items:center;
+    gap:8px; background:var(--fg); }
+  .qr-cap { font-family:var(--mono); font-size:9px; letter-spacing:.1em; color:#000; text-align:center; line-height:1.5; }
+  .btn { display:flex; align-items:center; justify-content:center; height:44px; border-radius:999px;
+    background:var(--fg); color:#000; font-family:var(--mono); font-size:11px; letter-spacing:.16em; transition:.15s; }
+  .btn:hover { background:#000; color:var(--fg); box-shadow:inset 0 0 0 2px var(--fg); }
+  .btn-ghost { height:38px; background:transparent; color:var(--fg); box-shadow:inset 0 0 0 1px #3a3a40; font-size:10px; letter-spacing:.12em; }
+  .btn-ghost:hover { background:transparent; color:var(--fg); box-shadow:inset 0 0 0 1px var(--fg); }
 
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 28px; }
-  .app { display: flex; gap: 16px; align-items: flex-start; }
-  .app .qr { flex-shrink: 0; }
-  .app h2 { font-size: var(--text-copy); font-weight: 600; margin: 0 0 4px; }
-  .app .meta, .app .desc {
-    font-size: var(--text-superfine); color: var(--content-secondary);
-    margin: 0 0 4px; line-height: 1.5;
-  }
-  .app .shots { display: flex; gap: 6px; margin-top: 8px; }
-  .app .shots img { height: 90px; border: none; }
-  .count { font-size: var(--text-superfine); color: var(--content-secondary); margin-bottom: 20px; }
-  .focus-row { margin-top: 40px; padding-top: 20px; }
-  .focus-row h2 { font-size: var(--text-copy); font-weight: 600; margin: 0 0 6px; }
-  a { color: var(--content); }
+  .wire { flex-shrink:0; height:34px; display:flex; align-items:center; gap:14px; padding:0 26px;
+    border-bottom:1px solid var(--line); }
+  .wire-tag { flex-shrink:0; font-family:var(--mono); font-size:9px; letter-spacing:.26em;
+    padding:3px 8px; border-radius:4px; background:#1a1a1e; }
+  .wire-track { flex:1; overflow:hidden; position:relative; height:14px; }
+  .wire-run { position:absolute; display:flex; gap:34px; white-space:nowrap; animation:marquee 34s linear infinite;
+    font-family:var(--mono); font-size:9.5px; letter-spacing:.2em; color:var(--dimmer); }
+  .nav { cursor:pointer; width:32px; height:24px; border-radius:6px; box-shadow:inset 0 0 0 1px var(--edge);
+    color:#8a8a90; display:flex; align-items:center; justify-content:center; font-size:11px; transition:.15s; }
+  .nav:hover { box-shadow:inset 0 0 0 1px var(--fg); color:var(--fg); }
+
+  .filters { flex-shrink:0; padding:14px 26px 12px; display:flex; flex-direction:column; gap:11px;
+    border-bottom:1px solid var(--line); }
+  .filters input { flex:1; max-width:420px; border:none; outline:none; background:transparent;
+    font-size:14px; color:var(--fg); padding:2px 0; border-bottom:2px solid var(--edge); }
+  .filters input:focus { border-bottom-color: var(--fg); }
+  .chip { cursor:pointer; padding:4px 11px; border-radius:999px; font-family:var(--mono); font-size:10px;
+    letter-spacing:.12em; color:var(--dim); box-shadow:inset 0 0 0 1px var(--line-2); transition:.15s; }
+  .chip:hover { color:var(--fg); box-shadow:inset 0 0 0 1px var(--edge); }
+  .chip[aria-selected="true"] { background:var(--fg); color:#000; box-shadow:none; }
+
+  .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(272px, 1fr)); gap:12px;
+    padding:16px 26px 0; }
+  .tile { cursor:pointer; padding:12px; border-radius:12px; border:1px solid var(--line-2);
+    display:flex; flex-direction:column; min-height:124px; transition:.15s; background:#000; }
+  .tile:hover { border-color:var(--fg); transform:translateY(-3px); }
+  .tile[aria-selected="true"] { border-color:var(--fg); }
+  .tile-icon { width:38px; height:38px; border-radius:10px; flex-shrink:0; display:flex; align-items:center;
+    justify-content:center; font-family:var(--round); font-size:18px; background:var(--fg); color:#000; }
+  .tile-name { font-family:var(--round); font-size:15px; }
+  .tile-meta { font-family:var(--mono); font-size:9px; letter-spacing:.1em; color:#7a7a80; margin-top:3px; }
+  .tile-sum { font-size:11.5px; line-height:1.45; color:var(--dim); margin-top:9px; flex:1; }
+  .tile-pill { font-family:var(--mono); font-size:9px; letter-spacing:.1em; padding:2px 8px;
+    border-radius:999px; box-shadow:inset 0 0 0 1px var(--line-2); color:var(--dim); }
+  .add-tile { display:flex; flex-direction:column; justify-content:center; gap:6px; padding:12px;
+    border-radius:12px; border:2px dashed #34343a; min-height:124px; transition:.15s; }
+  .add-tile:hover { border-color:var(--fg); transform:translateY(-3px); }
+
+  .foot { padding:26px; }
+  .empty { padding:40px 0; text-align:center; font-family:var(--mono); font-size:12px;
+    letter-spacing:.14em; color:#6a6a70; }
+  .note { margin-top:26px; font-family:var(--mono); font-size:10px; letter-spacing:.16em; color:var(--dimmest); }
+  @media (max-width: 900px) { .hero { flex-wrap: wrap; } }
 </style>
 </head>
 <body>
-<main>
-  <div class="top-bar"><span class="wordmark">BRIGHTMARKET</span></div>
-  <div class="content">
-    <h1>Browse</h1>
-    <p class="sub">
-      Scan an app's code with your phone's QR scanner to open it in BrightMarket.
-      Nothing installs until you tap Install on the phone.
-    </p>
+<div class="shell"><div class="col">
 
-    <input id="filter" type="text" placeholder="Filter" autocomplete="off" />
-    <div class="cats" id="cats"></div>
-    <div class="count" id="count"></div>
-    <div class="grid" id="grid"></div>
-
-    <div class="focus-row">
-      <h2>Focus mode</h2>
-      <p class="sub">
-        Turns phone browsing off, leaving your installed apps and their updates.
-        You can also change this in the app's own Settings.
-      </p>
-      <div style="display:flex; gap:32px; flex-wrap:wrap;">
-        <div><div id="qr-on"></div><div class="meta">Turn focus mode ON</div></div>
-        <div><div id="qr-off"></div><div class="meta">Turn focus mode OFF</div></div>
-      </div>
+  <div class="bar">
+    <div style="display:flex; align-items:center; gap:13px;">
+      <div class="logo">B</div>
+      <div class="wordmark">BRIGHTMARKET</div>
+      <div class="live"></div>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div class="status" id="status">LOADING</div>
+      <a class="pill-link" href="./submit.html"><span style="font-size:14px; line-height:1;">＋</span>ADD YOUR APP</a>
     </div>
   </div>
-</main>
+
+  <div class="hero-wrap">
+    <div class="hero-scan"></div>
+    <div class="hero" id="hero"></div>
+  </div>
+
+  <div class="wire">
+    <div class="wire-tag">WIRE</div>
+    <div class="wire-track"><div class="wire-run" id="wire"></div></div>
+    <div style="flex-shrink:0; display:flex; align-items:center; gap:9px;">
+      <div class="nav" id="prev">◀</div>
+      <div class="nav" id="next">▶</div>
+      <div class="status" id="pos"></div>
+    </div>
+  </div>
+
+  <div class="filters">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <div style="font-family:var(--mono); font-size:12px; color:#6a6a70;">⌕</div>
+      <input id="q" type="text" placeholder="Filter apps" autocomplete="off" />
+      <div style="flex:1"></div>
+      <div class="status" id="count"></div>
+    </div>
+    <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+      <div style="display:flex; gap:6px; flex-wrap:wrap;" id="cats"></div>
+      <div style="flex:1"></div>
+      <div style="display:flex; gap:6px;" id="sorts"></div>
+    </div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none;">NOTHING MATCHES — TRY ANOTHER WORD</div>
+
+  <div class="foot">
+    <div style="padding-top:18px; border-top:1px solid var(--line); display:flex; gap:26px;
+                align-items:flex-start; flex-wrap:wrap;">
+      <div style="flex:1; min-width:300px;">
+        <div style="font-family:var(--round); font-size:15px;">Focus mode</div>
+        <div style="font-size:12px; line-height:1.55; color:var(--dim); margin-top:6px; max-width:52ch;">
+          Turns phone browsing off, leaving your installed apps and their updates.
+          You can also change this in the app's own Settings.
+        </div>
+      </div>
+      <div style="display:flex; gap:14px;">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+          <div id="qr-on" style="width:78px; height:78px; background:#fff; border-radius:8px;
+               display:flex; align-items:center; justify-content:center;"></div>
+          <div class="status">ON</div>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+          <div id="qr-off" style="width:78px; height:78px; background:#fff; border-radius:8px;
+               display:flex; align-items:center; justify-content:center;"></div>
+          <div class="status">OFF</div>
+        </div>
+      </div>
+    </div>
+    <div class="note">NOTHING INSTALLS UNTIL YOU TAP INSTALL ON THE PHONE</div>
+  </div>
+
+</div></div>
 
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
 <script>
-  const INDEX = "https://gi-os.github.io/brightmarket-index/index-v1.json";
-  const el = (id) => document.getElementById(id);
+  const INDEX = "./index-v1.json";
+  const $ = (id) => document.getElementById(id);
 
-  let apps = [];
-  let category = "All";
+  let apps = [], sel = 0, query = "", cat = "All", sortBy = "Popular";
+  const SORTS = ["Popular", "Updated", "Name"];
 
-  function qr(text, size) {
-    // Type 0 = auto-fit the smallest version that holds the payload; 'L' is the
-    // lowest error correction, which keeps the code sparse and easy for a phone
-    // camera to read off a bright monitor.
-    const q = qrcode(0, "L");
-    q.addData(text);
-    q.make();
-    return q.createSvgTag({ cellSize: size, margin: 2, scalable: false });
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const mb = (n) => (n / 1e6).toFixed(1) + " MB";
+  const day = (iso) => {
+    const d = new Date(iso);
+    return isNaN(d) ? "—" : d.toLocaleDateString("en-GB", { day: "2-digit", month: "short" }).toUpperCase();
+  };
+
+  function qrInto(node, text, cell) {
+    if (!node || typeof qrcode !== "function") return;
+    const key = text + "|" + cell;
+    if (node.dataset.qr === key) return;   // repainting on every keystroke is visible
+    const q = qrcode(0, "L");              // lowest EC keeps the code sparse and easy to read off a monitor
+    q.addData(text); q.make();
+    node.innerHTML = q.createSvgTag({ cellSize: cell, margin: 1, scalable: false });
+    node.dataset.qr = key;
+  }
+
+  function visible() {
+    const t = query.trim().toLowerCase();
+    const list = apps.filter((a) => {
+      const catOk = cat === "All" || (a.category || "").toLowerCase() === cat.toLowerCase();
+      const qOk = !t ||
+        a.name.toLowerCase().includes(t) ||
+        (a.summary || "").toLowerCase().includes(t) ||
+        (a.category || "").toLowerCase().includes(t) ||
+        // applicationIds still read com.gios.light* after the rename, so
+        // someone searching "light" has to keep finding them.
+        a.pkg.toLowerCase().includes(t);
+      return catOk && qOk;
+    });
+    return list.slice().sort((a, b) => {
+      if (sortBy === "Popular") return (b.downloads || 0) - (a.downloads || 0);
+      if (sortBy === "Updated") return new Date(b.latest.published) - new Date(a.latest.published);
+      return a.name.localeCompare(b.name);
+    });
+  }
+
+  function renderHero(app) {
+    if (!app) { $("hero").innerHTML = ""; return; }
+    const shots = (app.screenshots || []).slice(0, 3);
+    $("hero").innerHTML = `
+      <div style="flex-shrink:0; display:flex; flex-direction:column; gap:12px; align-items:center; width:172px;">
+        <div class="hero-icon">${esc(app.name[0])}<div class="sh"></div></div>
+        <div style="font-family:var(--mono); font-size:9px; letter-spacing:.14em; color:#6a6a70;
+             text-align:center; line-height:1.7;">OPEN SOURCE<br />NO ACCOUNT</div>
+      </div>
+
+      <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:15px;">
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <div style="font-family:var(--round); font-size:30px; line-height:1;">${esc(app.name)}</div>
+          <div class="cat-pill">${esc((app.category || "").toUpperCase())}</div>
+          <div style="font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:var(--dimmer);">${esc(app.pkg)}</div>
+        </div>
+        <div style="font-size:15px; line-height:1.55; color:#d8d8dc; max-width:52ch;">${esc(app.summary)}</div>
+        <div class="stats">
+          <div class="stat"><b>VERSION</b><i>${esc(app.latest.version)}</i></div>
+          <div class="stat"><b>SIZE</b><i>${mb(app.latest.size)}</i></div>
+          <div class="stat"><b>GETS</b><i>${app.downloads || 0}</i></div>
+          <div class="stat"><b>UPDATED</b><i>${day(app.latest.published)}</i></div>
+        </div>
+        ${shots.length
+          ? `<div class="shots">${shots.map((s) => `<img src="${esc(s.url)}" alt="" loading="lazy" />`).join("")}</div>`
+          : `<div class="noshots">NO SCREENSHOTS SUBMITTED</div>`}
+      </div>
+
+      <div style="flex-shrink:0; width:176px; display:flex; flex-direction:column; gap:10px;">
+        <div class="qr-card">
+          <div id="hero-qr" style="width:136px; height:136px; display:flex; align-items:center; justify-content:center;"></div>
+          <div class="qr-cap">SCAN WITH YOUR PHONE<br />TO OPEN IT THERE</div>
+        </div>
+        <a class="btn" href="${esc(app.latest.apk)}" target="_blank" rel="noopener">GET APK ↓</a>
+        <a class="btn btn-ghost" href="https://github.com/${esc(app.repo)}" target="_blank" rel="noopener">SOURCE</a>
+      </div>`;
+    qrInto($("hero-qr"), "brightmarket://app/" + app.pkg, 4);
   }
 
   function render() {
-    const q = el("filter").value.trim().toLowerCase();
-    const matches = apps.filter((a) => {
-      const catOk = category === "All" || (a.category || "").toLowerCase() === category.toLowerCase();
-      const qOk = !q ||
-        a.name.toLowerCase().includes(q) ||
-        (a.summary || "").toLowerCase().includes(q) ||
-        (a.category || "").toLowerCase().includes(q) ||
-        a.pkg.toLowerCase().includes(q);
-      return catOk && qOk;
-    });
+    const list = visible();
+    if (sel > list.length - 1) sel = Math.max(0, list.length - 1);
+    renderHero(list[sel]);
 
-    el("count").textContent =
-      matches.length === apps.length ? `${apps.length} apps` : `${matches.length} of ${apps.length}`;
+    $("count").textContent = list.length === apps.length
+      ? `${apps.length} APPS` : `${list.length} OF ${apps.length}`;
+    $("pos").textContent = list.length ? `${sel + 1}/${list.length}` : "0/0";
+    $("empty").style.display = list.length ? "none" : "block";
 
-    el("grid").innerHTML = matches.map((a) => {
-      const shots = (a.screenshots || []).slice(0, 3)
-        .map((s) => `<img src="${s.url}" alt="" loading="lazy" />`).join("");
-      const mb = (a.latest.size / 1e6).toFixed(1);
-      return `
-        <div class="app">
-          <div class="qr">${qr("brightmarket://app/" + a.pkg, 3)}</div>
-          <div>
-            <h2>${a.name}</h2>
-            <p class="meta">v${a.latest.version} · ${mb}MB · ${a.downloads} downloads · ${a.category}</p>
-            <p class="desc">${a.summary || ""}</p>
-            ${shots ? `<div class="shots">${shots}</div>` : ""}
+    $("grid").innerHTML = list.map((a, i) => `
+      <div class="tile" data-i="${i}" aria-selected="${i === sel}">
+        <div style="display:flex; gap:11px; align-items:flex-start;">
+          <div class="tile-icon">${esc(a.name[0])}</div>
+          <div style="min-width:0; flex:1;">
+            <div class="tile-name">${esc(a.name)}</div>
+            <div class="tile-meta">v${esc(a.latest.version)} · ${mb(a.latest.size)}</div>
           </div>
-        </div>`;
-    }).join("");
+        </div>
+        <div class="tile-sum">${esc(a.summary)}</div>
+        <div style="margin-top:9px; display:flex; align-items:center; justify-content:space-between;">
+          <div class="tile-meta">${esc((a.category || "").toUpperCase())}</div>
+          <div class="tile-pill">${a.downloads || 0} GETS</div>
+        </div>
+      </div>`).join("") + `
+      <a class="add-tile" href="./submit.html">
+        <div style="font-family:var(--round); font-size:26px; line-height:1;">＋</div>
+        <div style="font-family:var(--round); font-size:14px;">Add your app</div>
+        <div style="font-size:11.5px; line-height:1.45; color:var(--dim);">
+          Sign in with GitHub, pick a repo with a release. CI does the rest.</div>
+      </a>`;
+
+    $("grid").querySelectorAll(".tile").forEach((n) =>
+      n.addEventListener("click", () => {
+        sel = +n.dataset.i;
+        render();
+        // Selecting from the grid is the "open to learn more" step; bring the
+        // panel it fills back into view.
+        document.querySelector(".hero-wrap").scrollIntoView({ behavior: "smooth", block: "start" });
+      }));
   }
 
-  function renderCats() {
+  function renderChips() {
     const cats = ["All", ...[...new Set(apps.map((a) => a.category).filter(Boolean))].sort()];
-    el("cats").innerHTML = cats.map((c) =>
-      `<span class="cat" data-cat="${c}" aria-selected="${c === category}">${c[0].toUpperCase() + c.slice(1)}</span>`
-    ).join("");
-    el("cats").querySelectorAll(".cat").forEach((n) =>
-      n.addEventListener("click", () => { category = n.dataset.cat; renderCats(); render(); })
-    );
+    $("cats").innerHTML = cats.map((c) =>
+      `<div class="chip" data-cat="${esc(c)}" aria-selected="${c === cat}">${esc(c.toUpperCase())}</div>`).join("");
+    $("cats").querySelectorAll(".chip").forEach((n) =>
+      n.addEventListener("click", () => { cat = n.dataset.cat; sel = 0; renderChips(); render(); }));
+
+    $("sorts").innerHTML = SORTS.map((s) =>
+      `<div class="chip" data-sort="${s}" aria-selected="${s === sortBy}">${s.toUpperCase()}</div>`).join("");
+    $("sorts").querySelectorAll(".chip").forEach((n) =>
+      n.addEventListener("click", () => { sortBy = n.dataset.sort; sel = 0; renderChips(); render(); }));
   }
 
-  el("filter").addEventListener("input", render);
+  function move(d) {
+    const n = visible().length;
+    if (!n) return;
+    sel = (sel + d + n) % n;
+    render();
+  }
+
+  $("prev").addEventListener("click", () => move(-1));
+  $("next").addEventListener("click", () => move(1));
+  $("q").addEventListener("input", (e) => { query = e.target.value; sel = 0; render(); });
+  window.addEventListener("keydown", (e) => {
+    if (e.target && /input|textarea/i.test(e.target.tagName)) return;
+    if (e.key === "ArrowRight") { move(1); e.preventDefault(); }
+    if (e.key === "ArrowLeft") { move(-1); e.preventDefault(); }
+  });
 
   (async function init() {
-    el("qr-on").innerHTML = qr("brightmarket://focus/on", 4);
-    el("qr-off").innerHTML = qr("brightmarket://focus/off", 4);
+    qrInto($("qr-on"), "brightmarket://focus/on", 2);
+    qrInto($("qr-off"), "brightmarket://focus/off", 2);
     try {
       const res = await fetch(INDEX, { cache: "no-store" });
       const data = await res.json();
       apps = data.apps || [];
-      renderCats();
+      $("status").textContent = `${apps.length} APPS · UPDATED ${day(data.generated)}`;
+      $("wire").innerHTML = [0, 1].map(() =>
+        `<span>${apps.map((a) => `${esc(a.name.toUpperCase())} v${esc(a.latest.version)}`).join("</span><span>")}</span>`
+      ).join("");
+      renderChips();
       render();
     } catch (err) {
-      el("count").textContent = "Couldn't load the index.";
+      $("status").textContent = "INDEX UNAVAILABLE";
+      $("empty").style.display = "block";
+      $("empty").textContent = "COULDN'T LOAD THE INDEX";
     }
   })();
 </script>
