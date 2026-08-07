@@ -335,6 +335,10 @@
 
       session = data.session;
       allRepos = data.repos || [];
+      reposError = data.reposError || null;
+      // Logged so a stale Worker is visible from the console rather than
+      // inferred from behaviour.
+      console.log("brightmarket worker version:", data.version || "(pre-versioning)");
       el("login-name").textContent = data.login;
       renderRepos("");
       el("signed-out").style.display = "none";
@@ -345,6 +349,7 @@
   }
 
   let allRepos = [];
+  let reposError = null;
   let selectedRepo = null;
 
   function renderRepos(filter) {
@@ -359,8 +364,11 @@
 
     list.innerHTML = "";
     if (allRepos.length === 0) {
-      el("repo-count").textContent =
-        "No public repos found on your account. BrightMarket only indexes public repos.";
+      // Distinguish "GitHub said no" from "you genuinely have none" -- these
+      // read identically to a user and need completely different fixes.
+      el("repo-count").textContent = reposError
+        ? `Couldn't list your repos: ${reposError}`
+        : "No public repos found on your account. BrightMarket only indexes public repos.";
       el("submit-btn").disabled = true;
       return;
     }

@@ -32,6 +32,14 @@
 
 const SESSION_TTL_SECONDS = 10 * 60; // the signed session is only good for 10 minutes
 
+/**
+ * Bumped whenever this file changes in a way that matters. /health reports it,
+ * so whether a deploy actually landed is a question with an answer instead of
+ * a guess -- which is what made the empty-repo-list bug take two rounds to
+ * pin down.
+ */
+const VERSION = "3-public-repos-endpoint";
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -42,6 +50,9 @@ export default {
     }
 
     try {
+      if (url.pathname === "/health") {
+        return json({ ok: true, version: VERSION }, 200, cors);
+      }
       if (url.pathname === "/exchange" && request.method === "POST") {
         return await handleExchange(request, env, cors);
       }
@@ -116,13 +127,19 @@ async function handleExchange(request, env, cors) {
   // type=owner excludes forks-of-others and org repos they merely collaborate
   // on. Paginated because 100 is a real ceiling for an active account.
   const repos = [];
+  let reposError = null;
   for (let page = 1; page <= 5; page++) {
     const res = await fetch(
       `https://api.github.com/users/${encodeURIComponent(me.login)}/repos` +
         `?type=owner&per_page=100&sort=updated&page=${page}`,
       { headers: ghHeaders }
     );
-    if (!res.ok) break;
+    if (!res.ok) {
+      // Surfaced to the page so a failure reads as a failure rather than as
+      // "you have no repos", which is what it looked like before.
+      reposError = `GitHub returned ${res.status} listing repositories`;
+      break;
+    }
     const batch = await res.json();
     if (!Array.isArray(batch) || batch.length === 0) break;
     for (const r of batch) {
@@ -143,7 +160,11 @@ async function handleExchange(request, env, cors) {
   // or a store of any kind -- it goes out of scope when this function returns.
 
   const session = await signSession(env, { login: me.login, repos: repos.map((r) => r.full_name) });
-  return json({ login: me.login, repos, session }, 200, cors);
+  return json(
+    { login: me.login, repos, session, version: VERSION, reposError },
+    200,
+    cors
+  );
 }
 
 // ---------------------------------------------------------------------------
