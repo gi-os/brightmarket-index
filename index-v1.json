@@ -1,13 +1,13 @@
 {
  "format": 1,
- "generated": "2026-08-07T17:40:48.832892+00:00",
+ "generated": "2026-08-07T17:49:00.329219+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
    "name": "BrightTip",
    "repo": "gi-os/BrightTip",
    "category": "productivity",
-   "summary": "Tip calculator, plus a receipt splitter that reads the line items.",
+   "summary": "Tip calculator, and a receipt splitter that reads the line items off a photo.",
    "latest": {
     "version": "1.3.19",
     "versionCode": 19,
@@ -36,7 +36,7 @@
      "size": 55824
     }
    ],
-   "downloads": 69,
+   "downloads": 72,
    "firstSeen": "2026-08-06"
   },
   {
@@ -73,7 +73,7 @@
      "size": 49896
     }
    ],
-   "downloads": 57,
+   "downloads": 60,
    "firstSeen": "2026-08-06"
   },
   {
@@ -94,7 +94,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 73,
+   "downloads": 76,
    "firstSeen": "2026-08-06"
   },
   {
@@ -131,7 +131,7 @@
      "size": 55168
     }
    ],
-   "downloads": 68,
+   "downloads": 71,
    "firstSeen": "2026-08-06"
   },
   {
@@ -168,7 +168,7 @@
      "size": 57213
     }
    ],
-   "downloads": 65,
+   "downloads": 68,
    "firstSeen": "2026-08-06"
   },
   {
@@ -220,7 +220,7 @@
      "size": 51624
     }
    ],
-   "downloads": 97,
+   "downloads": 100,
    "firstSeen": "2026-08-06"
   },
   {
@@ -252,7 +252,7 @@
      "size": 36611
     }
    ],
-   "downloads": 62,
+   "downloads": 65,
    "firstSeen": "2026-08-06"
   },
   {
@@ -279,7 +279,7 @@
      "size": 88062
     }
    ],
-   "downloads": 81,
+   "downloads": 84,
    "firstSeen": "2026-08-06"
   },
   {
@@ -300,7 +300,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 76,
+   "downloads": 79,
    "firstSeen": "2026-08-06"
   },
   {
@@ -337,7 +337,7 @@
      "size": 809265
     }
    ],
-   "downloads": 91,
+   "downloads": 94,
    "firstSeen": "2026-08-06"
   },
   {
@@ -374,7 +374,7 @@
      "size": 40635
     }
    ],
-   "downloads": 63,
+   "downloads": 66,
    "firstSeen": "2026-08-06"
   },
   {
@@ -401,7 +401,7 @@
      "size": 42506
     }
    ],
-   "downloads": 55,
+   "downloads": 58,
    "firstSeen": "2026-08-06"
   },
   {
@@ -433,7 +433,7 @@
      "size": 66903
     }
    ],
-   "downloads": 57,
+   "downloads": 60,
    "firstSeen": "2026-08-06"
   },
   {
@@ -470,7 +470,7 @@
      "size": 143880
     }
    ],
-   "downloads": 82,
+   "downloads": 85,
    "firstSeen": "2026-08-06"
   },
   {
@@ -507,7 +507,7 @@
      "size": 208010
     }
    ],
-   "downloads": 46,
+   "downloads": 49,
    "firstSeen": "2026-08-06"
   },
   {
@@ -528,7 +528,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 51,
+   "downloads": 54,
    "firstSeen": "2026-08-06"
   },
   {
@@ -549,7 +549,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 77,
+   "downloads": 80,
    "firstSeen": "2026-08-06"
   },
   {
@@ -601,7 +601,7 @@
      "size": 89898
     }
    ],
-   "downloads": 156,
+   "downloads": 159,
    "firstSeen": "2026-08-06"
   },
   {
@@ -633,7 +633,7 @@
      "size": 17692
     }
    ],
-   "downloads": 43,
+   "downloads": 46,
    "firstSeen": "2026-08-06"
   }
  ]
