@@ -29,7 +29,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install pyyaml
+      # pyaxmlparser reads the applicationId out of the binary manifest; the
+      # string-pool guess it replaced picked an app's ancestor package.
+      - run: pip install pyyaml pyaxmlparser
 
       - name: Validate
         id: validate

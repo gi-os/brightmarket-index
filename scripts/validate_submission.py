@@ -154,13 +154,43 @@ def validate(repo: str) -> dict:
     except (zipfile.BadZipFile, KeyError):
         raise Reject("That `.apk` isn't a readable Android package.")
 
-    text = manifest.decode("utf-16-le", errors="ignore") + manifest.decode("latin-1", errors="ignore")
-    candidates = re.findall(r"[a-z][a-z0-9_]*(?:\.[a-z][a-z0-9_]*){2,}", text)
-    ignore = ("android.", "androidx.", "com.google.", "kotlin.", "java.")
-    pkgs = [c for c in candidates if not c.startswith(ignore)]
-    if not pkgs:
-        raise Reject("Couldn't read an applicationId out of that APK's manifest.")
-    app_id = max(set(pkgs), key=pkgs.count)
+    # Parse the binary manifest properly. The old approach scanned the string
+    # pool for dotted identifiers and took the most frequent one that wasn't
+    # android./androidx./etc -- which is wrong for any app derived from sample
+    # code. The first real outside submission was a whoBIRD fork built on the
+    # TensorFlow Lite sound-classifier example, and
+    # `org.tensorflow.lite.examples.soundclassifier` appears throughout it far
+    # more often than its actual applicationId does. The count picked the
+    # ancestor.
+    #
+    # That is not a cosmetic mistake: pkg is the key the published index is
+    # stored under and the one the client compares against PackageManager, so a
+    # wrong one means the app never registers as installed and its signing
+    # certificate never pins.
+    app_id = None
+    try:
+        import tempfile
+        from pyaxmlparser import APK
+        with tempfile.NamedTemporaryFile(suffix=".apk", delete=False) as f:
+            f.write(blob)
+            tmp = f.name
+        try:
+            app_id = APK(tmp).package or None
+        finally:
+            os.unlink(tmp)
+    except Exception:
+        app_id = None
+
+    if not app_id:
+        # Kept only as a fallback for the case where the parser itself fails.
+        # Still a guess, and still capable of being wrong in the same way.
+        text = manifest.decode("utf-16-le", errors="ignore") + manifest.decode("latin-1", errors="ignore")
+        candidates = re.findall(r"[a-z][a-z0-9_]*(?:\.[a-z][a-z0-9_]*){2,}", text)
+        ignore = ("android.", "androidx.", "com.google.", "kotlin.", "java.")
+        pkgs = [c for c in candidates if not c.startswith(ignore)]
+        if not pkgs:
+            raise Reject("Couldn't read an applicationId out of that APK's manifest.")
+        app_id = max(set(pkgs), key=pkgs.count)
 
     return {
         "pkg": app_id,

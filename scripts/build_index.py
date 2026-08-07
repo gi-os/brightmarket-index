@@ -76,6 +76,35 @@ def version_code_from_tag(tag: str) -> int | None:
         return None
 
 
+def signer_of(apk) -> str:
+    """SHA-256 of the APK's signing certificate, or "" if it can't be read.
+
+    Android identifies an app by (applicationId, signing certificate), so this
+    is the only thing that distinguishes the real app from a rebuild by someone
+    else under the same package name. Pinned on first sight and compared on
+    every run after: a change means the app has changed hands, which is exactly
+    the event nobody would otherwise notice.
+
+    v3 first, then v2, then the old JAR signature -- newest scheme wins because
+    that is the one Android verifies against. Failing to read one is not treated
+    as a mismatch; "" means "unknown", and unknown never trips the alarm.
+    """
+    for reader in ("get_certificates_der_v3", "get_certificates_der_v2"):
+        try:
+            ders = getattr(apk, reader)() or []
+            if ders:
+                return hashlib.sha256(ders[0]).hexdigest()
+        except Exception:
+            pass
+    try:
+        names = apk.get_signature_names() or []
+        if names:
+            return hashlib.sha256(apk.get_certificate_der(names[0])).hexdigest()
+    except Exception:
+        pass
+    return ""
+
+
 def read_apk(blob: bytes) -> tuple[int, str] | None:
     """Read the real (versionCode, applicationId) out of an APK.
 
@@ -101,7 +130,7 @@ def read_apk(blob: bytes) -> tuple[int, str] | None:
         pkg = apk.package
         if not pkg:
             return None
-        return code, pkg
+        return code, pkg, signer_of(apk)
     except Exception:
         return None
     finally:
@@ -204,7 +233,10 @@ def main() -> int:
             continue
         asset = latest_assets[0]
 
-        prev = previous.get(pkg, {})
+        # Deliberately NOT `previous.get(pkg)` yet: pkg here is still whatever
+        # apps.yml claims, and it can be wrong. Looked up after the APK has had
+        # its say, below.
+        prev: dict = {}
 
         # One extra API call per app; cheap, and it means a developer adding a
         # screenshot sees it appear without touching apps.yml.
@@ -212,7 +244,7 @@ def main() -> int:
             repo_meta = get(f"{API}/repos/{repo}")
             screenshots = find_screenshots(repo, repo_meta.get("default_branch", "main"))
         except urllib.error.HTTPError:
-            screenshots = prev.get("screenshots", [])
+            screenshots = None
 
         # Download once: the same bytes give us the hash the client verifies and
         # the versionCode it compares against.
@@ -224,6 +256,7 @@ def main() -> int:
         sha256 = hashlib.sha256(blob).hexdigest()
 
         parsed = read_apk(blob)
+        signer = ""
         if parsed is None:
             version_code = version_code_from_tag(latest_release["tag_name"])
             if version_code is None:
@@ -231,7 +264,7 @@ def main() -> int:
                 continue
             warn(f"{pkg}: fell back to the tag for versionCode ({version_code})")
         else:
-            version_code, apk_pkg = parsed
+            version_code, apk_pkg, signer = parsed
             # apps.yml is hand-written and the APK is not. If they disagree the
             # APK wins, because that is the identity Android will actually use --
             # and a mismatch means the client would compare against a package
@@ -239,6 +272,35 @@ def main() -> int:
             if apk_pkg != pkg:
                 warn(f"{pkg}: apps.yml disagrees with the APK ({apk_pkg}) -- using the APK")
                 pkg = apk_pkg
+
+        # Now that pkg is the one Android will use, and therefore the one the
+        # previous index is keyed by. Doing this earlier meant an app whose
+        # apps.yml pkg was wrong looked new on every single run: firstSeen reset
+        # daily, and -- the part that actually matters -- the signing
+        # certificate never pinned, because there was never a previous entry to
+        # pin it against. The app would have looked exactly as trustworthy as
+        # the rest while carrying none of the guarantee.
+        prev = previous.get(pkg, {})
+        if screenshots is None:
+            screenshots = prev.get("screenshots", [])
+
+        # The pin. A first sighting records whatever the APK is signed with; a
+        # later run that disagrees keeps the previous entry and shouts, rather
+        # than quietly publishing a new hash for an app that is no longer the
+        # same app. Refusing to update is the safe direction: the worst case is
+        # a stale listing, which is visible, instead of a silent handover, which
+        # is not.
+        pinned = prev.get("signer", "")
+        if pinned and signer and signer != pinned:
+            warn(
+                f"{pkg}: SIGNING CERTIFICATE CHANGED "
+                f"({pinned[:16]}... -> {signer[:16]}...) -- keeping the previous "
+                f"entry. If this is intentional, clear `signer` for {pkg} in the "
+                f"published index."
+            )
+            out.append(prev)
+            continue
+        signer = signer or pinned
 
         out.append(
             {
@@ -264,6 +326,7 @@ def main() -> int:
                 "downloads": downloads,
                 # Carried forward, never recomputed -- see module docstring.
                 "firstSeen": prev.get("firstSeen") or today,
+                "signer": signer,
             }
         )
 
