@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-06T23:54:08.271001+00:00",
+ "generated": "2026-08-07T00:30:30.837810+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -17,7 +17,24 @@
     "published": "2026-08-06T23:27:57Z",
     "notes": "**Full Changelog**: https://github.com/gi-os/BrightTip/compare/v1.3.18...v1.3.19"
    },
-   "downloads": 19,
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightTip/main/docs/screenshots/split-items.png",
+     "name": "split-items.png",
+     "size": 59310
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightTip/main/docs/screenshots/tip.png",
+     "name": "tip.png",
+     "size": 54607
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightTip/main/docs/screenshots/totals.png",
+     "name": "totals.png",
+     "size": 55824
+    }
+   ],
+   "downloads": 20,
    "firstSeen": "2026-08-06"
   },
   {
@@ -35,7 +52,24 @@
     "published": "2026-08-06T23:19:18Z",
     "notes": "**Full Changelog**: https://github.com/gi-os/BrightNoise/compare/v1.1.9...v1.1.10"
    },
-   "downloads": 11,
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightNoise/main/docs/screenshots/mix.png",
+     "name": "mix.png",
+     "size": 49377
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightNoise/main/docs/screenshots/sounds.png",
+     "name": "sounds.png",
+     "size": 65338
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightNoise/main/docs/screenshots/timer.png",
+     "name": "timer.png",
+     "size": 49896
+    }
+   ],
+   "downloads": 12,
    "firstSeen": "2026-08-06"
   },
   {
@@ -53,7 +87,8 @@
     "published": "2026-08-06T23:15:05Z",
     "notes": "**Full Changelog**: https://github.com/gi-os/BrightAuthenticator/compare/v1.2.10...v1.2.11"
    },
-   "downloads": 23,
+   "screenshots": [],
+   "downloads": 24,
    "firstSeen": "2026-08-06"
   },
   {
@@ -71,7 +106,8 @@
     "published": "2026-08-06T23:26:18Z",
     "notes": "**Full Changelog**: https://github.com/gi-os/BrightSports/compare/v1.11.19...v1.11.20"
    },
-   "downloads": 18,
+   "screenshots": [],
+   "downloads": 19,
    "firstSeen": "2026-08-06"
   }
  ]

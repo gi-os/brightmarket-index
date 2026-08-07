@@ -27,6 +27,7 @@ import hashlib
 import datetime
 import urllib.request
 import urllib.error
+import urllib.parse
 
 import yaml
 
@@ -66,6 +67,51 @@ def parse_version_code(tag: str) -> int | None:
         return int(tag.lstrip("v").rsplit(".", 1)[-1])
     except (ValueError, IndexError):
         return None
+
+
+# Checked in order; the first that exists and has images wins. docs/screenshots
+# is the convention already used across the portfolio, so it goes first.
+SCREENSHOT_DIRS = ("docs/screenshots", "screenshots", ".github/screenshots")
+IMAGE_EXTS = (".png", ".jpg", ".jpeg", ".webp")
+
+
+def find_screenshots(repo: str, default_branch: str) -> list[dict]:
+    """Look for a screenshots folder in the app's own repo.
+
+    Deliberately reads from the app repo rather than hosting uploads: the files
+    are already there for the README, they version with the app, and it means
+    the whole marketplace still needs no storage of its own. A developer adds a
+    screenshot by committing it, same as any other change.
+
+    Served through raw.githubusercontent.com pinned to the branch name. Not to a
+    commit SHA -- pinning would freeze the images at whatever the index last saw
+    and quietly serve stale screenshots after a redesign.
+    """
+    for directory in SCREENSHOT_DIRS:
+        try:
+            listing = get(f"{API}/repos/{repo}/contents/{directory}")
+        except urllib.error.HTTPError:
+            continue
+        if not isinstance(listing, list):
+            continue
+
+        shots = [
+            {
+                "url": (
+                    f"https://raw.githubusercontent.com/{repo}/"
+                    f"{default_branch}/{directory}/{urllib.parse.quote(f['name'])}"
+                ),
+                "name": f["name"],
+                "size": f["size"],
+            }
+            # Sorted by filename so the order is stable and the developer can
+            # control it by naming files 1-, 2-, etc.
+            for f in sorted(listing, key=lambda x: x["name"])
+            if f["type"] == "file" and f["name"].lower().endswith(IMAGE_EXTS)
+        ]
+        if shots:
+            return shots
+    return []
 
 
 def load_previous(path: str) -> dict:
@@ -125,6 +171,14 @@ def main() -> int:
 
         prev = previous.get(pkg, {})
 
+        # One extra API call per app; cheap, and it means a developer adding a
+        # screenshot sees it appear without touching apps.yml.
+        try:
+            repo_meta = get(f"{API}/repos/{repo}")
+            screenshots = find_screenshots(repo, repo_meta.get("default_branch", "main"))
+        except urllib.error.HTTPError:
+            screenshots = prev.get("screenshots", [])
+
         # Hash what we actually serve, so the client can verify the download.
         try:
             sha256 = hashlib.sha256(get_bytes(asset["browser_download_url"])).hexdigest()
@@ -148,6 +202,7 @@ def main() -> int:
                     "published": latest_release["published_at"],
                     "notes": (latest_release["body"] or "")[:4000],
                 },
+                "screenshots": screenshots,
                 "downloads": downloads,
                 # Carried forward, never recomputed -- see module docstring.
                 "firstSeen": prev.get("firstSeen") or today,
@@ -167,7 +222,11 @@ def main() -> int:
 
     print(f"indexed {len(out)}/{len(apps)} apps, {len(warnings)} warning(s)")
     for a in out:
-        print(f"  {a['name']:24} v{a['latest']['version']:12} {a['downloads']:>6} downloads")
+        shots = len(a.get("screenshots", []))
+        print(
+            f"  {a['name']:24} v{a['latest']['version']:12} "
+            f"{a['downloads']:>6} downloads  {shots} screenshot(s)"
+        )
     return 0
 
 
