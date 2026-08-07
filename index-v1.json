@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T00:57:46.073635+00:00",
+ "generated": "2026-08-07T01:01:25.718281+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -117,13 +117,13 @@
    "category": "utilities",
    "summary": "The marketplace itself. Browse, install and update Light Phone apps.",
    "latest": {
-    "version": "1.0.7",
-    "versionCode": 7,
-    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.0.7/BrightMarket-v1.0.7.apk",
+    "version": "1.0.8",
+    "versionCode": 8,
+    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.0.8/BrightMarket-v1.0.8.apk",
     "size": 19106761,
-    "sha256": "6f061e3221b65a3e97d6b065982fb179effb1a6979519311a239f55a97ee4ae5",
-    "published": "2026-08-07T00:57:30Z",
-    "notes": "**Full Changelog**: https://github.com/gi-os/BrightMarket/compare/v1.0.6...v1.0.7"
+    "sha256": "5520d81355ec1670919976d9a149c7162fad6c431bd392b30d23901b9cb626f2",
+    "published": "2026-08-07T01:01:09Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightMarket/compare/v1.0.7...v1.0.8"
    },
    "screenshots": [],
    "downloads": 2,
