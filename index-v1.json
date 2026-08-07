@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T21:04:33.808195+00:00",
+ "generated": "2026-08-07T21:05:31.973912+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -692,6 +692,44 @@
    "downloads": 5,
    "firstSeen": "2026-08-07",
    "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
+  },
+  {
+   "pkg": "org.woheller69.whobird.chirp",
+   "name": "Chirp",
+   "repo": "barry7007/LightBirdIdentifier",
+   "category": "utilities",
+   "summary": "Identify bird sounds. Restyled from whoBird.",
+   "latest": {
+    "version": "1.0.1",
+    "versionCode": 2,
+    "apk": "https://github.com/barry7007/LightBirdIdentifier/releases/download/v1.0.1/Chirp-v1.0.1.apk",
+    "size": 47372412,
+    "sha256": "69c864b1deceb348da0c80d50553ded537617a568666c403816fbbf94fd00aff",
+    "published": "2026-08-04T08:56:19Z",
+    "notes": "**Full Changelog**: https://github.com/barry7007/LightBirdIdentifier/compare/v1.0.0...v1.0.1"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/barry7007/LightBirdIdentifier/main/docs/screenshots/collection.png",
+     "name": "collection.png",
+     "size": 973541
+    },
+    {
+     "url": "https://raw.githubusercontent.com/barry7007/LightBirdIdentifier/main/docs/screenshots/identified.png",
+     "name": "identified.png",
+     "size": 569781
+    },
+    {
+     "url": "https://raw.githubusercontent.com/barry7007/LightBirdIdentifier/main/docs/screenshots/settings.png",
+     "name": "settings.png",
+     "size": 73420
+    }
+   ],
+   "downloads": 5,
+   "firstSeen": "2026-08-07",
+   "signer": "9276d2b4ec2e238059119a23459164bd15201e9183180029fb30de2632f6fd21"
   }
  ]
 }
