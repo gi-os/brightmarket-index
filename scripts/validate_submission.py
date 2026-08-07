@@ -51,18 +51,54 @@ def get(url):
         return json.load(r)
 
 
-def parse_issue(body: str) -> tuple[str, str]:
-    """Pull repo + category out of either the issue-form rendering or the
-    portal's plain `**Repo:** <url>` format."""
+def field(body: str, label: str) -> str:
+    """Read one `**Label:** value` line written by the portal.
+
+    Anchored to the start of a line and stopping at the end of it, because the
+    portal strips newlines out of free text for exactly this reason -- a summary
+    that could contain its own `**Category:**` line would otherwise be able to
+    set a field the submitter never chose.
+    """
+    m = re.search(rf"^\s*\*\*{label}:\*\*\s*(.+?)\s*$", body, re.M | re.I)
+    return m.group(1).strip() if m else ""
+
+
+def parse_issue(body: str) -> dict:
+    """Pull the request out of either the issue-form rendering or the portal's
+    plain `**Repo:** <url>` format.
+
+    Returns an action as well as a repo now: the portal can ask to edit or
+    remove a listing, not only to add one, and all three arrive as issues on
+    this repo so they go through the same checks and leave the same trail.
+    """
     repo_m = re.search(r"github\.com/([\w.-]+/[\w.-]+)", body) or re.search(
         r"^\s*([\w.-]+/[\w.-]+)\s*$", body, re.M
     )
-    cat_m = re.search(r"(reading|utilities|games|media|productivity|hardware)", body, re.I)
     if not repo_m:
         raise Reject("I couldn't find a repo in this issue. Give me `owner/name` or a GitHub URL.")
-    if not cat_m:
+
+    action = (field(body, "Action") or "submit").lower()
+    if action not in ("submit", "edit", "remove"):
+        raise Reject(f"Unknown action `{action}`.")
+
+    # Prefer the explicit field; fall back to finding the word anywhere, which
+    # is what the hand-written issue form produces.
+    category = field(body, "Category").lower()
+    if category and category not in VALID_CATEGORIES:
+        raise Reject(f"`{category}` isn't a category. Pick one of: {', '.join(sorted(VALID_CATEGORIES))}.")
+    if not category:
+        cat_m = re.search(r"(reading|utilities|games|media|productivity|hardware)", body, re.I)
+        category = cat_m.group(1).lower() if cat_m else ""
+    if action == "submit" and not category:
         raise Reject(f"No category found. Pick one of: {', '.join(sorted(VALID_CATEGORIES))}.")
-    return repo_m.group(1).removesuffix(".git"), cat_m.group(1).lower()
+
+    return {
+        "action": action,
+        "repo": repo_m.group(1).removesuffix(".git"),
+        "category": category,
+        "name": field(body, "Name"),
+        "summary": field(body, "Summary"),
+    }
 
 
 def validate(repo: str) -> dict:
@@ -142,42 +178,74 @@ def main() -> int:
     apps_path = os.path.join(root, "apps.yml")
 
     try:
-        repo, category = parse_issue(body)
-        info = validate(repo)
+        req = parse_issue(body)
+        repo, action = req["repo"], req["action"]
 
         with open(apps_path) as f:
             doc = yaml.safe_load(f)
         existing = doc["apps"]
 
-        for a in existing:
-            if a["repo"].lower() == repo.lower():
-                raise Reject(f"`{repo}` is already in BrightMarket.")
-            if a["pkg"] == info["pkg"]:
-                raise Reject(
-                    f"Package `{info['pkg']}` is already indexed as **{a['name']}** "
-                    f"(`{a['repo']}`). Two apps can't share an applicationId."
-                )
+        if action == "remove":
+            match = next((a for a in existing if a["repo"].lower() == repo.lower()), None)
+            if not match:
+                raise Reject(f"`{repo}` isn't in BrightMarket, so there's nothing to remove.")
+            existing.remove(match)
+            summary = f"Removed **{match['name']}** (`{match['pkg']}`) at the owner's request."
+            out_pkg, out_name = match["pkg"], match["name"]
 
-        existing.append(
-            {
-                "pkg": info["pkg"],
-                "name": info["name"],
-                "repo": repo,
-                "category": category,
-                "summary": info["summary"],
-            }
-        )
+        elif action == "edit":
+            match = next((a for a in existing if a["repo"].lower() == repo.lower()), None)
+            if not match:
+                raise Reject(f"`{repo}` isn't in BrightMarket yet — submit it first.")
+            changed = []
+            for key in ("name", "summary", "category"):
+                value = req.get(key)
+                if value and value != match.get(key):
+                    changed.append(f"{key}: `{match.get(key)}` → `{value}`")
+                    match[key] = value
+            if not changed:
+                raise Reject("Nothing in that request differs from what's already listed.")
+            summary = f"Updated **{match['name']}** — " + "; ".join(changed)
+            out_pkg, out_name = match["pkg"], match["name"]
+
+        else:
+            # A new entry is the only action that has to touch the network: it
+            # is the only one making a claim about a repo we have never checked.
+            info = validate(repo)
+            for a in existing:
+                if a["repo"].lower() == repo.lower():
+                    raise Reject(f"`{repo}` is already in BrightMarket.")
+                if a["pkg"] == info["pkg"]:
+                    raise Reject(
+                        f"Package `{info['pkg']}` is already indexed as **{a['name']}** "
+                        f"(`{a['repo']}`). Two apps can't share an applicationId."
+                    )
+            existing.append(
+                {
+                    "pkg": info["pkg"],
+                    # What the submitter asked to be called, falling back to the
+                    # repo's own name and description when they said nothing.
+                    "name": req["name"] or info["name"],
+                    "repo": repo,
+                    "category": req["category"],
+                    "summary": req["summary"] or info["summary"],
+                }
+            )
+            summary = (
+                f"Validated **{req['name'] or info['name']}** (`{info['pkg']}`) — latest "
+                f"release `{info['version']}`, one asset `{info['apk']}`."
+            )
+            out_pkg, out_name = info["pkg"], req["name"] or info["name"]
+
         with open(apps_path, "w") as f:
             yaml.safe_dump(doc, f, sort_keys=False, default_flow_style=False, allow_unicode=True)
 
         with open(os.environ.get("GITHUB_OUTPUT", "/dev/null"), "a") as f:
             f.write("status=pass\n")
-            f.write(f"pkg={info['pkg']}\n")
-            f.write(f"name={info['name']}\n")
-        print(
-            f"Validated **{info['name']}** (`{info['pkg']}`) — latest release "
-            f"`{info['version']}`, one asset `{info['apk']}`."
-        )
+            f.write(f"action={action}\n")
+            f.write(f"pkg={out_pkg}\n")
+            f.write(f"name={out_name}\n")
+        print(summary)
         return 0
 
     except Reject as e:

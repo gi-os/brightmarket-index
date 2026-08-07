@@ -33,17 +33,26 @@ jobs:
         if: steps.validate.outputs.status == 'pass'
         uses: peter-evans/create-pull-request@v6
         with:
-          branch: submit/${{ steps.validate.outputs.pkg }}
-          title: "Add ${{ steps.validate.outputs.name }} to the index"
+          # One branch per app per action, so an edit and a removal for the same
+          # app don't overwrite each other's branch.
+          branch: ${{ steps.validate.outputs.action }}/${{ steps.validate.outputs.pkg }}
+          title: "${{ steps.validate.outputs.action }}: ${{ steps.validate.outputs.name }}"
           body: |
             Closes #${{ github.event.issue.number }}
 
-            Automated checks passed: public repo, published release, exactly one
-            `.apk` asset, parseable tag, applicationId read from the APK itself
-            and not already indexed.
-          commit-message: "index: add ${{ steps.validate.outputs.name }}"
+            Requested by the repo's owner, verified through GitHub OAuth before
+            the issue was filed. For a new listing the automated checks also
+            passed: public repo, published release, exactly one `.apk` asset,
+            parseable tag, and an applicationId read out of the APK itself that
+            isn't already indexed.
+          commit-message: "index: ${{ steps.validate.outputs.action }} ${{ steps.validate.outputs.name }}"
 
+      # always(): the first real submission passed its checks and then died on
+      # the PR step, and because this had no condition it was skipped -- so the
+      # person who submitted got no comment, no rejection, and no PR. Silence is
+      # the one outcome a submission queue must never produce.
       - name: Comment the result
+        if: always()
         uses: actions/github-script@v7
         env:
           STATUS: ${{ steps.validate.outputs.status }}
@@ -51,15 +60,20 @@ jobs:
         with:
           script: |
             const ok = process.env.STATUS === 'pass';
+            const broke = process.env.STATUS !== 'pass' && !process.env.REASON;
             await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: ok
                 ? "Checks passed — a PR is open to add this to the index. Nothing more needed from you."
-                : `Can't add this yet:\n\n> ${process.env.REASON}\n\nFix that and reopen this issue to re-run the checks.`
+                : broke
+                  ? "Something went wrong on our side, not yours — the checks didn't finish. This is being looked at; you don't need to do anything."
+                  : `Can't add this yet:\n\n> ${process.env.REASON}\n\nFix that and reopen this issue to re-run the checks.`
             });
-            if (!ok) {
+            // A run that broke on our side is not the submitter's fault, so it
+            // stays open rather than being closed under them.
+            if (!ok && !broke) {
               await github.rest.issues.update({
                 issue_number: context.issue.number,
                 owner: context.repo.owner, repo: context.repo.repo, state: 'closed'
