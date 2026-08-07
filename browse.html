@@ -140,6 +140,30 @@
     letter-spacing:.14em; color:#6a6a70; }
   .note { margin-top:26px; font-family:var(--mono); font-size:10px; letter-spacing:.16em; color:var(--dimmest); }
   @media (max-width: 900px) { .hero { flex-wrap: wrap; } }
+
+  /* README overlay. Fixed rather than inline: the hero is sticky, so an inline
+     panel would either be trapped under it or push the whole grid around. */
+  .veil { position:fixed; inset:0; background:rgba(0,0,0,.82); z-index:60;
+    display:flex; align-items:flex-start; justify-content:center; padding:40px 20px; }
+  .sheet { width:100%; max-width:860px; max-height:calc(100vh - 80px); overflow:auto;
+    background:#000; border:1px solid var(--line-2); border-radius:14px; }
+  .sheet-bar { position:sticky; top:0; background:#000; border-bottom:1px solid var(--line);
+    padding:14px 22px; display:flex; align-items:center; justify-content:space-between; }
+  .sheet-body { padding:22px 26px 34px; font-size:14px; line-height:1.65; color:#d8d8dc; }
+  .sheet-body h1 { font-family:var(--round); font-size:24px; margin:22px 0 10px; color:var(--fg); }
+  .sheet-body h2 { font-family:var(--round); font-size:18px; margin:22px 0 8px; color:var(--fg); }
+  .sheet-body h3 { font-family:var(--round); font-size:15px; margin:18px 0 6px; color:var(--fg); }
+  .sheet-body a { border-bottom:1px solid var(--edge); }
+  .sheet-body code { font-family:var(--mono); font-size:12.5px; background:#141418;
+    padding:1px 5px; border-radius:4px; }
+  .sheet-body pre { background:#0d0d10; border:1px solid var(--line-2); border-radius:8px;
+    padding:12px 14px; overflow:auto; }
+  .sheet-body pre code { background:none; padding:0; }
+  .sheet-body img { max-width:100%; border-radius:6px; }
+  .sheet-body table { border-collapse:collapse; width:100%; font-size:13px; display:block; overflow:auto; }
+  .sheet-body th, .sheet-body td { border:1px solid var(--line-2); padding:6px 9px; text-align:left; }
+  .sheet-body blockquote { margin:14px 0; padding:2px 0 2px 14px; border-left:2px solid var(--edge); color:var(--dim); }
+  .sheet-body hr { border:none; border-top:1px solid var(--line); margin:22px 0; }
 </style>
 </head>
 <body>
@@ -149,10 +173,8 @@
     <div style="display:flex; align-items:center; gap:13px;">
       <div class="logo">B</div>
       <div class="wordmark">BRIGHTMARKET</div>
-      <div class="live"></div>
     </div>
     <div style="display:flex; align-items:center; gap:12px;">
-      <div class="status" id="status">LOADING</div>
       <a class="pill-link" href="./submit.html"><span style="font-size:14px; line-height:1;">＋</span>ADD YOUR APP</a>
     </div>
   </div>
@@ -207,12 +229,16 @@
         </div>
       </div>
     </div>
-    <div class="note">NOTHING INSTALLS UNTIL YOU TAP INSTALL ON THE PHONE</div>
   </div>
 
 </div></div>
 
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<!-- A README is arbitrary markdown from an arbitrary repo, and markdown may
+     contain raw HTML. Rendering it unsanitised into the page would be a
+     scripting hole the moment anyone submits a repo. -->
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
 <script>
   const INDEX = "./index-v1.json";
   const $ = (id) => document.getElementById(id);
@@ -303,9 +329,70 @@
           <div class="qr-cap">SCAN WITH YOUR PHONE<br />TO OPEN IT THERE</div>
         </div>
         <a class="btn" href="${esc(app.latest.apk)}" target="_blank" rel="noopener">GET APK ↓</a>
+        <div class="btn btn-ghost" id="readme-btn" style="cursor:pointer;">README</div>
         <a class="btn btn-ghost" href="https://github.com/${esc(app.repo)}" target="_blank" rel="noopener">SOURCE</a>
       </div>`;
     qrInto($("hero-qr"), "brightmarket://app/" + app.pkg, 4);
+    $("readme-btn").addEventListener("click", () => openReadme(app));
+  }
+
+  // Cached per repo: reopening shouldn't refetch, and READMEs here run to 45KB.
+  const readmeCache = new Map();
+
+  async function openReadme(app) {
+    const veil = document.createElement("div");
+    veil.className = "veil";
+    veil.innerHTML = `
+      <div class="sheet">
+        <div class="sheet-bar">
+          <div style="font-family:var(--round); font-size:16px;">${esc(app.name)} · README</div>
+          <div class="chip" data-close="1" style="cursor:pointer;">CLOSE</div>
+        </div>
+        <div class="sheet-body" id="sheet-body">Loading…</div>
+      </div>`;
+    document.body.appendChild(veil);
+
+    const close = () => veil.remove();
+    veil.addEventListener("click", (e) => {
+      // Click the backdrop or CLOSE, but not the sheet itself.
+      if (e.target === veil || e.target.dataset.close) close();
+    });
+    const onKey = (e) => { if (e.key === "Escape") { close(); window.removeEventListener("keydown", onKey); } };
+    window.addEventListener("keydown", onKey);
+
+    const body = veil.querySelector("#sheet-body");
+    try {
+      let md = readmeCache.get(app.repo);
+      if (md == null) {
+        // HEAD as the ref, so this works whatever the default branch is called
+        // and costs no API rate limit -- raw.githubusercontent is unmetered,
+        // the API is 60/hour unauthenticated.
+        const res = await fetch(`https://raw.githubusercontent.com/${app.repo}/HEAD/README.md`);
+        if (!res.ok) throw new Error(String(res.status));
+        md = await res.text();
+        readmeCache.set(app.repo, md);
+      }
+      const html = marked.parse(md, { mangle: false, headerIds: false });
+      body.innerHTML = DOMPurify.sanitize(html, { ADD_ATTR: ["target"] });
+      // Relative links and images in a README resolve against the repo, not
+      // against this page, so rewrite them or they all 404.
+      body.querySelectorAll("img[src]").forEach((n) => {
+        const src = n.getAttribute("src");
+        if (!/^https?:/i.test(src)) {
+          n.src = `https://raw.githubusercontent.com/${app.repo}/HEAD/${src.replace(/^\.?\//, "")}`;
+        }
+      });
+      body.querySelectorAll("a[href]").forEach((n) => {
+        const href = n.getAttribute("href");
+        if (!/^https?:|^#/i.test(href)) {
+          n.href = `https://github.com/${app.repo}/blob/HEAD/${href.replace(/^\.?\//, "")}`;
+        }
+        n.target = "_blank";
+        n.rel = "noopener";
+      });
+    } catch (err) {
+      body.textContent = "Couldn't load the README for this app.";
+    }
   }
 
   function render() {
@@ -385,14 +472,12 @@
       const res = await fetch(INDEX, { cache: "no-store" });
       const data = await res.json();
       apps = data.apps || [];
-      $("status").textContent = `${apps.length} APPS · UPDATED ${day(data.generated)}`;
       $("wire").innerHTML = [0, 1].map(() =>
         `<span>${apps.map((a) => `${esc(a.name.toUpperCase())} ${esc(ver(a.latest.version))}`).join("</span><span>")}</span>`
       ).join("");
       renderChips();
       render();
     } catch (err) {
-      $("status").textContent = "INDEX UNAVAILABLE";
       $("empty").style.display = "block";
       $("empty").textContent = "COULDN'T LOAD THE INDEX";
     }
