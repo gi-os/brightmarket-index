@@ -72,9 +72,14 @@
     overflow:hidden; border-bottom:1px solid var(--line); }
   /* On a short window a sticky hero would leave no room for the grid, so below
      that height it scrolls away normally. */
-  /* On a short window all this stacked chrome would leave no room for the
-     grid it exists to help you browse, so below that height it scrolls. */
-  @media (max-height: 820px) {
+  /* All this stacked chrome can leave no room for the grid it exists to help
+     you browse, so past a point it scrolls away instead of sticking. That used
+     to be a fixed `max-height: 820px`, which stopped being the right number the
+     moment the hero grew: an app with three screenshots is ~160px taller than
+     one with none, so the same window could hold the whole thing for one app
+     and not for the next. The script measures and sets .no-stick instead. */
+  .no-stick .hero-wrap, .no-stick .wire { position:relative; top:auto; }
+  @media (max-height: 560px) {
     .hero-wrap, .wire { position:relative; top:auto; }
   }
   .hero-scan { position:absolute; left:0; right:0; top:0; height:80px; pointer-events:none;
@@ -93,8 +98,12 @@
   .stat { background:#000; padding:9px 12px; }
   .stat b { display:block; font-family:var(--mono); font-size:9px; letter-spacing:.14em; color:#6a6a70; font-weight:400; }
   .stat i { display:block; font-family:var(--mono); font-size:13px; font-style:normal; margin-top:3px; }
-  .shots { display:flex; gap:10px; flex-wrap:wrap; }
-  .shots img { height:158px; border-radius:6px; border:1px solid var(--line-2); background:#000;
+  .shots { display:flex; gap:10px; flex-wrap:nowrap; overflow-x:auto; overflow-y:hidden;
+    padding-bottom:6px; scrollbar-width:thin; }
+  .shots img { flex:0 0 auto; }
+  /* Was 158px. Three of these plus the metadata is most of a laptop window,
+     which is what pushed the hero past the point where it could stay pinned. */
+  .shots img { height:118px; border-radius:6px; border:1px solid var(--line-2); background:#000;
     cursor:zoom-in; transition:.15s; }
   .shots img:hover { border-color:var(--fg); }
   .lightbox-img { max-width:100%; max-height:calc(100vh - 160px); border-radius:8px;
@@ -307,7 +316,11 @@
   function renderHero(app) {
     if (!app) { $("hero").innerHTML = ""; return; }
     const self_ = app.pkg === "com.gios.brightmarket";
-    const shots = (app.screenshots || []).slice(0, 3);
+    // Was .slice(0, 3). The strip scrolls sideways now, so a sixth
+    // screenshot costs horizontal room rather than another row of
+    // height -- and the hero staying a fixed height is what keeps it
+    // pinned. No reason to hide the rest.
+    const shots = app.screenshots || [];
     $("hero").innerHTML = `
       <div style="flex-shrink:0; display:flex; flex-direction:column; gap:12px; align-items:center; width:172px;">
         <div class="hero-icon">${esc(app.name[0])}<div class="sh"></div></div>
@@ -584,6 +597,17 @@
     // one invisible pixel of the hero's border.
     const px = Math.max(0, Math.floor(h.getBoundingClientRect().height) - 1);
     document.documentElement.style.setProperty("--hero-h", px + "px");
+
+    // Sticky is all-or-nothing here: the ticker is positioned off the hero's
+    // measured height, so a hero that scrolls away while the ticker stays put
+    // leaves the ticker pinned to a gap. Either the bar, hero and ticker all
+    // hold, or only the bar does.
+    const bar = document.querySelector(".bar");
+    const wire = document.querySelector(".wire");
+    const stack = (bar ? bar.offsetHeight : 0) + px + (wire ? wire.offsetHeight : 0);
+    // Half the window is the budget: below that there is still a screen of grid
+    // visible underneath, which is the whole point of pinning the controls.
+    document.body.classList.toggle("no-stick", stack > window.innerHeight * 0.5);
   }
 
   function render() {
