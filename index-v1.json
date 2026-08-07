@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T02:20:49.421563+00:00",
+ "generated": "2026-08-07T02:35:46.185256+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -36,7 +36,7 @@
      "size": 55824
     }
    ],
-   "downloads": 40,
+   "downloads": 41,
    "firstSeen": "2026-08-06"
   },
   {
@@ -73,7 +73,7 @@
      "size": 49896
     }
    ],
-   "downloads": 30,
+   "downloads": 31,
    "firstSeen": "2026-08-06"
   },
   {
@@ -94,7 +94,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 42,
+   "downloads": 43,
    "firstSeen": "2026-08-06"
   },
   {
@@ -131,7 +131,7 @@
      "size": 55168
     }
    ],
-   "downloads": 37,
+   "downloads": 38,
    "firstSeen": "2026-08-06"
   },
   {
@@ -141,18 +141,18 @@
    "category": "utilities",
    "summary": "The marketplace itself. Browse, install and update Light Phone apps.",
    "latest": {
-    "version": "1.1.13",
-    "versionCode": 13,
-    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.1.13/BrightMarket-v1.1.13.apk",
-    "size": 22499774,
-    "sha256": "ed6dfa6f09a2b95264f7a6c1063ef3345678f6db427fd4865a03efe0b8a4c12c",
-    "published": "2026-08-07T02:20:12Z",
-    "notes": "\n**Scan a QR to install.** The camera is in, carried over from LightQR \u2014 ZXing\ndecoding the luminance plane, which works on LightOS because it needs no Google\nPlay Services. SCAN sits in the top bar rather than the bottom, because\nLightBottomBar allows at most three items when any of them is text and\nBrowse/Updates/Settings already fills it.\n\nTwo kinds of code work:\n\n- a `brightmarket://` link from the desktop catalogue, which opens that app\n- **any GitHub repo URL**, which starts tracking it for updates\n\n**Apps that aren't in BrightMarket.** That second one is the point: plenty of\nwhat people sideload will never be in a curated index \u2014 a fork, a personal\nbuild, something nobody has submitted. Those now appear under **NOT IN\nBRIGHTMARKET** and get update checks like anything else.\n\nThey are deliberately marked rather than blended in. An indexed app has passed\nthe submission checks and ships with a hash this app verifies before installing.\nA tracked repo has had none of that, and **its download cannot be verified** \u2014\nnothing generated a hash for it. Presenting the two identically would imply a\nguarantee only one of them has.\n\n**Obtainium import now imports everything.** It used to report a count of what\ndidn't match and drop the rest, which is the worst kind of migration: it looks\nfinished. Everything in the export is now kept, listed as unlisted where\nBrightMarket doesn't index it.\n\n**Also in this release**\n\n- Updates tab: what's installed, what's newer, and Update All\n- Focus mode, chosen on first launch, for browsing on a desktop instead\n- Screenshots on the detail page\n- The marketplace can update itself, and does so last in a batch \u2014 installing it\n  kills the process, so anything queued behind it would silently never run\n\n"
+    "version": "1.2.16",
+    "versionCode": 16,
+    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.2.16/BrightMarket-v1.2.16.apk",
+    "size": 22516162,
+    "sha256": "6a8dda9baba14cb1eec464b1d15f02b84fa426d66c4ecd1e0942d6655ac8de36",
+    "published": "2026-08-07T02:35:05Z",
+    "notes": "\n**Refresh.** A refresh control in the top bar, which refetches the catalogue\n*and* re-checks every tracked repo. Those are two halves of one question \u2014 \"is\nanything newer\" \u2014 and refreshing only one would leave a stale answer on screen.\n\n**Icons.** The bottom bar is icons now, drawn rather than shipped as assets.\nThat also lifts a real constraint: LightBottomBar allows five icon items but\nonly three when any of them is text.\n\n**Markdown in descriptions and release notes.** Every app's notes contain\nmarkdown \u2014 today all twenty include at least `**Full Changelog**` \u2014 and shown as\nplain text those asterisks appear literally, which reads as a bug. Bold, italic,\ncode, links, headings and bullets now render. It is deliberately a small reader\nrather than a library: a full parser is a dependency, and this is two screens of\ntext on a phone with very little storage.\n\n**Focus mode is stricter.** With it on, the phone shows Updates and Settings\nonly \u2014 the separate \"Installed\" tab was rendering the same screen as Updates, so\nit was a duplicate of itself. Focus mode can no longer be switched off in\nSettings; the only way back is scanning the OFF code on the desktop catalogue,\nwhich is now large and alone at the bottom of that page. Turning it *on* is\nstill one tap in Settings.\n\nThat is a commitment device, not a security boundary, and it is worth saying\nplainly: the code is an ordinary `brightmarket://focus/off` link and anyone\ndetermined can make one. It makes the easy path the intentional one. It does not\nstop the owner of the device.\n\n"
    },
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 22,
+   "downloads": 25,
    "firstSeen": "2026-08-06"
   },
   {
@@ -194,7 +194,7 @@
      "size": 212473
     }
    ],
-   "downloads": 65,
+   "downloads": 66,
    "firstSeen": "2026-08-06"
   },
   {
@@ -215,7 +215,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 34,
+   "downloads": 35,
    "firstSeen": "2026-08-06"
   },
   {
@@ -242,7 +242,7 @@
      "size": 88062
     }
    ],
-   "downloads": 53,
+   "downloads": 54,
    "firstSeen": "2026-08-06"
   },
   {
@@ -258,12 +258,12 @@
     "size": 18365257,
     "sha256": "a49c8d6052d17dc77267bfa78022ca911a61ccf77b7f952e77bd180d0918d71c",
     "published": "2026-08-06T23:21:50Z",
-    "notes": "**Full Changelog**: https://github.com/gi-os/BrightControl/compare/v1.8.46...v2.0.53"
+    "notes": "## LightControl v2.0 \u2014 Tap the volume strip to pick what the keys move\n\n**Two changes to the volume HUD, and the second one is the first time this app moves a volume\nitself.**\n\nIt no longer appears over LightOS. Light's dashboard and lock screen already have a volume control\nof their own, and a second one drawn over the top of it is this app's oldest mistake in a new place:\non Light's own screens, anything added is something duplicated. Everywhere else is unchanged.\n\nAnd the strip is now tappable. Android hands the volume keys one stream at a time \u2014 whatever is\nplaying, and media when nothing is \u2014 so the ringer and the alarm levels cannot be reached from the\nhardware at all, and LightOS has no screen for them either. Tap the strip and it cycles: media, ring,\nalarm, and the call stream when there is a call. The chosen one says **PIN**, and for the next few\nseconds the keys move that stream instead of the default one.\n\nReaching those streams means taking the press, so this is the one place the app adjusts a volume\nrather than reporting one \u2014 which is a rule worth bending only inside a fence:\n\n- It needs a tap first. Until you tap, no volume key is consumed, exactly as before.\n- It applies to one named stream, and it expires with the strip. Every press that uses it extends it.\n- It cannot survive a ring. The takeover lives in a path the service never reaches while anything is\n  ringing or a call is up, so the keys that dismiss an alarm are never in question.\n- Walking the ringer down into silence needs Do Not Disturb access, which a sideloaded app doesn't\n  have. The strip says NEEDS DND ACCESS instead of quietly doing nothing.\n- **Settings \u2192 VOLUME \u2192 Tap to pick a stream** turns it off, and with it off nothing here consumes a\n  key at all.\n\nThe strip had to become touchable for this, which is a real cost stated plainly: a tap landing on a\nthin bar at the very top of the screen, during the second or so it is visible, goes to the strip\ninstead of the app. Everything outside it passes through untouched, and the window stays unfocusable\n\u2014 so it can take a stray tap, but never a key.\n\n## LightControl v1.9 \u2014 The wheel says what it did, and the volume strip gets out of the way\n\n**Two small things, one of them a diagnosis tool.**\n\nThe volume HUD is half the height it was. The first version used a LightOS bar's worth of padding,\nwhich is the right amount for something you tap and far too much for something that flashes over the\ntop of whatever you are looking at. The label drops one step down the type scale, the notches are\nshorter and their gutters narrower, and the strip now reads as a line of type rather than a panel.\n\nThe key log has learned about **turns**. Until now it only recorded buttons, which meant the half of\nthis app that fails *quietly* left no evidence at all: a wheel that does nothing in one app looks\nexactly the same whether the key never reached the service, the app resolved to pass the turn\nthrough, or the brightness write was refused for a missing grant. Those are three different fixes.\nNow each turn writes one line \u2014 the app in front, what was decided, and the level it landed on \u2014\ndeduped so a twenty-notch gesture costs one line instead of filling the log.\n\nThe useful part is what the log says when it says nothing. **No line for a turn means the service was\nnever handed the key**, and no setting in this app can be the cause. A line saying PASS THROUGH means\nthe app is set to scroll itself; one saying \"blocked \u2014 no WRITE_SETTINGS\" means the appop is gone.\nSettings \u2192 KEY LOG.\n\n**Full Changelog**: https://github.com/gi-os/BrightControl/compare/v1.8.46...v2.0.53\n"
    },
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 47,
+   "downloads": 48,
    "firstSeen": "2026-08-06"
   },
   {
@@ -284,7 +284,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 8,
+   "downloads": 9,
    "firstSeen": "2026-08-06"
   },
   {
@@ -305,7 +305,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 60,
+   "downloads": 61,
    "firstSeen": "2026-08-06"
   },
   {
@@ -326,7 +326,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 36,
+   "downloads": 37,
    "firstSeen": "2026-08-06"
   },
   {
@@ -353,7 +353,7 @@
      "size": 42506
     }
    ],
-   "downloads": 28,
+   "downloads": 29,
    "firstSeen": "2026-08-06"
   },
   {
@@ -385,7 +385,7 @@
      "size": 66903
     }
    ],
-   "downloads": 30,
+   "downloads": 31,
    "firstSeen": "2026-08-06"
   },
   {
@@ -432,7 +432,7 @@
      "size": 47577
     }
    ],
-   "downloads": 55,
+   "downloads": 56,
    "firstSeen": "2026-08-06"
   },
   {
@@ -469,7 +469,7 @@
      "size": 208010
     }
    ],
-   "downloads": 19,
+   "downloads": 20,
    "firstSeen": "2026-08-06"
   },
   {
@@ -490,7 +490,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 23,
+   "downloads": 24,
    "firstSeen": "2026-08-06"
   },
   {
@@ -511,7 +511,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 49,
+   "downloads": 50,
    "firstSeen": "2026-08-06"
   },
   {
@@ -563,7 +563,7 @@
      "size": 89898
     }
    ],
-   "downloads": 121,
+   "downloads": 122,
    "firstSeen": "2026-08-06"
   },
   {
@@ -595,7 +595,7 @@
      "size": 17692
     }
    ],
-   "downloads": 15,
+   "downloads": 16,
    "firstSeen": "2026-08-06"
   }
  ]
