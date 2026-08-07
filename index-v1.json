@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T21:22:35.882773+00:00",
+ "generated": "2026-08-07T21:24:41.539784+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -172,7 +172,7 @@
      "size": 57213
     }
    ],
-   "downloads": 88,
+   "downloads": 92,
    "firstSeen": "2026-08-06",
    "signer": "c15078bcb72a89c67efb54d1a9fc1b00cc88da578891f8e96233a7d279550df6"
   },
