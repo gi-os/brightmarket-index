@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T17:22:13.146253+00:00",
+ "generated": "2026-08-07T17:33:14.763447+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -36,7 +36,7 @@
      "size": 55824
     }
    ],
-   "downloads": 68,
+   "downloads": 69,
    "firstSeen": "2026-08-06"
   },
   {
@@ -73,7 +73,7 @@
      "size": 49896
     }
    ],
-   "downloads": 56,
+   "downloads": 57,
    "firstSeen": "2026-08-06"
   },
   {
@@ -94,7 +94,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 72,
+   "downloads": 73,
    "firstSeen": "2026-08-06"
   },
   {
@@ -131,7 +131,7 @@
      "size": 55168
     }
    ],
-   "downloads": 66,
+   "downloads": 68,
    "firstSeen": "2026-08-06"
   },
   {
@@ -168,7 +168,7 @@
      "size": 57213
     }
    ],
-   "downloads": 64,
+   "downloads": 65,
    "firstSeen": "2026-08-06"
   },
   {
@@ -178,39 +178,49 @@
    "category": "reading",
    "summary": "EPUB, comics and Calibre, with a cover shelf and a page view.",
    "latest": {
-    "version": "build-56",
-    "versionCode": 56,
-    "apk": "https://github.com/gi-os/BrightLibrary/releases/download/build-56/LightFastread-1.15.0-light.1-b56.apk",
+    "version": "build-58",
+    "versionCode": 58,
+    "apk": "https://github.com/gi-os/BrightLibrary/releases/download/build-58/LightFastread-1.15.0-light.1-b58.apk",
     "size": 26848361,
-    "sha256": "24ab0acc12d6410255245af20d1a206a46e9de5ffd7085202389de0d17520c54",
-    "published": "2026-08-07T16:01:36Z",
-    "notes": "Automatic build of `f371976eea87dd9ee1050877171b72594cd16885`.\n\n```\nadb install -r LightFastread-1.15.0-light.1-b56.apk\n```\n\n`versionCode` is the workflow run number (`56`) and\nevery build is signed with the same key, so this updates in place \u2014 via\n`adb`, or via Obtainium.\n\nSigning certificate SHA-256 is pinned in\n[`signing-fingerprint.txt`](https://github.com/gi-os/LightFastread/blob/main/signing-fingerprint.txt);\nCI fails if it ever changes.\n"
+    "sha256": "cf4e70e77e0201e5b1a21132088c62d8087af0131b0a626993441ad4de29ad5f",
+    "published": "2026-08-07T17:32:25Z",
+    "notes": "Automatic build of `f60afd7e642e298742e500ba2fa014c9fbf5b7b0`.\n\n```\nadb install -r LightFastread-1.15.0-light.1-b58.apk\n```\n\n`versionCode` is the workflow run number (`58`) and\nevery build is signed with the same key, so this updates in place \u2014 via\n`adb`, or via Obtainium.\n\nSigning certificate SHA-256 is pinned in\n[`signing-fingerprint.txt`](https://github.com/gi-os/LightFastread/blob/main/signing-fingerprint.txt);\nCI fails if it ever changes.\n"
    },
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [
     {
-     "url": "https://raw.githubusercontent.com/gi-os/BrightLibrary/main/docs/screenshots/library.png",
-     "name": "library.png",
-     "size": 49921
+     "url": "https://raw.githubusercontent.com/gi-os/BrightLibrary/main/docs/screenshots/01-shelf.png",
+     "name": "01-shelf.png",
+     "size": 1168192
     },
     {
-     "url": "https://raw.githubusercontent.com/gi-os/BrightLibrary/main/docs/screenshots/quick-settings.png",
-     "name": "quick-settings.png",
-     "size": 134905
+     "url": "https://raw.githubusercontent.com/gi-os/BrightLibrary/main/docs/screenshots/02-calibre.png",
+     "name": "02-calibre.png",
+     "size": 95753
     },
     {
-     "url": "https://raw.githubusercontent.com/gi-os/BrightLibrary/main/docs/screenshots/reader.png",
-     "name": "reader.png",
-     "size": 74119
+     "url": "https://raw.githubusercontent.com/gi-os/BrightLibrary/main/docs/screenshots/03-reader.png",
+     "name": "03-reader.png",
+     "size": 102579
     },
     {
-     "url": "https://raw.githubusercontent.com/gi-os/BrightLibrary/main/docs/screenshots/settings.png",
-     "name": "settings.png",
-     "size": 212473
+     "url": "https://raw.githubusercontent.com/gi-os/BrightLibrary/main/docs/screenshots/04-manga.png",
+     "name": "04-manga.png",
+     "size": 854651
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightLibrary/main/docs/screenshots/05-comic-page.png",
+     "name": "05-comic-page.png",
+     "size": 1297360
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightLibrary/main/docs/screenshots/06-focus-word.png",
+     "name": "06-focus-word.png",
+     "size": 51624
     }
    ],
-   "downloads": 95,
+   "downloads": 97,
    "firstSeen": "2026-08-06"
   },
   {
@@ -231,7 +241,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 61,
+   "downloads": 62,
    "firstSeen": "2026-08-06"
   },
   {
@@ -258,7 +268,7 @@
      "size": 88062
     }
    ],
-   "downloads": 80,
+   "downloads": 81,
    "firstSeen": "2026-08-06"
   },
   {
@@ -279,7 +289,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 75,
+   "downloads": 76,
    "firstSeen": "2026-08-06"
   },
   {
@@ -300,7 +310,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 34,
+   "downloads": 35,
    "firstSeen": "2026-08-06"
   },
   {
@@ -320,8 +330,24 @@
    },
    "deprecated": false,
    "supersededBy": "",
-   "screenshots": [],
-   "downloads": 90,
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightNotebook/main/docs/screenshots/01-calendar.png",
+     "name": "01-calendar.png",
+     "size": 78982
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightNotebook/main/docs/screenshots/02-notes.png",
+     "name": "02-notes.png",
+     "size": 83306
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightNotebook/main/docs/screenshots/03-day.png",
+     "name": "03-day.png",
+     "size": 809265
+    }
+   ],
+   "downloads": 91,
    "firstSeen": "2026-08-06"
   },
   {
@@ -342,7 +368,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 62,
+   "downloads": 63,
    "firstSeen": "2026-08-06"
   },
   {
@@ -369,7 +395,7 @@
      "size": 42506
     }
    ],
-   "downloads": 54,
+   "downloads": 55,
    "firstSeen": "2026-08-06"
   },
   {
@@ -401,7 +427,7 @@
      "size": 66903
     }
    ],
-   "downloads": 56,
+   "downloads": 57,
    "firstSeen": "2026-08-06"
   },
   {
@@ -423,32 +449,22 @@
    "supersededBy": "",
    "screenshots": [
     {
-     "url": "https://raw.githubusercontent.com/gi-os/BrightNews/images-and-qr/docs/screenshots/add-feed.png",
-     "name": "add-feed.png",
-     "size": 43056
+     "url": "https://raw.githubusercontent.com/gi-os/BrightNews/images-and-qr/docs/screenshots/01-feeds.png",
+     "name": "01-feeds.png",
+     "size": 344524
     },
     {
-     "url": "https://raw.githubusercontent.com/gi-os/BrightNews/images-and-qr/docs/screenshots/device-inbox.png",
-     "name": "device-inbox.png",
-     "size": 294789
+     "url": "https://raw.githubusercontent.com/gi-os/BrightNews/images-and-qr/docs/screenshots/02-newsletters.png",
+     "name": "02-newsletters.png",
+     "size": 111703
     },
     {
-     "url": "https://raw.githubusercontent.com/gi-os/BrightNews/images-and-qr/docs/screenshots/inbox.png",
-     "name": "inbox.png",
-     "size": 102588
-    },
-    {
-     "url": "https://raw.githubusercontent.com/gi-os/BrightNews/images-and-qr/docs/screenshots/reader.png",
-     "name": "reader.png",
-     "size": 148019
-    },
-    {
-     "url": "https://raw.githubusercontent.com/gi-os/BrightNews/images-and-qr/docs/screenshots/subscriptions.png",
-     "name": "subscriptions.png",
-     "size": 47577
+     "url": "https://raw.githubusercontent.com/gi-os/BrightNews/images-and-qr/docs/screenshots/03-newsletter.png",
+     "name": "03-newsletter.png",
+     "size": 143880
     }
    ],
-   "downloads": 81,
+   "downloads": 82,
    "firstSeen": "2026-08-06"
   },
   {
@@ -485,7 +501,7 @@
      "size": 208010
     }
    ],
-   "downloads": 45,
+   "downloads": 46,
    "firstSeen": "2026-08-06"
   },
   {
@@ -506,7 +522,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 50,
+   "downloads": 51,
    "firstSeen": "2026-08-06"
   },
   {
@@ -527,7 +543,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 76,
+   "downloads": 77,
    "firstSeen": "2026-08-06"
   },
   {
@@ -579,7 +595,7 @@
      "size": 89898
     }
    ],
-   "downloads": 155,
+   "downloads": 156,
    "firstSeen": "2026-08-06"
   },
   {
@@ -611,7 +627,7 @@
      "size": 17692
     }
    ],
-   "downloads": 42,
+   "downloads": 43,
    "firstSeen": "2026-08-06"
   }
  ]
