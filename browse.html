@@ -84,7 +84,11 @@
   .stat b { display:block; font-family:var(--mono); font-size:9px; letter-spacing:.14em; color:#6a6a70; font-weight:400; }
   .stat i { display:block; font-family:var(--mono); font-size:13px; font-style:normal; margin-top:3px; }
   .shots { display:flex; gap:10px; flex-wrap:wrap; }
-  .shots img { height:158px; border-radius:6px; border:1px solid var(--line-2); background:#000; }
+  .shots img { height:158px; border-radius:6px; border:1px solid var(--line-2); background:#000;
+    cursor:zoom-in; transition:.15s; }
+  .shots img:hover { border-color:var(--fg); }
+  .lightbox-img { max-width:100%; max-height:calc(100vh - 160px); border-radius:8px;
+    border:1px solid var(--line-2); }
   .noshots { display:flex; align-items:center; padding:0 16px; height:52px; max-width:340px;
     border:1px dashed var(--edge); border-radius:8px; font-family:var(--mono); font-size:11px;
     letter-spacing:.1em; color:#6a6a70; }
@@ -334,6 +338,57 @@
       </div>`;
     qrInto($("hero-qr"), "brightmarket://app/" + app.pkg, 4);
     $("readme-btn").addEventListener("click", () => openReadme(app));
+    $("hero").querySelectorAll(".shots img").forEach((n, i) =>
+      n.addEventListener("click", () => openShot(app, i)));
+  }
+
+  /**
+   * Full-size screenshot over the page.
+   *
+   * Same overlay as the README for the same reason -- the hero is sticky, so
+   * growing an image in place would push everything around it. Arrow keys step
+   * through the app's other shots, because looking at one screenshot almost
+   * always means wanting to see the next.
+   */
+  function openShot(app, startIndex) {
+    const shots = (app.screenshots || []).map((s) => s.url);
+    if (!shots.length) return;
+    let i = startIndex;
+
+    const veil = document.createElement("div");
+    veil.className = "veil";
+    veil.style.alignItems = "center";
+    veil.innerHTML = `
+      <div style="display:flex; flex-direction:column; align-items:center; gap:14px; max-width:100%;">
+        <img class="lightbox-img" id="lb-img" alt="" />
+        <div style="display:flex; align-items:center; gap:14px;">
+          <div class="chip" data-step="-1" style="cursor:pointer;">◀</div>
+          <div class="status" id="lb-pos"></div>
+          <div class="chip" data-step="1" style="cursor:pointer;">▶</div>
+          <div class="chip" data-close="1" style="cursor:pointer;">CLOSE</div>
+        </div>
+      </div>`;
+    document.body.appendChild(veil);
+
+    const paint = () => {
+      veil.querySelector("#lb-img").src = shots[i];
+      veil.querySelector("#lb-pos").textContent = `${i + 1}/${shots.length}`;
+    };
+    const step = (d) => { i = (i + d + shots.length) % shots.length; paint(); };
+    const close = () => { veil.remove(); window.removeEventListener("keydown", onKey); };
+    const onKey = (e) => {
+      if (e.key === "Escape") close();
+      if (e.key === "ArrowRight") step(1);
+      if (e.key === "ArrowLeft") step(-1);
+    };
+
+    veil.addEventListener("click", (e) => {
+      const d = e.target.dataset || {};
+      if (d.step) return step(+d.step);
+      if (d.close || e.target === veil) close();
+    });
+    window.addEventListener("keydown", onKey);
+    paint();
   }
 
   // Cached per repo: reopening shouldn't refetch, and READMEs here run to 45KB.
