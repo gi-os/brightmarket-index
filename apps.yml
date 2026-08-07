@@ -3,7 +3,8 @@ apps:
   name: BrightTip
   repo: gi-os/BrightTip
   category: productivity
-  summary: Tip calculator, plus a receipt splitter that reads the line items.
+  summary: Tip calculator, and a receipt splitter that reads the line items off a
+    photo.
 - pkg: com.gios.lightnoise
   name: BrightNoise
   repo: gi-os/BrightNoise
@@ -78,8 +79,8 @@ apps:
   name: LightKeyboard
   repo: gi-os/LightKeyboard
   category: hardware
-  summary: A fork of the Light Phone keyboard, adding swipe typing and autocorrect from a bundled dictionary.
-    Works offline.
+  summary: A fork of the Light Phone keyboard, adding swipe typing and autocorrect
+    from a bundled dictionary. Works offline.
 - pkg: com.gios.lightfog
   name: FogLight
   repo: gi-os/FogLight
@@ -89,7 +90,8 @@ apps:
   name: Roll
   repo: gi-os/Roll
   category: media
-  summary: 'Camera and album: a film-roll viewfinder, real-time filters, face detection and a QR mode.'
+  summary: 'Camera and album: a film-roll viewfinder, real-time filters, face detection
+    and a QR mode.'
 - pkg: com.gios.lightqr
   name: LightQR
   repo: gi-os/LightQR
