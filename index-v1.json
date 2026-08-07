@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T21:29:54.733496+00:00",
+ "generated": "2026-08-07T21:33:22.034039+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -36,7 +36,7 @@
      "size": 55824
     }
    ],
-   "downloads": 85,
+   "downloads": 90,
    "firstSeen": "2026-08-06",
    "signer": "eece33e8486e95a327518bb7798df9ae99c683a2a80c4439fe0b7bf30ae1a5d7"
   },
@@ -74,7 +74,7 @@
      "size": 49896
     }
    ],
-   "downloads": 73,
+   "downloads": 78,
    "firstSeen": "2026-08-06",
    "signer": "4d2a3bb63292bc7cdfec383a3b041da3b4a483058cfa0575a33d06fb88c9973a"
   },
@@ -96,7 +96,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 89,
+   "downloads": 94,
    "firstSeen": "2026-08-06",
    "signer": "4662590c434c98e8642244cbb1ebe5818ca63ae692eff8f3cab2f8407cf4d386"
   },
@@ -134,7 +134,7 @@
      "size": 55168
     }
    ],
-   "downloads": 84,
+   "downloads": 89,
    "firstSeen": "2026-08-06",
    "signer": "4ea28ba461cfa1d5d8cee38e71ce8eacfab570afee83f248c5fec8c5cca4cb5f"
   },
@@ -172,9 +172,18 @@
      "size": 57213
     }
    ],
-   "downloads": 92,
+   "downloads": 97,
    "firstSeen": "2026-08-06",
-   "signer": "c15078bcb72a89c67efb54d1a9fc1b00cc88da578891f8e96233a7d279550df6"
+   "signer": "c15078bcb72a89c67efb54d1a9fc1b00cc88da578891f8e96233a7d279550df6",
+   "preview": {
+    "version": "nightly-1.13.29",
+    "versionCode": 29,
+    "apk": "https://github.com/gi-os/BrightMarket/releases/download/nightly-1.13.29/BrightMarket-v1.13.29.apk",
+    "size": 22683770,
+    "sha256": "3197b5b49cabbac99d0076153bb184dc38e9c4f7cf323f5d6e38b4ce06849add",
+    "published": "2026-08-07T21:32:14Z",
+    "notes": "\n**Nightly builds are a channel you choose now, not the default.**\n\nUntil today every push to this repo cut a release, and BrightMarket and\nObtainium both offered it to everybody within the hour. A typo fix and a real\nfeature arrived identically, and anyone who updates promptly was testing work in\nprogress without having agreed to. Twelve releases went out in one day. That is\nfine for a project with one user and wrong for one people rely on.\n\nA push now publishes a **nightly**, marked as a prerelease. The catalogue has\nalways skipped prereleases, so a nightly reaches nobody who hasn't asked for\none. An official release is asked for deliberately.\n\n**Settings \u2192 Updates** picks your channel. Official releases only is the\ndefault, and staying there means you'll see fewer updates and each one will have\nbeen meant. Nightly builds gets you everything as it's made, including the ones\nthat turn out to be wrong.\n\nA nightly is checked exactly as hard as a release: the index downloads it,\nhashes it, and reads its versionCode out of the APK, so an install off the\nnightly channel verifies the same way. And a nightly is only ever offered when\nit's genuinely ahead \u2014 cut an official release after the last nightly and\neveryone on the channel moves to it, rather than sitting on something older than\nthe people who didn't opt in.\n\nTurning the channel off never downgrades you; Android won't install backwards.\nIt stops offering nightlies, and the next official release catches you up.\n\n"
+   }
   },
   {
    "pkg": "com.lightfastread",
@@ -225,7 +234,7 @@
      "size": 51624
     }
    ],
-   "downloads": 116,
+   "downloads": 121,
    "firstSeen": "2026-08-06",
    "signer": "32ec6e7a87ee30c5c50ae7a245fc2e34f6b6f8d9f7b3394e8a14dc65ae9fecbc"
   },
@@ -258,7 +267,7 @@
      "size": 36611
     }
    ],
-   "downloads": 82,
+   "downloads": 87,
    "firstSeen": "2026-08-06",
    "signer": "88fa9df840f139a9079aaf8ab8a54f64022a9da276bacac99227a464c0b1eeda"
   },
@@ -286,7 +295,7 @@
      "size": 88062
     }
    ],
-   "downloads": 97,
+   "downloads": 101,
    "firstSeen": "2026-08-06",
    "signer": "0829436c50e0f0904edcc1719f25e1237281303691c6406d2b06dc9a521c64eb"
   },
@@ -308,7 +317,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 93,
+   "downloads": 100,
    "firstSeen": "2026-08-06",
    "signer": "a38858d990bb61057ef53d1f8aa3c5854d01f68585b34f115793b06298b593e8"
   },
@@ -346,7 +355,7 @@
      "size": 809265
     }
    ],
-   "downloads": 109,
+   "downloads": 114,
    "firstSeen": "2026-08-06",
    "signer": "ceca3d378bf9709bc0d0b3eea84cc8bf7994777a628e5df8079a619cf7a7bda8"
   },
@@ -384,7 +393,7 @@
      "size": 40635
     }
    ],
-   "downloads": 79,
+   "downloads": 84,
    "firstSeen": "2026-08-06",
    "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28",
    "preview": {
@@ -421,7 +430,7 @@
      "size": 42506
     }
    ],
-   "downloads": 71,
+   "downloads": 76,
    "firstSeen": "2026-08-06",
    "signer": "386edb7091947707a812587af8c37b0873bb2cde88963e9520574cc45bc0128c"
   },
@@ -454,7 +463,7 @@
      "size": 66903
     }
    ],
-   "downloads": 73,
+   "downloads": 78,
    "firstSeen": "2026-08-06",
    "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
   },
@@ -492,7 +501,7 @@
      "size": 143880
     }
    ],
-   "downloads": 98,
+   "downloads": 103,
    "firstSeen": "2026-08-06",
    "signer": "c6902aa1870b4ffa2fd0cd627643dc8ddee7cc0fdbd1752febb3d911092d8ec5"
   },
@@ -530,7 +539,7 @@
      "size": 208010
     }
    ],
-   "downloads": 63,
+   "downloads": 68,
    "firstSeen": "2026-08-06",
    "signer": "f32ea67db48b7d40573ce88f03b3da33e0f3e814e1f08e9f5f4007ff7bea6e9f"
   },
@@ -552,7 +561,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 69,
+   "downloads": 77,
    "firstSeen": "2026-08-06",
    "signer": "7844d8cc52fc12b5a2b5879b028605d90391a0a06cc4d87ef92a59350226d203"
   },
@@ -574,7 +583,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 93,
+   "downloads": 98,
    "firstSeen": "2026-08-06",
    "signer": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c"
   },
@@ -627,7 +636,7 @@
      "size": 89898
     }
    ],
-   "downloads": 174,
+   "downloads": 179,
    "firstSeen": "2026-08-06",
    "signer": "d11cf9eecbfd5b482946e317f1dbf785a594234e313d7aa92042be3616b66dc3"
   },
@@ -660,7 +669,7 @@
      "size": 17692
     }
    ],
-   "downloads": 59,
+   "downloads": 64,
    "firstSeen": "2026-08-06",
    "signer": "8e8dee395ca68f83870fa5fc9e62d723ff7e960f2c94f93427e6c62513236420"
   },
@@ -698,7 +707,7 @@
      "size": 74191
     }
    ],
-   "downloads": 9,
+   "downloads": 14,
    "firstSeen": "2026-08-07",
    "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
   },
@@ -736,7 +745,7 @@
      "size": 73420
     }
    ],
-   "downloads": 8,
+   "downloads": 14,
    "firstSeen": "2026-08-07",
    "signer": "9276d2b4ec2e238059119a23459164bd15201e9183180029fb30de2632f6fd21"
   }
