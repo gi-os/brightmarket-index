@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T17:38:09.765770+00:00",
+ "generated": "2026-08-07T17:40:48.832892+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -230,13 +230,13 @@
    "category": "utilities",
    "summary": "Apple TV remote, speaking the Companion protocol natively.",
    "latest": {
-    "version": "1.19.30",
-    "versionCode": 30,
-    "apk": "https://github.com/gi-os/BrightRemote/releases/download/v1.19.30/LightRemote-v1.19.30.apk",
+    "version": "1.19.31",
+    "versionCode": 31,
+    "apk": "https://github.com/gi-os/BrightRemote/releases/download/v1.19.31/LightRemote-v1.19.31.apk",
     "size": 2328462,
-    "sha256": "b10836b5e33df35b646c9454acd2126826902a62d28b1884b464ccad3da38414",
-    "published": "2026-08-07T03:39:15Z",
-    "notes": "**Full Changelog**: https://github.com/gi-os/BrightRemote/compare/v1.19.29...v1.19.30"
+    "sha256": "1f02cd0134343f7ec1061d12bb3576c0e7204311900610856ac35937df80803d",
+    "published": "2026-08-07T17:39:58Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightRemote/compare/v1.19.30...v1.19.31"
    },
    "deprecated": false,
    "supersededBy": "",
