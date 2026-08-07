@@ -408,7 +408,13 @@
    */
   function openSetup() {
     const market = apps.find((a) => a.pkg === "com.gios.brightmarket");
-    const apk = market ? market.latest.apk
+    // The short URL rather than the release asset: it is a much smaller QR,
+    // which matters when the thing scanning it is a phone camera pointed at a
+    // monitor, and it never goes stale between releases. Served from wherever
+    // this page is, so it works on the Pages path today and on the custom
+    // domain once DNS exists.
+    const apk = new URL("./apk/", location.href).href;
+    const direct = market ? market.latest.apk
       : "https://github.com/gi-os/BrightMarket/releases/latest";
     const ver = market ? ver_(market.latest.version) : "latest";
 
@@ -430,8 +436,9 @@
             <div style="flex:1; min-width:260px;">
               <p style="margin-top:0;">Scan that with the phone and the download starts.
                  No typing, no cable.</p>
-              <p><a href="${esc(apk)}">Or download the APK here</a> and move it across
+              <p><a href="${esc(direct)}">Or download the APK here</a> and move it across
                  however you like.</p>
+              <p>Short link: <code>brightmarket.gzl.dev/apk</code></p>
             </div>
           </div>
 
