@@ -104,3 +104,8 @@ apps:
   repo: barry7007/LightNorwayTransit
   category: utilities
   summary: Live departure times for public transport in Norway
+- pkg: org.woheller69.whobird.chirp
+  name: Chirp
+  repo: barry7007/LightBirdIdentifier
+  category: utilities
+  summary: Identify bird sounds. Restyled from whoBird.
