@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T12:25:58.894120+00:00",
+ "generated": "2026-08-07T13:43:10.650186+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -36,7 +36,7 @@
      "size": 55824
     }
    ],
-   "downloads": 54,
+   "downloads": 55,
    "firstSeen": "2026-08-06"
   },
   {
@@ -73,7 +73,7 @@
      "size": 49896
     }
    ],
-   "downloads": 43,
+   "downloads": 44,
    "firstSeen": "2026-08-06"
   },
   {
@@ -94,7 +94,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 58,
+   "downloads": 59,
    "firstSeen": "2026-08-06"
   },
   {
@@ -104,13 +104,13 @@
    "category": "utilities",
    "summary": "Live scores and standings across thirteen leagues.",
    "latest": {
-    "version": "1.11.23",
-    "versionCode": 23,
-    "apk": "https://github.com/gi-os/BrightSports/releases/download/v1.11.23/LightSports-v1.11.23.apk",
+    "version": "1.12.24",
+    "versionCode": 24,
+    "apk": "https://github.com/gi-os/BrightSports/releases/download/v1.12.24/LightSports-v1.12.24.apk",
     "size": 19480245,
-    "sha256": "b8f32c9a1c816eb68b43f421467867ae0e7a58eca5448f06674f47cf40a34bb2",
-    "published": "2026-08-07T03:37:46Z",
-    "notes": "**Full Changelog**: https://github.com/gi-os/BrightSports/compare/v1.11.22...v1.11.23"
+    "sha256": "13c457bfa87ac99a44536e3314bfcbeede991b3162cdccd5d660935a85462681",
+    "published": "2026-08-07T13:42:21Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightSports/compare/v1.11.23...v1.12.24"
    },
    "deprecated": false,
    "supersededBy": "",
@@ -131,7 +131,7 @@
      "size": 55168
     }
    ],
-   "downloads": 52,
+   "downloads": 53,
    "firstSeen": "2026-08-06"
   },
   {
@@ -141,18 +141,18 @@
    "category": "utilities",
    "summary": "The marketplace itself. Browse, install and update Light Phone apps.",
    "latest": {
-    "version": "1.5.19",
-    "versionCode": 19,
-    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.5.19/BrightMarket-v1.5.19.apk",
-    "size": 22663262,
-    "sha256": "0c99bafc4357a17829d0bcaabd7b1f15cd5856f5cb9f5cc9afaf9f3d4705728f",
-    "published": "2026-08-07T03:37:29Z",
-    "notes": "\n**Installed apps now actually move into the installed section.** Returning from\nthe system installer dialog resumes the app, but the install finishes a moment\nafter that \u2014 so the phone still reported the app as absent and the list never\nupdated. BrightMarket now listens for the package event itself, which is the\nauthoritative signal and also catches installs that finish while it is in the\nforeground.\n\n"
+    "version": "1.6.20",
+    "versionCode": 20,
+    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.6.20/BrightMarket-v1.6.20.apk",
+    "size": 22663266,
+    "sha256": "722806c8e32dffad0d231497d72f9342162b93805c5d624e26a35e9278728c62",
+    "published": "2026-08-07T13:42:05Z",
+    "notes": "\n**Installed apps really do move into the installed section now.** The previous\nfix listened for the package event but registered the listener only while the\napp was on screen \u2014 and the system installer is a full screen, so BrightMarket\nis stopped for the entire install. The listener was unregistered at exactly the\nmoment the event fired. It now lives for as long as the screen does.\n\n"
    },
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 42,
+   "downloads": 47,
    "firstSeen": "2026-08-06"
   },
   {
@@ -194,7 +194,7 @@
      "size": 212473
     }
    ],
-   "downloads": 79,
+   "downloads": 80,
    "firstSeen": "2026-08-06"
   },
   {
@@ -215,7 +215,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 48,
+   "downloads": 49,
    "firstSeen": "2026-08-06"
   },
   {
@@ -242,7 +242,7 @@
      "size": 88062
     }
    ],
-   "downloads": 67,
+   "downloads": 68,
    "firstSeen": "2026-08-06"
   },
   {
@@ -263,7 +263,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 61,
+   "downloads": 63,
    "firstSeen": "2026-08-06"
   },
   {
@@ -284,7 +284,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 21,
+   "downloads": 22,
    "firstSeen": "2026-08-06"
   },
   {
@@ -305,7 +305,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 77,
+   "downloads": 78,
    "firstSeen": "2026-08-06"
   },
   {
@@ -326,7 +326,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 49,
+   "downloads": 50,
    "firstSeen": "2026-08-06"
   },
   {
@@ -353,7 +353,7 @@
      "size": 42506
     }
    ],
-   "downloads": 41,
+   "downloads": 42,
    "firstSeen": "2026-08-06"
   },
   {
@@ -385,7 +385,7 @@
      "size": 66903
     }
    ],
-   "downloads": 43,
+   "downloads": 44,
    "firstSeen": "2026-08-06"
   },
   {
@@ -432,7 +432,7 @@
      "size": 47577
     }
    ],
-   "downloads": 68,
+   "downloads": 69,
    "firstSeen": "2026-08-06"
   },
   {
@@ -469,7 +469,7 @@
      "size": 208010
     }
    ],
-   "downloads": 32,
+   "downloads": 33,
    "firstSeen": "2026-08-06"
   },
   {
@@ -490,7 +490,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 37,
+   "downloads": 38,
    "firstSeen": "2026-08-06"
   },
   {
@@ -511,7 +511,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 62,
+   "downloads": 63,
    "firstSeen": "2026-08-06"
   },
   {
@@ -563,7 +563,7 @@
      "size": 89898
     }
    ],
-   "downloads": 141,
+   "downloads": 143,
    "firstSeen": "2026-08-06"
   },
   {
@@ -595,7 +595,7 @@
      "size": 17692
     }
    ],
-   "downloads": 29,
+   "downloads": 30,
    "firstSeen": "2026-08-06"
   }
  ]
