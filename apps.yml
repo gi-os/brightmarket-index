@@ -14,7 +14,7 @@ apps:
   name: BrightAuthenticator
   repo: gi-os/BrightAuthenticator
   category: utilities
-  summary: TOTP codes on the Light Phone III, in a PIN-wrapped vault.
+  summary: IN DEVELOPMENT - TOTP codes on the Light Phone III, in a PIN-wrapped vault.
 - pkg: com.gios.lightsports
   name: BrightSports
   repo: gi-os/BrightSports
