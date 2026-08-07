@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T17:36:55.818102+00:00",
+ "generated": "2026-08-07T17:38:09.765770+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -301,27 +301,6 @@
    "supersededBy": "",
    "screenshots": [],
    "downloads": 76,
-   "firstSeen": "2026-08-06"
-  },
-  {
-   "pkg": "com.gios.lightsync",
-   "name": "BrightSync",
-   "repo": "gi-os/BrightSync",
-   "category": "utilities",
-   "summary": "Backs your apps up to your own server, nightly.",
-   "latest": {
-    "version": "1.2.6",
-    "versionCode": 6,
-    "apk": "https://github.com/gi-os/BrightSync/releases/download/v1.2.6/LightSync-v1.2.6.apk",
-    "size": 2214561,
-    "sha256": "02479a8d589f4e231095fecd957786af017ac485d86a2f3f6ea3498248ffecf2",
-    "published": "2026-08-06T23:25:00Z",
-    "notes": "**Full Changelog**: https://github.com/gi-os/BrightSync/compare/v1.2.5...v1.2.6"
-   },
-   "deprecated": false,
-   "supersededBy": "",
-   "screenshots": [],
-   "downloads": 35,
    "firstSeen": "2026-08-06"
   },
   {
