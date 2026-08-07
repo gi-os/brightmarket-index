@@ -132,15 +132,6 @@ def validate(repo: str) -> dict:
             "signature and users get `Failure: Invalid`."
         )
 
-    try:
-        int(latest["tag_name"].lstrip("v").rsplit(".", 1)[-1])
-    except ValueError:
-        raise Reject(
-            f"Tag `{latest['tag_name']}` doesn't end in a number. BrightMarket derives "
-            "versionCode from the tag's last segment (`v1.2.34` → `34`), and it has to "
-            "increase every release or Android refuses the update."
-        )
-
     # Read the applicationId straight out of the APK the user is actually shipping,
     # rather than trusting anything they typed. AndroidManifest.xml inside an APK is
     # binary XML, but the applicationId appears verbatim in the string pool, so a
@@ -168,6 +159,7 @@ def validate(repo: str) -> dict:
     # wrong one means the app never registers as installed and its signing
     # certificate never pins.
     app_id = None
+    version_code = None
     try:
         import tempfile
         from pyaxmlparser import APK
@@ -175,11 +167,34 @@ def validate(repo: str) -> dict:
             f.write(blob)
             tmp = f.name
         try:
-            app_id = APK(tmp).package or None
+            apk = APK(tmp)
+            app_id = apk.package or None
+            version_code = int(apk.version_code)
         finally:
             os.unlink(tmp)
     except Exception:
         app_id = None
+
+    # There used to be a check here that the tag ended in a number, on the
+    # grounds that versionCode came from the tag's last segment. It hasn't since
+    # the index builder started reading it out of the APK -- and the check was
+    # rejecting shapes the builder handles perfectly well. BrightLibrary has been
+    # in the catalogue for days under the tag `build-58`; BrightMusic was turned
+    # away for `build-65`, the identical shape.
+    #
+    # The APK is the authority, as it is everywhere else. The tag is only
+    # consulted when the APK can't be parsed at all, and then only to establish
+    # that *something* here is a number that can move forwards.
+    if version_code is None:
+        try:
+            version_code = int(latest["tag_name"].lstrip("v").rsplit(".", 1)[-1])
+        except ValueError:
+            raise Reject(
+                f"I couldn't read a versionCode out of that APK, and the tag "
+                f"`{latest['tag_name']}` doesn't end in a number to fall back on. "
+                "Android needs a versionCode that increases every release or it "
+                "refuses the update."
+            )
 
     if not app_id:
         # Kept only as a fallback for the case where the parser itself fails.
@@ -198,6 +213,7 @@ def validate(repo: str) -> dict:
         "name": meta["name"],
         "summary": (meta.get("description") or "").strip(),
         "version": latest["tag_name"],
+        "versionCode": version_code,
         "apk": apks[0]["name"],
     }
 

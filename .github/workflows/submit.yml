@@ -90,12 +90,17 @@ jobs:
             isn't already indexed.
           commit-message: "index: ${{ steps.validate.outputs.action }} ${{ steps.validate.outputs.name }}"
 
-      # always(): the first real submission passed its checks and then died on
-      # the PR step, and because this had no condition it was skipped -- so the
-      # person who submitted got no comment, no rejection, and no PR. Silence is
-      # the one outcome a submission queue must never produce.
+      # Runs on success and on failure, but NOT on cancellation.
+      #
+      # It had no condition at all once, and the first real submission passed its
+      # checks, died on the PR step, and told the submitter nothing -- silence is
+      # the one outcome a submission queue must never produce. The fix was
+      # always(), which then ran on the run that the concurrency guard cancels
+      # when an issue arrives with two labels: that run has no status to report,
+      # so it posted "something went wrong on our side" a second before the real
+      # run posted the actual reason. Two comments, the first of them wrong.
       - name: Comment the result
-        if: always()
+        if: ${{ !cancelled() }}
         uses: actions/github-script@v7
         env:
           STATUS: ${{ steps.validate.outputs.status }}
