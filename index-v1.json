@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T10:38:31.265100+00:00",
+ "generated": "2026-08-07T11:34:46.513904+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -36,7 +36,7 @@
      "size": 55824
     }
    ],
-   "downloads": 52,
+   "downloads": 53,
    "firstSeen": "2026-08-06"
   },
   {
@@ -73,7 +73,7 @@
      "size": 49896
     }
    ],
-   "downloads": 41,
+   "downloads": 42,
    "firstSeen": "2026-08-06"
   },
   {
@@ -94,7 +94,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 56,
+   "downloads": 57,
    "firstSeen": "2026-08-06"
   },
   {
@@ -131,7 +131,7 @@
      "size": 55168
     }
    ],
-   "downloads": 50,
+   "downloads": 51,
    "firstSeen": "2026-08-06"
   },
   {
@@ -152,7 +152,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 40,
+   "downloads": 41,
    "firstSeen": "2026-08-06"
   },
   {
@@ -194,7 +194,7 @@
      "size": 212473
     }
    ],
-   "downloads": 77,
+   "downloads": 78,
    "firstSeen": "2026-08-06"
   },
   {
@@ -215,7 +215,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 46,
+   "downloads": 47,
    "firstSeen": "2026-08-06"
   },
   {
@@ -242,7 +242,7 @@
      "size": 88062
     }
    ],
-   "downloads": 65,
+   "downloads": 66,
    "firstSeen": "2026-08-06"
   },
   {
@@ -263,7 +263,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 59,
+   "downloads": 60,
    "firstSeen": "2026-08-06"
   },
   {
@@ -284,7 +284,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 19,
+   "downloads": 20,
    "firstSeen": "2026-08-06"
   },
   {
@@ -305,7 +305,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 75,
+   "downloads": 76,
    "firstSeen": "2026-08-06"
   },
   {
@@ -326,7 +326,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 47,
+   "downloads": 48,
    "firstSeen": "2026-08-06"
   },
   {
@@ -353,7 +353,7 @@
      "size": 42506
     }
    ],
-   "downloads": 39,
+   "downloads": 40,
    "firstSeen": "2026-08-06"
   },
   {
@@ -385,7 +385,7 @@
      "size": 66903
     }
    ],
-   "downloads": 41,
+   "downloads": 42,
    "firstSeen": "2026-08-06"
   },
   {
@@ -432,7 +432,7 @@
      "size": 47577
     }
    ],
-   "downloads": 66,
+   "downloads": 67,
    "firstSeen": "2026-08-06"
   },
   {
@@ -469,7 +469,7 @@
      "size": 208010
     }
    ],
-   "downloads": 30,
+   "downloads": 31,
    "firstSeen": "2026-08-06"
   },
   {
@@ -490,7 +490,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 35,
+   "downloads": 36,
    "firstSeen": "2026-08-06"
   },
   {
@@ -511,7 +511,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 60,
+   "downloads": 61,
    "firstSeen": "2026-08-06"
   },
   {
@@ -563,7 +563,7 @@
      "size": 89898
     }
    ],
-   "downloads": 139,
+   "downloads": 140,
    "firstSeen": "2026-08-06"
   },
   {
@@ -595,7 +595,7 @@
      "size": 17692
     }
    ],
-   "downloads": 26,
+   "downloads": 27,
    "firstSeen": "2026-08-06"
   }
  ]
