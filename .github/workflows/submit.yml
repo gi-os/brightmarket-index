@@ -4,6 +4,13 @@ on:
   issues:
     types: [opened, reopened, labeled]
 
+# An issue filed with two labels fires opened + labeled + labeled, and the test
+# submission got three identical "checks passed" comments and opened the same PR
+# three times over. One run per issue, latest wins.
+concurrency:
+  group: submission-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
   issues: write
@@ -11,7 +18,11 @@ permissions:
 
 jobs:
   validate:
-    if: contains(github.event.issue.labels.*.name, 'submission')
+    # Also ignores label events for anything other than 'submission', so adding
+    # 'edit' or 'remove' alongside it isn't a second trigger.
+    if: >-
+      contains(github.event.issue.labels.*.name, 'submission') &&
+      (github.event.action != 'labeled' || github.event.label.name == 'submission')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
