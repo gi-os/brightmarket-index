@@ -46,12 +46,11 @@
   @keyframes scan { 0% { transform: translateY(-100%);} 100% { transform: translateY(900%);} }
   @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
 
-  .shell { min-height:100vh; display:flex; justify-content:center; }
-  .col { width:100%; max-width:1240px; min-height:100vh; display:flex; flex-direction:column;
-         border-left:1px solid var(--line); border-right:1px solid var(--line); }
+  .shell { min-height:100vh; }
+  .col { width:100%; min-height:100vh; display:flex; flex-direction:column; }
 
   .bar { position:sticky; top:0; z-index:20; background:var(--bg); flex-shrink:0; height:60px; display:flex; align-items:center; justify-content:space-between;
-         padding:0 26px; border-bottom:1px solid var(--line); }
+         padding:0 34px; border-bottom:1px solid var(--line); }
   .logo { width:26px; height:26px; border-radius:8px; background:var(--fg); color:#000;
           display:flex; align-items:center; justify-content:center; font-family:var(--round); font-size:15px; }
   .wordmark { font-family:var(--mono); font-size:12px; letter-spacing:.34em; color:#8a8a8e; }
@@ -62,19 +61,19 @@
                letter-spacing:.18em; transition:.15s; }
   .pill-link:hover { background:var(--fg); color:#000; box-shadow:inset 0 0 0 1px var(--fg); }
 
-  .hero-wrap { position:sticky; top:60px; z-index:10; background:var(--bg); flex-shrink:0;
+  .hero-wrap { position:sticky; top:59px; z-index:10; background:var(--bg); flex-shrink:0;
     overflow:hidden; border-bottom:1px solid var(--line); }
   /* On a short window a sticky hero would leave no room for the grid, so below
      that height it scrolls away normally. */
   /* On a short window all this stacked chrome would leave no room for the
      grid it exists to help you browse, so below that height it scrolls. */
   @media (max-height: 820px) {
-    .hero-wrap, .wire, .filters { position:relative; top:auto; }
+    .hero-wrap, .wire { position:relative; top:auto; }
   }
   .hero-scan { position:absolute; left:0; right:0; top:0; height:80px; pointer-events:none;
     background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.04) 60%,rgba(255,255,255,0) 100%);
     animation:scan 8s linear infinite; }
-  .hero { display:flex; gap:30px; padding:26px; }
+  .hero { display:flex; gap:30px; padding:26px 34px; }
   .hero-icon { position:relative; width:172px; height:172px; border-radius:16px; overflow:hidden;
     border:2px solid var(--fg); animation:bob 5s ease-in-out infinite; display:flex;
     align-items:center; justify-content:center; background:#000; font-family:var(--round); font-size:72px; }
@@ -106,7 +105,7 @@
   .btn-ghost:hover { background:transparent; color:var(--fg); box-shadow:inset 0 0 0 1px var(--fg); }
 
   .wire { position:sticky; top:calc(60px + var(--hero-h, 232px)); z-index:9; background:var(--bg);
-    flex-shrink:0; height:34px; display:flex; align-items:center; gap:14px; padding:0 26px;
+    flex-shrink:0; height:34px; display:flex; align-items:center; gap:14px; padding:0 34px;
     border-bottom:1px solid var(--line); }
   .wire-tag { flex-shrink:0; font-family:var(--mono); font-size:9px; letter-spacing:.26em;
     padding:3px 8px; border-radius:4px; background:#1a1a1e; }
@@ -117,8 +116,7 @@
     color:#8a8a90; display:flex; align-items:center; justify-content:center; font-size:11px; transition:.15s; }
   .nav:hover { box-shadow:inset 0 0 0 1px var(--fg); color:var(--fg); }
 
-  .filters { position:sticky; top:calc(60px + var(--hero-h, 232px) + 34px); z-index:8;
-    background:var(--bg); flex-shrink:0; padding:14px 26px 12px; display:flex; flex-direction:column; gap:11px;
+  .filters { flex-shrink:0; padding:14px 34px 12px; display:flex; flex-direction:column; gap:11px;
     border-bottom:1px solid var(--line); }
   .filters input { flex:1; max-width:420px; border:none; outline:none; background:transparent;
     font-size:14px; color:var(--fg); padding:2px 0; border-bottom:2px solid var(--edge); }
@@ -129,7 +127,7 @@
   .chip[aria-selected="true"] { background:var(--fg); color:#000; box-shadow:none; }
 
   .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(272px, 1fr)); gap:12px;
-    padding:16px 26px 0; }
+    padding:16px 34px 0; }
   .tile { cursor:pointer; padding:12px; border-radius:12px; border:1px solid var(--line-2);
     display:flex; flex-direction:column; min-height:124px; transition:.15s; background:#000; }
   .tile:hover { border-color:var(--fg); transform:translateY(-3px); }
@@ -145,7 +143,7 @@
     border-radius:12px; border:2px dashed #34343a; min-height:124px; transition:.15s; }
   .add-tile:hover { border-color:var(--fg); transform:translateY(-3px); }
 
-  .foot { padding:26px; }
+  .foot { padding:26px 34px; }
   .empty { padding:40px 0; text-align:center; font-family:var(--mono); font-size:12px;
     letter-spacing:.14em; color:#6a6a70; }
   .note { margin-top:26px; font-family:var(--mono); font-size:10px; letter-spacing:.16em; color:var(--dimmest); }
@@ -345,8 +343,12 @@
       </div>`;
     qrInto($("hero-qr"), "brightmarket://app/" + app.pkg, 4);
     $("readme-btn").addEventListener("click", () => openReadme(app));
-    $("hero").querySelectorAll(".shots img").forEach((n, i) =>
-      n.addEventListener("click", () => openShot(app, i)));
+    $("hero").querySelectorAll(".shots img").forEach((n, i) => {
+      n.addEventListener("click", () => openShot(app, i));
+      // Images arrive after layout and change the hero's height; without this
+      // the seam reopens on exactly the apps that have screenshots.
+      n.addEventListener("load", syncStickyOffsets);
+    });
   }
 
   /**
@@ -462,7 +464,14 @@
     // the selected app has screenshots, and a fixed offset would leave a gap or
     // overlap on half the catalogue.
     const h = document.querySelector(".hero-wrap");
-    if (h) document.documentElement.style.setProperty("--hero-h", h.offsetHeight + "px");
+    if (!h) return;
+    // getBoundingClientRect, not offsetHeight: offsetHeight is rounded to whole
+    // pixels, so on a fractional layout the ticker landed a sliver BELOW the
+    // hero's real bottom edge and the grid scrolled through the seam.
+    // Floor-then-1px-overlap guarantees they meet with no gap, at the cost of
+    // one invisible pixel of the hero's border.
+    const px = Math.max(0, Math.floor(h.getBoundingClientRect().height) - 1);
+    document.documentElement.style.setProperty("--hero-h", px + "px");
   }
 
   function render() {
