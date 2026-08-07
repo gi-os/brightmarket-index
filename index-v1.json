@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T20:55:18.636613+00:00",
+ "generated": "2026-08-07T21:04:33.808195+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -36,7 +36,7 @@
      "size": 55824
     }
    ],
-   "downloads": 78,
+   "downloads": 81,
    "firstSeen": "2026-08-06",
    "signer": "eece33e8486e95a327518bb7798df9ae99c683a2a80c4439fe0b7bf30ae1a5d7"
   },
@@ -74,7 +74,7 @@
      "size": 49896
     }
    ],
-   "downloads": 66,
+   "downloads": 69,
    "firstSeen": "2026-08-06",
    "signer": "4d2a3bb63292bc7cdfec383a3b041da3b4a483058cfa0575a33d06fb88c9973a"
   },
@@ -96,7 +96,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 82,
+   "downloads": 85,
    "firstSeen": "2026-08-06",
    "signer": "4662590c434c98e8642244cbb1ebe5818ca63ae692eff8f3cab2f8407cf4d386"
   },
@@ -134,7 +134,7 @@
      "size": 55168
     }
    ],
-   "downloads": 77,
+   "downloads": 80,
    "firstSeen": "2026-08-06",
    "signer": "4ea28ba461cfa1d5d8cee38e71ce8eacfab570afee83f248c5fec8c5cca4cb5f"
   },
@@ -145,13 +145,13 @@
    "category": "utilities",
    "summary": "The marketplace itself. Browse, install and update Light Phone apps.",
    "latest": {
-    "version": "1.10.24",
-    "versionCode": 24,
-    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.10.24/BrightMarket-v1.10.24.apk",
-    "size": 22667386,
-    "sha256": "7c41654f552efa29404c18c85f77b5e08123119e1d340eac77b8c274aaa3a578",
-    "published": "2026-08-07T17:21:26Z",
-    "notes": "\n**You have to reinstall this one.** Sorry. Every build up to v1.9 was signed with a\nkey that lived in this repository with its password written three lines under it,\nwhich meant anybody could produce an APK that Android would happily accept as an\nupdate to BrightMarket. That was fine when the only person installing it was me. It\nis not fine for an app whose entire job is installing software.\n\nThe key is now a CI secret and the replacement has never been in the tree. Android\nidentifies an app by package name *and* signing certificate and refuses to install\nacross a change of either, so this one time the update has to be an uninstall and a\nfresh install. Your installed apps are not touched \u2014 only BrightMarket's own\nsettings, which is Focus mode and your tracked repos.\n\nBuilding locally still works and still gives you an installable APK; it is signed\nwith your debug key and won't install over a release, which is the correct outcome\nrather than an inconvenience.\n\nAlso: a licence file, at last (MIT, same as the rest), and the store's own listing\nfinally has screenshots.\n\n"
+    "version": "1.11.26",
+    "versionCode": 26,
+    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.11.26/BrightMarket-v1.11.26.apk",
+    "size": 22683770,
+    "sha256": "fc5a2ea72700a4306cde55a7dac8844e81715f1ea7c4d7e7860cd75de1676761",
+    "published": "2026-08-07T21:04:01Z",
+    "notes": "\n**Uninstall is in the app now.** Removing something you'd installed meant going\nto LightOS's own settings and finding it there, which is several screens from\nthe list of installed apps and not somewhere anyone thinks to look. There's an\nUNINSTALL under each row in Updates and on each app's page. It sits below the\nrow rather than beside the name on purpose \u2014 putting a destructive action next\nto the one you tap constantly is how it gets tapped by accident. Android still\nshows its own confirmation, and BrightMarket won't offer to uninstall itself.\n\n**Add an app by pasting a link, not just by scanning one.** The scan screen has\na field above the viewfinder that takes a GitHub repo, a `brightmarket.gzl.dev`\nlink, or a direct `.apk` URL. Scanning assumed the thing you wanted was on\nanother screen you could point a camera at; often it arrived in a message on\nthis phone, and there was no way to use it.\n\nThe field sits above the camera permission prompt, so declining the camera no\nlonger means you can't add apps at all. A direct `.apk` link installs once and\nisn't tracked afterwards \u2014 a file on a web server has no releases to watch, and\na row that could never update would just look broken. It has to be `https`:\nthere's no hash to check an unlisted APK against, so the connection is the only\nthing standing between you and whatever else the network felt like sending.\n\n"
    },
    "deprecated": false,
    "supersededBy": "",
@@ -172,7 +172,7 @@
      "size": 57213
     }
    ],
-   "downloads": 80,
+   "downloads": 84,
    "firstSeen": "2026-08-06",
    "signer": "c15078bcb72a89c67efb54d1a9fc1b00cc88da578891f8e96233a7d279550df6"
   },
@@ -225,7 +225,7 @@
      "size": 51624
     }
    ],
-   "downloads": 107,
+   "downloads": 110,
    "firstSeen": "2026-08-06",
    "signer": "32ec6e7a87ee30c5c50ae7a245fc2e34f6b6f8d9f7b3394e8a14dc65ae9fecbc"
   },
@@ -258,7 +258,7 @@
      "size": 36611
     }
    ],
-   "downloads": 74,
+   "downloads": 77,
    "firstSeen": "2026-08-06",
    "signer": "88fa9df840f139a9079aaf8ab8a54f64022a9da276bacac99227a464c0b1eeda"
   },
@@ -286,7 +286,7 @@
      "size": 88062
     }
    ],
-   "downloads": 90,
+   "downloads": 93,
    "firstSeen": "2026-08-06",
    "signer": "0829436c50e0f0904edcc1719f25e1237281303691c6406d2b06dc9a521c64eb"
   },
@@ -308,7 +308,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 85,
+   "downloads": 90,
    "firstSeen": "2026-08-06",
    "signer": "a38858d990bb61057ef53d1f8aa3c5854d01f68585b34f115793b06298b593e8"
   },
@@ -346,7 +346,7 @@
      "size": 809265
     }
    ],
-   "downloads": 101,
+   "downloads": 104,
    "firstSeen": "2026-08-06",
    "signer": "ceca3d378bf9709bc0d0b3eea84cc8bf7994777a628e5df8079a619cf7a7bda8"
   },
@@ -384,7 +384,7 @@
      "size": 40635
     }
    ],
-   "downloads": 72,
+   "downloads": 75,
    "firstSeen": "2026-08-06",
    "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
   },
@@ -412,7 +412,7 @@
      "size": 42506
     }
    ],
-   "downloads": 64,
+   "downloads": 67,
    "firstSeen": "2026-08-06",
    "signer": "386edb7091947707a812587af8c37b0873bb2cde88963e9520574cc45bc0128c"
   },
@@ -445,7 +445,7 @@
      "size": 66903
     }
    ],
-   "downloads": 66,
+   "downloads": 69,
    "firstSeen": "2026-08-06",
    "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
   },
@@ -483,7 +483,7 @@
      "size": 143880
     }
    ],
-   "downloads": 91,
+   "downloads": 94,
    "firstSeen": "2026-08-06",
    "signer": "c6902aa1870b4ffa2fd0cd627643dc8ddee7cc0fdbd1752febb3d911092d8ec5"
   },
@@ -521,7 +521,7 @@
      "size": 208010
     }
    ],
-   "downloads": 56,
+   "downloads": 59,
    "firstSeen": "2026-08-06",
    "signer": "f32ea67db48b7d40573ce88f03b3da33e0f3e814e1f08e9f5f4007ff7bea6e9f"
   },
@@ -543,7 +543,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 61,
+   "downloads": 64,
    "firstSeen": "2026-08-06",
    "signer": "7844d8cc52fc12b5a2b5879b028605d90391a0a06cc4d87ef92a59350226d203"
   },
@@ -565,7 +565,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 86,
+   "downloads": 89,
    "firstSeen": "2026-08-06",
    "signer": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c"
   },
@@ -618,7 +618,7 @@
      "size": 89898
     }
    ],
-   "downloads": 166,
+   "downloads": 170,
    "firstSeen": "2026-08-06",
    "signer": "d11cf9eecbfd5b482946e317f1dbf785a594234e313d7aa92042be3616b66dc3"
   },
@@ -651,7 +651,7 @@
      "size": 17692
     }
    ],
-   "downloads": 52,
+   "downloads": 55,
    "firstSeen": "2026-08-06",
    "signer": "8e8dee395ca68f83870fa5fc9e62d723ff7e960f2c94f93427e6c62513236420"
   },
@@ -689,7 +689,7 @@
      "size": 74191
     }
    ],
-   "downloads": 2,
+   "downloads": 5,
    "firstSeen": "2026-08-07",
    "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
   }
