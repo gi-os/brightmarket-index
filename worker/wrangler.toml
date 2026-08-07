@@ -1,0 +1,8 @@
+name = "brightmarket-portal"
+main = "worker.js"
+compatibility_date = "2026-08-01"
+
+# Not secret -- fine to commit. Set the two secrets below with `wrangler secret put`.
+[vars]
+ALLOWED_ORIGIN = "https://gi-os.github.io"
+SUBMIT_REPO = "gi-os/brightmarket-index"
