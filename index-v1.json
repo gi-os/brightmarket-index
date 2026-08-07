@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T01:47:56.672453+00:00",
+ "generated": "2026-08-07T01:57:55.715211+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -460,6 +460,56 @@
    },
    "screenshots": [],
    "downloads": 43,
+   "firstSeen": "2026-08-06"
+  },
+  {
+   "pkg": "com.gios.lightcamera",
+   "name": "Roll",
+   "repo": "gi-os/Roll",
+   "category": "media",
+   "summary": "Camera and album: a film-roll viewfinder, real-time filters, face detection and a QR mode.",
+   "latest": {
+    "version": "2.44.67",
+    "versionCode": 67,
+    "apk": "https://github.com/gi-os/Roll/releases/download/v2.44.67/LightCamera-v2.44.67.apk",
+    "size": 17512650,
+    "sha256": "8c0bfcce027f603fcdb3648ad25921643c00f645d58f0af978db454233bc593a",
+    "published": "2026-08-06T20:40:04Z",
+    "notes": "## LightCamera v2.44 \u2014 Point the controls where you want them\n\nThe wheel walks the filters, holding it in and turning is exposure, clicking it is the torch, and\neither volume key is a shutter. That is a good mapping and it is still exactly what a fresh install\ndoes. It was also the *only* mapping, which is a problem on this phone in particular: the wheel is a\nsystem-wide control, and anyone who has remapped it elsewhere \u2014 with LightControl, most likely \u2014\nfound this app quietly assuming the wheel was free.\n\nSo the mapping is a setting now. Five controls, each pointed wherever you want it:\n\n| Control | Can be | Defaults to |\n| --- | --- | --- |\n| Volume up | shutter, torch, front/rear, next mode, timer, exposure, zoom, nothing | shutter |\n| Volume down | the same list | shutter |\n| Click the wheel | the same list | torch |\n| Turn the wheel | filter, exposure, zoom, nothing | filter |\n| Press and turn | the same four | exposure |\n\nThe camera button is not on the list and never will be: half press to focus, press through to shoot.\n\n**One shutter always survives.** There is no shutter button on the screen, so unbinding the last one\non a phone whose camera key is being swallowed by an accessibility service would leave a camera that\ncannot take a photograph and no obvious way back. An option that would do that is skipped rather\nthan offered. A key set to Nothing is handed back to the phone rather than eaten, so a volume key\nwith no job here still changes the volume.\n\nA filter dial stays unarmed \u2014 each notch counts once, and None is three notches wide so a flick\nlands somewhere harmless. Exposure and zoom are armed, so a fast turn racks through them. Whichever\nway the wheel is pointed, an open strip takes it for as long as it is open.\n\n### Drag the exposure strip\n\nTwelve notches is the whole exposure range on this camera, so getting from \u22122 to +2 by tapping `+`\nwas twelve taps. Now: drag to set it, tap to jump to a stop, long-press to go back to zero. The `+`\nand `\u2212` are still there for a single stop, and the wheel is still the better control \u2014 this is the\none you reach for when the phone is already in your hand.\n\n### Zoom, at last, as a control\n\nThe lens is fixed and the crop is digital, which is why the wheel was spent on filters instead. But\na digital crop is still the difference between a photograph of a sign and a photograph of the wall\nit is on, and until now the only way to get one was a pinch on a 3.92\" panel held sideways in one\nhand. There is a zoom strip now, and it is **logarithmic**: each doubling gets the same travel, so\nthe low end is not crushed into the first few millimetres.\n\n### Two slots in the band are yours\n\nThe album, the mode-and-filter chip and the flash are the stock camera's own bar in the stock\ncamera's own order, and they stay put. The two at the end \u2014 where the brightness icon was \u2014 can be\nexposure, zoom, front/rear, self timer, shape, grid, or nothing. Exposure then nothing is what the\napp has always shown.\n\n**Front/rear is the one worth pointing at.** Turning the camera round was a double tap on the\nviewfinder and nothing else, which is not a thing anybody finds.\n\n### Exposure aids, for a greyscale screen\n\nJudging exposure in black and white is the hard case: a face and a window can read as the same grey,\nand nothing warns you that a highlight has gone to 255 and taken the detail with it. Two aids, both\noff by default, both drawn from the frame already on the panel so neither changes what the camera is\nbound to and neither costs the shutter anything:\n\n- a **histogram**, bottom left, 64 bins on a square-root scale so the shadows are visible rather\n  than a flat line;\n- **clipping marks**, a 45\u00b0 hairline hatch over the cells that have gone to white. Hatching rather\n  than crawling zebras: a static diagonal on a monochrome panel is already unmistakably not part of\n  the world, and it does not put an animation over the viewfinder permanently.\n\nA cell has to be a third blown before it is marked, so one hot p"
+   },
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/Roll/main/docs/screenshots/01-viewfinder.jpg",
+     "name": "01-viewfinder.jpg",
+     "size": 95657
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/Roll/main/docs/screenshots/02-mode-picker.jpg",
+     "name": "02-mode-picker.jpg",
+     "size": 77695
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/Roll/main/docs/screenshots/03-roll.jpg",
+     "name": "03-roll.jpg",
+     "size": 89035
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/Roll/main/docs/screenshots/04-bulge.jpg",
+     "name": "04-bulge.jpg",
+     "size": 99104
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/Roll/main/docs/screenshots/05-dither.jpg",
+     "name": "05-dither.jpg",
+     "size": 112485
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/Roll/main/docs/screenshots/06-film.jpg",
+     "name": "06-film.jpg",
+     "size": 89898
+    }
+   ],
+   "downloads": 117,
    "firstSeen": "2026-08-06"
   }
  ]

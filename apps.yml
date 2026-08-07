@@ -90,3 +90,8 @@ apps:
   repo: gi-os/FogLight
   category: utilities
   summary: 'Fog of World companion: record where you go, watch the fog clear.'
+- pkg: com.gios.lightcamera
+  name: Roll
+  repo: gi-os/Roll
+  category: media
+  summary: 'Camera and album: a film-roll viewfinder, real-time filters, face detection and a QR mode.'
