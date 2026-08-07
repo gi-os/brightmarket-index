@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T15:03:57.617225+00:00",
+ "generated": "2026-08-07T15:47:58.546922+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -36,7 +36,7 @@
      "size": 55824
     }
    ],
-   "downloads": 59,
+   "downloads": 60,
    "firstSeen": "2026-08-06"
   },
   {
@@ -73,7 +73,7 @@
      "size": 49896
     }
    ],
-   "downloads": 47,
+   "downloads": 48,
    "firstSeen": "2026-08-06"
   },
   {
@@ -94,7 +94,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 63,
+   "downloads": 64,
    "firstSeen": "2026-08-06"
   },
   {
@@ -131,7 +131,7 @@
      "size": 55168
     }
    ],
-   "downloads": 56,
+   "downloads": 58,
    "firstSeen": "2026-08-06"
   },
   {
@@ -141,18 +141,18 @@
    "category": "utilities",
    "summary": "The marketplace itself. Browse, install and update Light Phone apps.",
    "latest": {
-    "version": "1.7.21",
-    "versionCode": 21,
-    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.7.21/BrightMarket-v1.7.21.apk",
+    "version": "1.8.22",
+    "versionCode": 22,
+    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.8.22/BrightMarket-v1.8.22.apk",
     "size": 22663294,
-    "sha256": "3907cf603b7e5cb38ab7bc03859e1a3df9fbbdf1ec5b6cb58c6b484bbbb0875d",
-    "published": "2026-08-07T14:09:50Z",
-    "notes": "\n**Fixes the installed list properly.** Since Android 11 an app cannot see other\ninstalled packages at all unless it says so in its manifest \u2014 every lookup threw\nand was quietly read as \"not installed\". That is why nothing ever joined the\ninstalled section, why apps plainly sitting on the phone were listed as not\ninstalled, and why no update was ever offered for anything. BrightMarket now\ndeclares the visibility it needs.\n\nThe two previous attempts at this were fixing the wrong thing: the app was\nasking the right question at the right moment and being refused an answer.\n\n"
+    "sha256": "9e4b9cbe8e5b10e3bc359fbd17e08d18d66f7560c4abac4facb3b732ae240dd8",
+    "published": "2026-08-07T15:47:11Z",
+    "notes": "\n**Refresh tells you what it found.** A refresh that turns up nothing new\nchanges nothing on screen, which is indistinguishable from the button not\nworking. It now reports the result \u2014 \"up to date\", or how many updates are\nwaiting \u2014 and shows that it is busy while it runs. The fetch on launch stays\nsilent; announcing that one would be noise on every start.\n\n"
    },
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 52,
+   "downloads": 55,
    "firstSeen": "2026-08-06"
   },
   {
@@ -162,13 +162,13 @@
    "category": "reading",
    "summary": "EPUB, comics and Calibre, with a cover shelf and a page view.",
    "latest": {
-    "version": "build-52",
-    "versionCode": 52,
-    "apk": "https://github.com/gi-os/BrightLibrary/releases/download/build-52/LightFastread-1.14.1-light.1-b52.apk",
+    "version": "build-54",
+    "versionCode": 54,
+    "apk": "https://github.com/gi-os/BrightLibrary/releases/download/build-54/LightFastread-1.14.3-light.1-b54.apk",
     "size": 26846977,
-    "sha256": "0d26a376b02e38630b98d77eff0e70bec559e776915ef516fe3d23ef00901e49",
-    "published": "2026-08-07T03:38:48Z",
-    "notes": "Automatic build of `1f2b67768112daa4ab9b121e6f0031b173569061`.\n\n```\nadb install -r LightFastread-1.14.1-light.1-b52.apk\n```\n\n`versionCode` is the workflow run number (`52`) and\nevery build is signed with the same key, so this updates in place \u2014 via\n`adb`, or via Obtainium.\n\nSigning certificate SHA-256 is pinned in\n[`signing-fingerprint.txt`](https://github.com/gi-os/LightFastread/blob/main/signing-fingerprint.txt);\nCI fails if it ever changes.\n"
+    "sha256": "a3774eb2fad9dab662633de6fe788b5e38cb818858c70a4b44e780e28a705000",
+    "published": "2026-08-07T15:40:09Z",
+    "notes": "Automatic build of `7c283fdfb7c8747b3d23492ca06f53eba865616e`.\n\n```\nadb install -r LightFastread-1.14.3-light.1-b54.apk\n```\n\n`versionCode` is the workflow run number (`54`) and\nevery build is signed with the same key, so this updates in place \u2014 via\n`adb`, or via Obtainium.\n\nSigning certificate SHA-256 is pinned in\n[`signing-fingerprint.txt`](https://github.com/gi-os/LightFastread/blob/main/signing-fingerprint.txt);\nCI fails if it ever changes.\n"
    },
    "deprecated": false,
    "supersededBy": "",
@@ -194,7 +194,7 @@
      "size": 212473
     }
    ],
-   "downloads": 83,
+   "downloads": 84,
    "firstSeen": "2026-08-06"
   },
   {
@@ -215,7 +215,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 52,
+   "downloads": 53,
    "firstSeen": "2026-08-06"
   },
   {
@@ -242,7 +242,7 @@
      "size": 88062
     }
    ],
-   "downloads": 71,
+   "downloads": 72,
    "firstSeen": "2026-08-06"
   },
   {
@@ -263,7 +263,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 66,
+   "downloads": 67,
    "firstSeen": "2026-08-06"
   },
   {
@@ -284,7 +284,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 25,
+   "downloads": 26,
    "firstSeen": "2026-08-06"
   },
   {
@@ -305,7 +305,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 81,
+   "downloads": 82,
    "firstSeen": "2026-08-06"
   },
   {
@@ -326,7 +326,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 53,
+   "downloads": 54,
    "firstSeen": "2026-08-06"
   },
   {
@@ -353,7 +353,7 @@
      "size": 42506
     }
    ],
-   "downloads": 45,
+   "downloads": 46,
    "firstSeen": "2026-08-06"
   },
   {
@@ -385,7 +385,7 @@
      "size": 66903
     }
    ],
-   "downloads": 47,
+   "downloads": 48,
    "firstSeen": "2026-08-06"
   },
   {
@@ -432,7 +432,7 @@
      "size": 47577
     }
    ],
-   "downloads": 72,
+   "downloads": 73,
    "firstSeen": "2026-08-06"
   },
   {
@@ -469,7 +469,7 @@
      "size": 208010
     }
    ],
-   "downloads": 36,
+   "downloads": 37,
    "firstSeen": "2026-08-06"
   },
   {
@@ -490,7 +490,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 41,
+   "downloads": 42,
    "firstSeen": "2026-08-06"
   },
   {
@@ -511,7 +511,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 66,
+   "downloads": 68,
    "firstSeen": "2026-08-06"
   },
   {
@@ -563,7 +563,7 @@
      "size": 89898
     }
    ],
-   "downloads": 146,
+   "downloads": 147,
    "firstSeen": "2026-08-06"
   },
   {
@@ -595,7 +595,7 @@
      "size": 17692
     }
    ],
-   "downloads": 33,
+   "downloads": 34,
    "firstSeen": "2026-08-06"
   }
  ]
