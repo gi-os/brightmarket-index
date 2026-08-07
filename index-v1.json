@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T03:16:24.405909+00:00",
+ "generated": "2026-08-07T03:38:23.051641+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -36,7 +36,7 @@
      "size": 55824
     }
    ],
-   "downloads": 44,
+   "downloads": 45,
    "firstSeen": "2026-08-06"
   },
   {
@@ -73,7 +73,7 @@
      "size": 49896
     }
    ],
-   "downloads": 34,
+   "downloads": 35,
    "firstSeen": "2026-08-06"
   },
   {
@@ -94,7 +94,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 46,
+   "downloads": 48,
    "firstSeen": "2026-08-06"
   },
   {
@@ -104,13 +104,13 @@
    "category": "utilities",
    "summary": "Live scores and standings across thirteen leagues.",
    "latest": {
-    "version": "1.11.21",
-    "versionCode": 21,
-    "apk": "https://github.com/gi-os/BrightSports/releases/download/v1.11.21/LightSports-v1.11.21.apk",
+    "version": "1.11.22",
+    "versionCode": 22,
+    "apk": "https://github.com/gi-os/BrightSports/releases/download/v1.11.22/LightSports-v1.11.22.apk",
     "size": 19480245,
-    "sha256": "55f47f5e83fc15ad0d4ff886b490cb0acbd38aaf23ea6663ccc26d37f93c9903",
-    "published": "2026-08-07T02:07:33Z",
-    "notes": "**Full Changelog**: https://github.com/gi-os/BrightSports/compare/v1.11.20...v1.11.21"
+    "sha256": "d295daa60ebcb94550d353865c812c27494ff9062b97f05fcdd4b2759a390811",
+    "published": "2026-08-07T03:22:59Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightSports/compare/v1.11.21...v1.11.22"
    },
    "deprecated": false,
    "supersededBy": "",
@@ -131,7 +131,7 @@
      "size": 55168
     }
    ],
-   "downloads": 42,
+   "downloads": 43,
    "firstSeen": "2026-08-06"
   },
   {
@@ -141,18 +141,18 @@
    "category": "utilities",
    "summary": "The marketplace itself. Browse, install and update Light Phone apps.",
    "latest": {
-    "version": "1.4.18",
-    "versionCode": 18,
-    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.4.18/BrightMarket-v1.4.18.apk",
+    "version": "1.5.19",
+    "versionCode": 19,
+    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.5.19/BrightMarket-v1.5.19.apk",
     "size": 22663262,
-    "sha256": "a41ff8cf11c75acc687c2311d82863feabac180a9e527d839a7b575263a204fb",
-    "published": "2026-08-07T03:15:47Z",
-    "notes": "\n**Imported apps show up whether or not they're installed.** An Obtainium\nimport matched the apps BrightMarket indexes and then did nothing visible with\nthem, because the Updates tab only ever listed what the phone reported as\ninstalled. They now appear under **IN YOUR LIST, NOT INSTALLED**, one tap from\ninstalling, and are watched from then on.\n\n**Remove things.** Anything in your list can be removed, and any tracked repo\ncan be forgotten.\n\n**Scanned repos can finally be updated.** A GitHub release doesn't say which\npackage it installs, so a scanned repo had no applicationId \u2014 meaning the app\ncould never tell whether it was installed and never offered an update for it.\nThe APK is now read with the platform's own parser as it installs, which is the\none moment that information exists, and remembered.\n\n**The wheel and shake-to-report.** Both from light-common, the same shared layer\nevery other app in the portfolio uses: the wheel scrolls the lists, and shaking\nthe phone files a report.\n\n"
+    "sha256": "0c99bafc4357a17829d0bcaabd7b1f15cd5856f5cb9f5cc9afaf9f3d4705728f",
+    "published": "2026-08-07T03:37:29Z",
+    "notes": "\n**Installed apps now actually move into the installed section.** Returning from\nthe system installer dialog resumes the app, but the install finishes a moment\nafter that \u2014 so the phone still reported the app as absent and the list never\nupdated. BrightMarket now listens for the package event itself, which is the\nauthoritative signal and also catches installs that finish while it is in the\nforeground.\n\n"
    },
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 30,
+   "downloads": 33,
    "firstSeen": "2026-08-06"
   },
   {
@@ -162,13 +162,13 @@
    "category": "reading",
    "summary": "EPUB, comics and Calibre, with a cover shelf and a page view.",
    "latest": {
-    "version": "build-50",
-    "versionCode": 50,
-    "apk": "https://github.com/gi-os/BrightLibrary/releases/download/build-50/LightFastread-1.14.1-light.1-b50.apk",
-    "size": 26846977,
-    "sha256": "b200bf470e179840960ec8bc44eb49e15e5888d9aaf27e10c2226f52ee1cdfce",
-    "published": "2026-08-07T00:20:36Z",
-    "notes": "Automatic build of `6b97fda62bbee533b93d0656736c19b7a56286ec`.\n\n```\nadb install -r LightFastread-1.14.1-light.1-b50.apk\n```\n\n`versionCode` is the workflow run number (`50`) and\nevery build is signed with the same key, so this updates in place \u2014 via\n`adb`, or via Obtainium.\n\nSigning certificate SHA-256 is pinned in\n[`signing-fingerprint.txt`](https://github.com/gi-os/LightFastread/blob/main/signing-fingerprint.txt);\nCI fails if it ever changes.\n"
+    "version": "build-51",
+    "versionCode": 51,
+    "apk": "https://github.com/gi-os/BrightLibrary/releases/download/build-51/LightFastread-1.14.1-light.1-b51.apk",
+    "size": 26846973,
+    "sha256": "efa5fa0f7b5a06c3fbc415ab42a5bffec2a271f6dab825a99a4692711e326fc5",
+    "published": "2026-08-07T03:24:49Z",
+    "notes": "Automatic build of `61654bbafcbc7d904bbaa8cfa8996c8c14349898`.\n\n```\nadb install -r LightFastread-1.14.1-light.1-b51.apk\n```\n\n`versionCode` is the workflow run number (`51`) and\nevery build is signed with the same key, so this updates in place \u2014 via\n`adb`, or via Obtainium.\n\nSigning certificate SHA-256 is pinned in\n[`signing-fingerprint.txt`](https://github.com/gi-os/LightFastread/blob/main/signing-fingerprint.txt);\nCI fails if it ever changes.\n"
    },
    "deprecated": false,
    "supersededBy": "",
@@ -194,7 +194,7 @@
      "size": 212473
     }
    ],
-   "downloads": 69,
+   "downloads": 70,
    "firstSeen": "2026-08-06"
   },
   {
@@ -204,18 +204,18 @@
    "category": "utilities",
    "summary": "Apple TV remote, speaking the Companion protocol natively.",
    "latest": {
-    "version": "1.19.28",
-    "versionCode": 28,
-    "apk": "https://github.com/gi-os/BrightRemote/releases/download/v1.19.28/LightRemote-v1.19.28.apk",
-    "size": 2328462,
-    "sha256": "ffc708f743ad0ff006bc421c339731641fa78441f9346057c03cd6c2afdc545f",
-    "published": "2026-08-06T23:29:24Z",
-    "notes": "**Full Changelog**: https://github.com/gi-os/BrightRemote/compare/v1.19.27...v1.19.28"
+    "version": "1.19.29",
+    "versionCode": 29,
+    "apk": "https://github.com/gi-os/BrightRemote/releases/download/v1.19.29/LightRemote-v1.19.29.apk",
+    "size": 2328458,
+    "sha256": "49e78a782d895125c0f0c6bcd5ce6f61a94096534e7fd8732250d2d3dd65ba15",
+    "published": "2026-08-07T03:23:46Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightRemote/compare/v1.19.28...v1.19.29"
    },
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 38,
+   "downloads": 39,
    "firstSeen": "2026-08-06"
   },
   {
@@ -225,13 +225,13 @@
    "category": "utilities",
    "summary": "iMessage over a self-hosted BlueBubbles server.",
    "latest": {
-    "version": "2.9.37",
-    "versionCode": 37,
-    "apk": "https://github.com/gi-os/BrightChat/releases/download/v2.9.37/LightChat-v2.9.37.apk",
+    "version": "2.9.38",
+    "versionCode": 38,
+    "apk": "https://github.com/gi-os/BrightChat/releases/download/v2.9.38/LightChat-v2.9.38.apk",
     "size": 3917240,
-    "sha256": "8ae9f2b40c9141ca82fe4d1f2db99517d77c5bb34dd7e4088deb95d69c54ac76",
-    "published": "2026-08-06T23:11:38Z",
-    "notes": "**Full Changelog**: https://github.com/gi-os/BrightChat/compare/v2.9.36...v2.9.37"
+    "sha256": "7adfca0bcaada1ad0525590dfb9d87d56ca086b338431c0fbf8428685b2b83ed",
+    "published": "2026-08-07T03:25:31Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightChat/compare/v2.9.37...v2.9.38"
    },
    "deprecated": false,
    "supersededBy": "",
@@ -242,7 +242,7 @@
      "size": 88062
     }
    ],
-   "downloads": 57,
+   "downloads": 58,
    "firstSeen": "2026-08-06"
   },
   {
@@ -252,18 +252,18 @@
    "category": "hardware",
    "summary": "The wheel and camera button, working phone-wide.",
    "latest": {
-    "version": "2.0.53",
-    "versionCode": 53,
-    "apk": "https://github.com/gi-os/BrightControl/releases/download/v2.0.53/LightControl-v2.0.53.apk",
-    "size": 18365257,
-    "sha256": "a49c8d6052d17dc77267bfa78022ca911a61ccf77b7f952e77bd180d0918d71c",
-    "published": "2026-08-06T23:21:50Z",
-    "notes": "## LightControl v2.0 \u2014 Tap the volume strip to pick what the keys move\n\n**Two changes to the volume HUD, and the second one is the first time this app moves a volume\nitself.**\n\nIt no longer appears over LightOS. Light's dashboard and lock screen already have a volume control\nof their own, and a second one drawn over the top of it is this app's oldest mistake in a new place:\non Light's own screens, anything added is something duplicated. Everywhere else is unchanged.\n\nAnd the strip is now tappable. Android hands the volume keys one stream at a time \u2014 whatever is\nplaying, and media when nothing is \u2014 so the ringer and the alarm levels cannot be reached from the\nhardware at all, and LightOS has no screen for them either. Tap the strip and it cycles: media, ring,\nalarm, and the call stream when there is a call. The chosen one says **PIN**, and for the next few\nseconds the keys move that stream instead of the default one.\n\nReaching those streams means taking the press, so this is the one place the app adjusts a volume\nrather than reporting one \u2014 which is a rule worth bending only inside a fence:\n\n- It needs a tap first. Until you tap, no volume key is consumed, exactly as before.\n- It applies to one named stream, and it expires with the strip. Every press that uses it extends it.\n- It cannot survive a ring. The takeover lives in a path the service never reaches while anything is\n  ringing or a call is up, so the keys that dismiss an alarm are never in question.\n- Walking the ringer down into silence needs Do Not Disturb access, which a sideloaded app doesn't\n  have. The strip says NEEDS DND ACCESS instead of quietly doing nothing.\n- **Settings \u2192 VOLUME \u2192 Tap to pick a stream** turns it off, and with it off nothing here consumes a\n  key at all.\n\nThe strip had to become touchable for this, which is a real cost stated plainly: a tap landing on a\nthin bar at the very top of the screen, during the second or so it is visible, goes to the strip\ninstead of the app. Everything outside it passes through untouched, and the window stays unfocusable\n\u2014 so it can take a stray tap, but never a key.\n\n## LightControl v1.9 \u2014 The wheel says what it did, and the volume strip gets out of the way\n\n**Two small things, one of them a diagnosis tool.**\n\nThe volume HUD is half the height it was. The first version used a LightOS bar's worth of padding,\nwhich is the right amount for something you tap and far too much for something that flashes over the\ntop of whatever you are looking at. The label drops one step down the type scale, the notches are\nshorter and their gutters narrower, and the strip now reads as a line of type rather than a panel.\n\nThe key log has learned about **turns**. Until now it only recorded buttons, which meant the half of\nthis app that fails *quietly* left no evidence at all: a wheel that does nothing in one app looks\nexactly the same whether the key never reached the service, the app resolved to pass the turn\nthrough, or the brightness write was refused for a missing grant. Those are three different fixes.\nNow each turn writes one line \u2014 the app in front, what was decided, and the level it landed on \u2014\ndeduped so a twenty-notch gesture costs one line instead of filling the log.\n\nThe useful part is what the log says when it says nothing. **No line for a turn means the service was\nnever handed the key**, and no setting in this app can be the cause. A line saying PASS THROUGH means\nthe app is set to scroll itself; one saying \"blocked \u2014 no WRITE_SETTINGS\" means the appop is gone.\nSettings \u2192 KEY LOG.\n\n**Full Changelog**: https://github.com/gi-os/BrightControl/compare/v1.8.46...v2.0.53\n"
+    "version": "2.0.55",
+    "versionCode": 55,
+    "apk": "https://github.com/gi-os/BrightControl/releases/download/v2.0.55/LightControl-v2.0.55.apk",
+    "size": 18365253,
+    "sha256": "c3bb664363ebfcebcaca807b72d69937ec5d301a904fed0bd5a07077139114be",
+    "published": "2026-08-07T03:23:01Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightControl/compare/v2.0.53...v2.0.55"
    },
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 51,
+   "downloads": 52,
    "firstSeen": "2026-08-06"
   },
   {
@@ -284,7 +284,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 12,
+   "downloads": 13,
    "firstSeen": "2026-08-06"
   },
   {
@@ -294,18 +294,18 @@
    "category": "productivity",
    "summary": "Notes and a calendar, with your day gathered in one place.",
    "latest": {
-    "version": "1.42.64",
-    "versionCode": 64,
-    "apk": "https://github.com/gi-os/BrightNotebook/releases/download/v1.42.64/LightNotebook-v1.42.64.apk",
-    "size": 4498862,
-    "sha256": "864a9554dbf506cc32060ecff97516f6cf9e70f21100ec2ae91f392c75c661b7",
-    "published": "2026-08-06T23:33:11Z",
-    "notes": "## Things that repeat, and checkboxes you can tick\n\nTwo things this app has been missing since the beginning.\n\n**A weekly meeting is now a weekly meeting.** Open any entry and there is a *Repeats* row:\ndaily, weekly, monthly or yearly, every so many of those, which weekdays for a weekly one, and\nan end \u2014 never, after a number of times, or on a date. The same thing works the other way\nround: importing a `.ics` used to skip `RRULE` on purpose, so a standup exported out of Outlook\narrived exactly once and then never again. It arrives as a standup now.\n\nBoth halves are one engine. That was the whole point of doing them together \u2014 two separate\nhalf-implementations of recurrence in one app would have been worse than the nothing that was\nthere before, because they would eventually disagree about which Tuesday something happens on.\n\nA series is **one row in the database**, and the days it falls on are worked out for whatever\nwindow is on screen. A ten-year daily meeting in an imported feed costs one row, not three and\na half thousand, and nothing has to reconcile those rows the next time the feed is re-fetched.\nIt also means the rule survives a LightSync backup for free: it is two columns on an entry, in\nthe database that was already being backed up.\n\nBeing honest about what it reads: `FREQ`, `INTERVAL`, `BYDAY` \u2014 including the \"first Monday\" and\n\"last Friday\" forms \u2014 `BYMONTHDAY`, `COUNT`, `UNTIL` and `EXDATE`. It refuses `BYSETPOS`,\n`BYWEEKNO`, `BYYEARDAY`, week starts other than Monday, and the sub-daily frequencies. A refused\nrule is not dropped and not guessed at: the event shows once, on the day it really starts, and\nthe *Repeats* row admits the app cannot read it. That is a much smaller lie than scattering\nsomething across the wrong days.\n\nMonthly on the 31st **skips** February rather than sliding to the 28th. That is what RFC 5545\nsays and it is also the right answer \u2014 a thing that happens on the 31st does not happen in a\nmonth with no 31st. If what you meant was the end of the month, the picker has *LAST* for that.\n\nDeleting or editing one occurrence of a series always asks whether you mean that one or all of\nthem. Neither answer is assumed: a silent \"all of them\" throws away a year of standups, and a\nsilent \"just this one\" leaves the other fifty-one saying the wrong thing.\n\n**Checkboxes.** Type `- [ ] milk` in a note and it draws a checkbox; tap it and the line becomes\n`- [x] milk`. The note is still plain text \u2014 that is the point. There is no second, hidden list\nmodel to keep in step with the words, nothing to migrate, and a checklist read anywhere else is\nstill the five characters you typed. Two identical `- [ ] milk` lines tick independently,\nbecause the rewrite is addressed by line number and not by matching the text. And the checkbox\nis its own tap target, so ticking something off does not drop the caret into the note or throw\nthe keyboard up over half the screen, which on this panel is the difference between a shopping\nlist and an argument.\n\nOne thing changed underneath to make that work: the note itself scrolls now, instead of the text\nfield scrolling inside it. A text field that scrolls itself will not say how far it has scrolled,\nso the checkboxes would have slid off their lines in any note longer than a screen. Keeping the\ncursor visible while typing is now done by hand, which it has to be \u2014 and the side effect is that\nthe wheel scrolls a long note, which it could never do before.\n\nUpgrading keeps everything. The two new columns arrive by migration; nothing is rebuilt and\nnothing is thrown away.\n\n\n**Full Changelog**: https://github.com/gi-os/BrightNotebook/compare/v1.42.62...v1.42.64"
+    "version": "1.42.65",
+    "versionCode": 65,
+    "apk": "https://github.com/gi-os/BrightNotebook/releases/download/v1.42.65/LightNotebook-v1.42.65.apk",
+    "size": 4498866,
+    "sha256": "9c11390fdcb3e9100548d0d84b16cd3601f81091272d734417fd13e46a1470d1",
+    "published": "2026-08-07T03:25:26Z",
+    "notes": "## Things that repeat, and checkboxes you can tick\n\nTwo things this app has been missing since the beginning.\n\n**A weekly meeting is now a weekly meeting.** Open any entry and there is a *Repeats* row:\ndaily, weekly, monthly or yearly, every so many of those, which weekdays for a weekly one, and\nan end \u2014 never, after a number of times, or on a date. The same thing works the other way\nround: importing a `.ics` used to skip `RRULE` on purpose, so a standup exported out of Outlook\narrived exactly once and then never again. It arrives as a standup now.\n\nBoth halves are one engine. That was the whole point of doing them together \u2014 two separate\nhalf-implementations of recurrence in one app would have been worse than the nothing that was\nthere before, because they would eventually disagree about which Tuesday something happens on.\n\nA series is **one row in the database**, and the days it falls on are worked out for whatever\nwindow is on screen. A ten-year daily meeting in an imported feed costs one row, not three and\na half thousand, and nothing has to reconcile those rows the next time the feed is re-fetched.\nIt also means the rule survives a LightSync backup for free: it is two columns on an entry, in\nthe database that was already being backed up.\n\nBeing honest about what it reads: `FREQ`, `INTERVAL`, `BYDAY` \u2014 including the \"first Monday\" and\n\"last Friday\" forms \u2014 `BYMONTHDAY`, `COUNT`, `UNTIL` and `EXDATE`. It refuses `BYSETPOS`,\n`BYWEEKNO`, `BYYEARDAY`, week starts other than Monday, and the sub-daily frequencies. A refused\nrule is not dropped and not guessed at: the event shows once, on the day it really starts, and\nthe *Repeats* row admits the app cannot read it. That is a much smaller lie than scattering\nsomething across the wrong days.\n\nMonthly on the 31st **skips** February rather than sliding to the 28th. That is what RFC 5545\nsays and it is also the right answer \u2014 a thing that happens on the 31st does not happen in a\nmonth with no 31st. If what you meant was the end of the month, the picker has *LAST* for that.\n\nDeleting or editing one occurrence of a series always asks whether you mean that one or all of\nthem. Neither answer is assumed: a silent \"all of them\" throws away a year of standups, and a\nsilent \"just this one\" leaves the other fifty-one saying the wrong thing.\n\n**Checkboxes.** Type `- [ ] milk` in a note and it draws a checkbox; tap it and the line becomes\n`- [x] milk`. The note is still plain text \u2014 that is the point. There is no second, hidden list\nmodel to keep in step with the words, nothing to migrate, and a checklist read anywhere else is\nstill the five characters you typed. Two identical `- [ ] milk` lines tick independently,\nbecause the rewrite is addressed by line number and not by matching the text. And the checkbox\nis its own tap target, so ticking something off does not drop the caret into the note or throw\nthe keyboard up over half the screen, which on this panel is the difference between a shopping\nlist and an argument.\n\nOne thing changed underneath to make that work: the note itself scrolls now, instead of the text\nfield scrolling inside it. A text field that scrolls itself will not say how far it has scrolled,\nso the checkboxes would have slid off their lines in any note longer than a screen. Keeping the\ncursor visible while typing is now done by hand, which it has to be \u2014 and the side effect is that\nthe wheel scrolls a long note, which it could never do before.\n\nUpgrading keeps everything. The two new columns arrive by migration; nothing is rebuilt and\nnothing is thrown away.\n\n\n**Full Changelog**: https://github.com/gi-os/BrightNotebook/compare/v1.42.64...v1.42.65"
    },
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 66,
+   "downloads": 67,
    "firstSeen": "2026-08-06"
   },
   {
@@ -326,7 +326,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 40,
+   "downloads": 41,
    "firstSeen": "2026-08-06"
   },
   {
@@ -353,7 +353,7 @@
      "size": 42506
     }
    ],
-   "downloads": 32,
+   "downloads": 33,
    "firstSeen": "2026-08-06"
   },
   {
@@ -385,7 +385,7 @@
      "size": 66903
     }
    ],
-   "downloads": 34,
+   "downloads": 35,
    "firstSeen": "2026-08-06"
   },
   {
@@ -432,7 +432,7 @@
      "size": 47577
     }
    ],
-   "downloads": 59,
+   "downloads": 60,
    "firstSeen": "2026-08-06"
   },
   {
@@ -469,7 +469,7 @@
      "size": 208010
     }
    ],
-   "downloads": 23,
+   "downloads": 24,
    "firstSeen": "2026-08-06"
   },
   {
@@ -479,18 +479,18 @@
    "category": "hardware",
    "summary": "A fork of the Light Phone keyboard, adding swipe typing and autocorrect from a bundled dictionary. Works offline.",
    "latest": {
-    "version": "1.0.23",
-    "versionCode": 23,
-    "apk": "https://github.com/gi-os/LightKeyboard/releases/download/v1.0.23/LightKeyboard-v1.0.23.apk",
+    "version": "1.0.25",
+    "versionCode": 25,
+    "apk": "https://github.com/gi-os/LightKeyboard/releases/download/v1.0.25/LightKeyboard-v1.0.25.apk",
     "size": 11183251,
-    "sha256": "b868b26f20a31f5aeae9095cccb221fc364b5e339b7c6e452c1595a379914188",
-    "published": "2026-08-02T02:58:03Z",
-    "notes": "**Full Changelog**: https://github.com/gi-os/LightKeyboard/compare/v1.0.22...v1.0.23"
+    "sha256": "bf631d561f9ec3e49cee410a78a30d18c54429cc9257af7fddc6dc0c7ca0a3b4",
+    "published": "2026-08-07T03:38:01Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/LightKeyboard/compare/v1.0.24...v1.0.25"
    },
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 26,
+   "downloads": 28,
    "firstSeen": "2026-08-06"
   },
   {
@@ -511,7 +511,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 52,
+   "downloads": 54,
    "firstSeen": "2026-08-06"
   },
   {
@@ -521,12 +521,12 @@
    "category": "media",
    "summary": "Camera and album: a film-roll viewfinder, real-time filters, face detection and a QR mode.",
    "latest": {
-    "version": "2.44.67",
-    "versionCode": 67,
-    "apk": "https://github.com/gi-os/Roll/releases/download/v2.44.67/LightCamera-v2.44.67.apk",
-    "size": 17512650,
-    "sha256": "8c0bfcce027f603fcdb3648ad25921643c00f645d58f0af978db454233bc593a",
-    "published": "2026-08-06T20:40:04Z",
+    "version": "2.44.68",
+    "versionCode": 68,
+    "apk": "https://github.com/gi-os/Roll/releases/download/v2.44.68/LightCamera-v2.44.68.apk",
+    "size": 17512646,
+    "sha256": "bc79bcfda176634187d47a36e5b2fdd5fff394be186d61bc4ffd0556709d7fee",
+    "published": "2026-08-07T03:24:35Z",
     "notes": "## LightCamera v2.44 \u2014 Point the controls where you want them\n\nThe wheel walks the filters, holding it in and turning is exposure, clicking it is the torch, and\neither volume key is a shutter. That is a good mapping and it is still exactly what a fresh install\ndoes. It was also the *only* mapping, which is a problem on this phone in particular: the wheel is a\nsystem-wide control, and anyone who has remapped it elsewhere \u2014 with LightControl, most likely \u2014\nfound this app quietly assuming the wheel was free.\n\nSo the mapping is a setting now. Five controls, each pointed wherever you want it:\n\n| Control | Can be | Defaults to |\n| --- | --- | --- |\n| Volume up | shutter, torch, front/rear, next mode, timer, exposure, zoom, nothing | shutter |\n| Volume down | the same list | shutter |\n| Click the wheel | the same list | torch |\n| Turn the wheel | filter, exposure, zoom, nothing | filter |\n| Press and turn | the same four | exposure |\n\nThe camera button is not on the list and never will be: half press to focus, press through to shoot.\n\n**One shutter always survives.** There is no shutter button on the screen, so unbinding the last one\non a phone whose camera key is being swallowed by an accessibility service would leave a camera that\ncannot take a photograph and no obvious way back. An option that would do that is skipped rather\nthan offered. A key set to Nothing is handed back to the phone rather than eaten, so a volume key\nwith no job here still changes the volume.\n\nA filter dial stays unarmed \u2014 each notch counts once, and None is three notches wide so a flick\nlands somewhere harmless. Exposure and zoom are armed, so a fast turn racks through them. Whichever\nway the wheel is pointed, an open strip takes it for as long as it is open.\n\n### Drag the exposure strip\n\nTwelve notches is the whole exposure range on this camera, so getting from \u22122 to +2 by tapping `+`\nwas twelve taps. Now: drag to set it, tap to jump to a stop, long-press to go back to zero. The `+`\nand `\u2212` are still there for a single stop, and the wheel is still the better control \u2014 this is the\none you reach for when the phone is already in your hand.\n\n### Zoom, at last, as a control\n\nThe lens is fixed and the crop is digital, which is why the wheel was spent on filters instead. But\na digital crop is still the difference between a photograph of a sign and a photograph of the wall\nit is on, and until now the only way to get one was a pinch on a 3.92\" panel held sideways in one\nhand. There is a zoom strip now, and it is **logarithmic**: each doubling gets the same travel, so\nthe low end is not crushed into the first few millimetres.\n\n### Two slots in the band are yours\n\nThe album, the mode-and-filter chip and the flash are the stock camera's own bar in the stock\ncamera's own order, and they stay put. The two at the end \u2014 where the brightness icon was \u2014 can be\nexposure, zoom, front/rear, self timer, shape, grid, or nothing. Exposure then nothing is what the\napp has always shown.\n\n**Front/rear is the one worth pointing at.** Turning the camera round was a double tap on the\nviewfinder and nothing else, which is not a thing anybody finds.\n\n### Exposure aids, for a greyscale screen\n\nJudging exposure in black and white is the hard case: a face and a window can read as the same grey,\nand nothing warns you that a highlight has gone to 255 and taken the detail with it. Two aids, both\noff by default, both drawn from the frame already on the panel so neither changes what the camera is\nbound to and neither costs the shutter anything:\n\n- a **histogram**, bottom left, 64 bins on a square-root scale so the shadows are visible rather\n  than a flat line;\n- **clipping marks**, a 45\u00b0 hairline hatch over the cells that have gone to white. Hatching rather\n  than crawling zebras: a static diagonal on a monochrome panel is already unmistakably not part of\n  the world, and it does not put an animation over the viewfinder permanently.\n\nA cell has to be a third blown before it is marked, so one hot p"
    },
    "deprecated": false,
@@ -563,7 +563,7 @@
      "size": 89898
     }
    ],
-   "downloads": 127,
+   "downloads": 129,
    "firstSeen": "2026-08-06"
   },
   {
@@ -595,7 +595,7 @@
      "size": 17692
     }
    ],
-   "downloads": 18,
+   "downloads": 20,
    "firstSeen": "2026-08-06"
   }
  ]
