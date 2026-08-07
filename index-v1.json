@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T21:33:22.034039+00:00",
+ "generated": "2026-08-07T21:41:16.070529+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -145,13 +145,13 @@
    "category": "utilities",
    "summary": "The marketplace itself. Browse, install and update Light Phone apps.",
    "latest": {
-    "version": "1.13.28",
-    "versionCode": 28,
-    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.13.28/BrightMarket-v1.13.28.apk",
-    "size": 22683774,
-    "sha256": "0b50c8faac830a5c27847309d70d4efbc3c4ff3597544db48101649e605e9137",
-    "published": "2026-08-07T21:27:45Z",
-    "notes": "\n**Nightly builds are a channel you choose now, not the default.**\n\nUntil today every push to this repo cut a release, and BrightMarket and\nObtainium both offered it to everybody within the hour. A typo fix and a real\nfeature arrived identically, and anyone who updates promptly was testing work in\nprogress without having agreed to. Twelve releases went out in one day. That is\nfine for a project with one user and wrong for one people rely on.\n\nA push now publishes a **nightly**, marked as a prerelease. The catalogue has\nalways skipped prereleases, so a nightly reaches nobody who hasn't asked for\none. An official release is asked for deliberately.\n\n**Settings \u2192 Updates** picks your channel. Official releases only is the\ndefault, and staying there means you'll see fewer updates and each one will have\nbeen meant. Nightly builds gets you everything as it's made, including the ones\nthat turn out to be wrong.\n\nA nightly is checked exactly as hard as a release: the index downloads it,\nhashes it, and reads its versionCode out of the APK, so an install off the\nnightly channel verifies the same way. And a nightly is only ever offered when\nit's genuinely ahead \u2014 cut an official release after the last nightly and\neveryone on the channel moves to it, rather than sitting on something older than\nthe people who didn't opt in.\n\nTurning the channel off never downgrades you; Android won't install backwards.\nIt stops offering nightlies, and the next official release catches you up.\n\n"
+    "version": "1.14.30",
+    "versionCode": 30,
+    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.14.30/BrightMarket-v1.14.30.apk",
+    "size": 22683798,
+    "sha256": "f2e84c81bbd2d32b186c1d8c7244f5f0ec8fb80d6849690db5a44f12b7281ac1",
+    "published": "2026-08-07T21:40:29Z",
+    "notes": "\n**Uninstall actually works.** It needed `REQUEST_DELETE_PACKAGES` in the\nmanifest, which wasn't there. Without it Android refuses the request before any\nUI appears, so the button did nothing regardless of how big it was \u2014 v1.12 made\nthe tap target larger, which was a real problem but not this one. The permission\ngrants no power to remove anything: the system still shows its own confirmation\nand you still have to agree. It only buys the right to ask.\n\nIt's also gone from the downloads list. One place to uninstall from, and it's\nthe app's own page \u2014 a destructive action repeated down every row of a list you\nscroll is asking for it.\n\n"
    },
    "deprecated": false,
    "supersededBy": "",
@@ -172,7 +172,7 @@
      "size": 57213
     }
    ],
-   "downloads": 97,
+   "downloads": 99,
    "firstSeen": "2026-08-06",
    "signer": "c15078bcb72a89c67efb54d1a9fc1b00cc88da578891f8e96233a7d279550df6",
    "preview": {
@@ -295,7 +295,7 @@
      "size": 88062
     }
    ],
-   "downloads": 101,
+   "downloads": 102,
    "firstSeen": "2026-08-06",
    "signer": "0829436c50e0f0904edcc1719f25e1237281303691c6406d2b06dc9a521c64eb"
   },
