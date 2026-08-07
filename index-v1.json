@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T01:37:31.237214+00:00",
+ "generated": "2026-08-07T01:39:05.073017+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -126,7 +126,7 @@
     "notes": "**Full Changelog**: https://github.com/gi-os/BrightMarket/compare/v1.0.10...v1.0.12"
    },
    "screenshots": [],
-   "downloads": 11,
+   "downloads": 13,
    "firstSeen": "2026-08-06"
   },
   {
