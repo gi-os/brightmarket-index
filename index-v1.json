@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T16:50:02.388063+00:00",
+ "generated": "2026-08-07T16:58:36.118302+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -141,13 +141,13 @@
    "category": "utilities",
    "summary": "The marketplace itself. Browse, install and update Light Phone apps.",
    "latest": {
-    "version": "1.8.22",
-    "versionCode": 22,
-    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.8.22/BrightMarket-v1.8.22.apk",
+    "version": "1.9.23",
+    "versionCode": 23,
+    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.9.23/BrightMarket-v1.9.23.apk",
     "size": 22663294,
-    "sha256": "9e4b9cbe8e5b10e3bc359fbd17e08d18d66f7560c4abac4facb3b732ae240dd8",
-    "published": "2026-08-07T15:47:11Z",
-    "notes": "\n**Refresh tells you what it found.** A refresh that turns up nothing new\nchanges nothing on screen, which is indistinguishable from the button not\nworking. It now reports the result \u2014 \"up to date\", or how many updates are\nwaiting \u2014 and shows that it is busy while it runs. The fetch on launch stays\nsilent; announcing that one would be noise on every start.\n\n"
+    "sha256": "8d35a61fc8f2b64ff7d0600f0d1c1edcc9af9b05b22f8899bf5149a2d518b7d4",
+    "published": "2026-08-07T16:57:37Z",
+    "notes": "\n**The catalogue has its own address: `brightmarket.gzl.dev`.** The old\n`gi-os.github.io/brightmarket-index` links still work and always will \u2014 GitHub\nredirects them \u2014 but the app now fetches the index from the short domain\ndirectly rather than through a redirect, and the \"turn Focus mode off\" screen\ntells you the address you'd actually type.\n\nThe install link is `brightmarket.gzl.dev/apk`, which always points at the\ncurrent signed release. That is what the setup QR encodes now, so a code printed\nin a README doesn't go stale the next time this ships.\n\n"
    },
    "deprecated": false,
    "supersededBy": "",
