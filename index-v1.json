@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-07T21:19:58.818444+00:00",
+ "generated": "2026-08-07T21:22:35.882773+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -145,13 +145,13 @@
    "category": "utilities",
    "summary": "The marketplace itself. Browse, install and update Light Phone apps.",
    "latest": {
-    "version": "1.11.26",
-    "versionCode": 26,
-    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.11.26/BrightMarket-v1.11.26.apk",
-    "size": 22683770,
-    "sha256": "fc5a2ea72700a4306cde55a7dac8844e81715f1ea7c4d7e7860cd75de1676761",
-    "published": "2026-08-07T21:04:01Z",
-    "notes": "\n**Uninstall is in the app now.** Removing something you'd installed meant going\nto LightOS's own settings and finding it there, which is several screens from\nthe list of installed apps and not somewhere anyone thinks to look. There's an\nUNINSTALL under each row in Updates and on each app's page. It sits below the\nrow rather than beside the name on purpose \u2014 putting a destructive action next\nto the one you tap constantly is how it gets tapped by accident. Android still\nshows its own confirmation, and BrightMarket won't offer to uninstall itself.\n\n**Add an app by pasting a link, not just by scanning one.** The scan screen has\na field above the viewfinder that takes a GitHub repo, a `brightmarket.gzl.dev`\nlink, or a direct `.apk` URL. Scanning assumed the thing you wanted was on\nanother screen you could point a camera at; often it arrived in a message on\nthis phone, and there was no way to use it.\n\nThe field sits above the camera permission prompt, so declining the camera no\nlonger means you can't add apps at all. A direct `.apk` link installs once and\nisn't tracked afterwards \u2014 a file on a web server has no releases to watch, and\na row that could never update would just look broken. It has to be `https`:\nthere's no hash to check an unlisted APK against, so the connection is the only\nthing standing between you and whatever else the network felt like sending.\n\n"
+    "version": "1.12.27",
+    "versionCode": 27,
+    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.12.27/BrightMarket-v1.12.27.apk",
+    "size": 22683774,
+    "sha256": "489bec516e7e6c4468b1c8d7dd79400065376a0e3acf4823bbd97a4b3014385c",
+    "published": "2026-08-07T21:19:52Z",
+    "notes": "\n**The uninstall button is now big enough to press.** It shipped as small text\nwith no padding around it, so the thing you could actually hit was about the\nheight of the letters \u2014 roughly 20dp, against the 48dp Android treats as the\nminimum. Near misses landed on the row underneath and opened the app's page,\nwhich looks exactly like a button that doesn't work.\n\nIt's full-size on both the list and the app's own page now, with the padding\ninside the tap target rather than around it. And if the system uninstaller\ncan't be opened for some reason, it says so instead of failing silently \u2014 a tap\nthat does nothing and says nothing is the same thing as a broken button from\nwhere you're sitting.\n\n"
    },
    "deprecated": false,
    "supersededBy": "",
@@ -303,7 +303,7 @@
     "size": 18365257,
     "sha256": "aa552d552ac27fdde47cdd1f663d43256ca4431e37d229f1155895a01d2859b9",
     "published": "2026-08-07T21:19:15Z",
-    "notes": "**Full Changelog**: https://github.com/gi-os/BrightControl/compare/v2.0.56...v2.1.58"
+    "notes": "## v2.1 \u2014 the home button works everywhere again, and SWIPE stops eating brightness\n\n### Fixed\n- **Home no longer strands you on LightOS's screens.** The hands-off gate ran before the home button's own door, so on the dashboard or after a wake the tap binding never fired \u2014 not even in shadow mode. Press home, get the idle face, press again, idle face: stuck. Home is now routed to its door first; hands-off is one of that door's refusals, and a tap that names its own destination (Luma, Resume, any app) takes the key wherever you are standing.\n- **A shadow tap no longer fires behind the keyguard or a dark screen.** The launch was dropped silently but still stamped the launch throttle, so the real press just after the unlock read as a repeat and was declined \u2014 home presses that \"did nothing\" right after waking the phone.\n- **SWIPE apps now follow the mode switch.** Double-tapping the wheel to BRIGHTNESS changes what a turn does in swipe-scrolled apps too, the way it always has for scroll-through apps \u2014 instead of flipping the readout while every notch kept swiping. The per-app rule decides how a scroll is delivered, not what a turn is allowed to mean.\n\n### Notes\n- Base version bumped to 2.1. No permission or binding changes; installs over the top.\n"
    },
    "deprecated": false,
    "supersededBy": "",
@@ -386,7 +386,16 @@
    ],
    "downloads": 77,
    "firstSeen": "2026-08-06",
-   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28",
+   "preview": {
+    "version": "0.1.0",
+    "versionCode": 1,
+    "apk": "https://github.com/gi-os/BrightNonogram/releases/download/v0.1.0/LightNonogram-0.1.0.apk",
+    "size": 25888932,
+    "sha256": "d86b15270cfa577fc70f63921d27a1c626ac2700da4f0b3a82e4cbc45182e499",
+    "published": "2026-07-28T16:21:59Z",
+    "notes": "> **This build does not work.** It crashes on launch: the tool module was missing the KSP plugin, so the SDK registry that locates the initial screen was never generated. Fixed in v0.1.1 \u2014 install that instead.\n\n---\n\nPicross for the Light Phone III, versionCode 1.\n69 hand-drawn 10x10 pictures plus endless generated puzzles. No network,\nno permissions.\n\nInstall with `adb install -r LightNonogram-0.1.0.apk`, or track\nthis repository in [Obtainium](https://github.com/ImranR98/Obtainium) with the APK\nfilter `LightNonogram-.*\\.apk` to get updates automatically. See\n[INSTALL.md](https://github.com/gi-os/LightNonogram/blob/main/INSTALL.md).\n\nSigned with the SDK development key (not a stable sideload key), not by Light. Android only accepts an update\nsigned by the same key that installed the app, so an APK signed with a different\nkey needs the old one uninstalled first.\n\n\n**Full Changelog**: https://github.com/gi-os/LightNonogram/commits/v0.1.0"
+   }
   },
   {
    "pkg": "com.thelightphone.solitaire",
