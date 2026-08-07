@@ -109,3 +109,8 @@ apps:
   repo: barry7007/LightBirdIdentifier
   category: utilities
   summary: Identify bird sounds. Restyled from whoBird.
+- pkg: com.lightphone.spotify
+  name: BrightMusic
+  repo: gi-os/BrightMusic
+  category: media
+  summary: Spotify, NTSradio + Radio, Podcasts + more! Forked from Jonathancaudill/phono
