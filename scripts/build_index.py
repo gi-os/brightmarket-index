@@ -183,6 +183,55 @@ def find_screenshots(repo: str, default_branch: str) -> list[dict]:
     return []
 
 
+def build_preview(pkg: str, prereleases: list, carried: dict | None) -> dict | None:
+    """The newest prerelease with exactly one .apk, hashed and read.
+
+    Returns None when there is no usable prerelease, and also when the newest
+    prerelease is older than nothing at all -- the caller drops the key entirely
+    in that case rather than publishing an empty object, so a client can test
+    for presence.
+
+    Re-uses the carried-forward entry when the tag hasn't moved. Without that
+    this would download every app's nightly on every run, which at a fifteen
+    minute schedule is a lot of bandwidth to confirm nothing changed.
+    """
+    candidates = [
+        (r, [a for a in r["assets"] if a["name"].endswith(".apk")])
+        for r in prereleases
+    ]
+    candidates = [(r, assets) for r, assets in candidates if len(assets) == 1]
+    if not candidates:
+        return None
+
+    release, assets = candidates[0]
+    asset = assets[0]
+
+    if carried and carried.get("version") == release["tag_name"].lstrip("v"):
+        return carried
+
+    try:
+        blob = get_bytes(asset["browser_download_url"])
+    except urllib.error.HTTPError as e:
+        warn(f"{pkg}: could not download the nightly ({e.code}) -- keeping the previous one")
+        return carried
+
+    parsed = read_apk(blob)
+    if parsed is None:
+        warn(f"{pkg}: couldn't read the nightly APK -- ignoring it")
+        return carried
+    version_code, _apk_pkg, _signer = parsed
+
+    return {
+        "version": release["tag_name"].lstrip("v"),
+        "versionCode": version_code,
+        "apk": asset["browser_download_url"],
+        "size": asset["size"],
+        "sha256": hashlib.sha256(blob).hexdigest(),
+        "published": release["published_at"],
+        "notes": (release["body"] or "")[:2000],
+    }
+
+
 def load_previous(path: str) -> dict:
     try:
         with open(path) as f:
@@ -212,8 +261,13 @@ def main() -> int:
                 out.append(previous[pkg])
             continue
 
-        # Drafts and prereleases are never shipped to users.
+        # Drafts and prereleases are never the default. A prerelease is now a
+        # deliberate channel rather than a mistake -- BrightMarket publishes a
+        # nightly on every push -- so the newest one is recorded separately,
+        # below, for the people who have asked to be on it. Everyone else never
+        # sees it.
         published = [r for r in releases if not r["draft"] and not r["prerelease"]]
+        prereleases = [r for r in releases if not r["draft"] and r["prerelease"]]
         apk_releases = [
             (r, [a for a in r["assets"] if a["name"].endswith(".apk")]) for r in published
         ]
@@ -284,6 +338,13 @@ def main() -> int:
         if screenshots is None:
             screenshots = prev.get("screenshots", [])
 
+        # The nightly channel. Same treatment as the stable entry -- the APK is
+        # downloaded, hashed and read for its real versionCode -- because a
+        # nightly installs the same way and deserves the same check. Carried
+        # forward untouched when the newest prerelease hasn't changed, so this
+        # doesn't re-download tens of megabytes every fifteen minutes.
+        preview = build_preview(pkg, prereleases, prev.get("preview"))
+
         # The pin. A first sighting records whatever the APK is signed with; a
         # later run that disagrees keeps the previous entry and shouts, rather
         # than quietly publishing a new hash for an app that is no longer the
@@ -327,6 +388,9 @@ def main() -> int:
                 # Carried forward, never recomputed -- see module docstring.
                 "firstSeen": prev.get("firstSeen") or today,
                 "signer": signer,
+                # Absent for every app that publishes no prereleases, which is
+                # most of them. Clients treat a missing preview as "no nightly".
+                **({"preview": preview} if preview else {}),
             }
         )
 
