@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T03:52:29.290566+00:00",
+ "generated": "2026-08-08T04:04:01.946842+00:00",
  "apps": [
   {
    "pkg": "app.lightphonekeyboard",
@@ -60,7 +60,7 @@
      "size": 57213
     }
    ],
-   "downloads": 136,
+   "downloads": 137,
    "firstSeen": "2026-08-06",
    "signer": "c15078bcb72a89c67efb54d1a9fc1b00cc88da578891f8e96233a7d279550df6",
    "preview": {
@@ -260,7 +260,7 @@
      "size": 49896
     }
    ],
-   "downloads": 99,
+   "downloads": 101,
    "firstSeen": "2026-08-06",
    "signer": "4d2a3bb63292bc7cdfec383a3b041da3b4a483058cfa0575a33d06fb88c9973a"
   },
@@ -627,18 +627,18 @@
    "summary": "Spotify, NTSradio + Radio, Podcasts + more! Forked from Jonathancaudill/phono",
    "upstream": "jonathancaudill/phono",
    "latest": {
-    "version": "build-81",
-    "versionCode": 81,
-    "apk": "https://github.com/gi-os/BrightMusic/releases/download/build-81/LightPhono-v0.32.81.apk",
+    "version": "build-82",
+    "versionCode": 82,
+    "apk": "https://github.com/gi-os/BrightMusic/releases/download/build-82/LightPhono-v0.33.82.apk",
     "size": 24252739,
-    "sha256": "18af8cfcc444b32de994b2278eeca7ba99853191c18b2092446ff5be0286f607",
-    "published": "2026-08-08T03:30:48Z",
-    "notes": "Automated build from `cc315ff3cb1928888ced948239f8401fc3da0f11`.\n\n`versionCode` is the workflow run number (81), so this\nupgrades an installed build in place.\n\n**First install needs one adb grant** for colour album art:\n\n```\nadb shell pm grant com.lightphone.spotify android.permission.WRITE_SECURE_SETTINGS\n```\n\nWithout it covers stay greyscale \u2014 nothing else changes. Text entry also needs a\nsystem IME on the device (`adb shell ime list -s`); see the README.\n"
+    "sha256": "2c6985bf30360c6de476d7a35b3ff7f1c7f6135d1f6099625d24835503d12fc6",
+    "published": "2026-08-08T03:57:09Z",
+    "notes": "Automated build from `ae68de78fdfd70d1e4f2028b7f9b1bfc4f2277ed`.\n\n`versionCode` is the workflow run number (82), so this\nupgrades an installed build in place.\n\n**First install needs one adb grant** for colour album art:\n\n```\nadb shell pm grant com.lightphone.spotify android.permission.WRITE_SECURE_SETTINGS\n```\n\nWithout it covers stay greyscale \u2014 nothing else changes. Text entry also needs a\nsystem IME on the device (`adb shell ime list -s`); see the README.\n"
    },
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 87,
+   "downloads": 89,
    "firstSeen": "2026-08-07",
    "signer": "ee7dc895039a92fe58dc0836730ab70f516ddb7eab7813faec98b3aef14680ec"
   },
@@ -677,7 +677,7 @@
      "size": 143880
     }
    ],
-   "downloads": 124,
+   "downloads": 125,
    "firstSeen": "2026-08-06",
    "signer": "c6902aa1870b4ffa2fd0cd627643dc8ddee7cc0fdbd1752febb3d911092d8ec5"
   },
@@ -779,7 +779,7 @@
      "size": 42506
     }
    ],
-   "downloads": 105,
+   "downloads": 106,
    "firstSeen": "2026-08-06",
    "signer": "386edb7091947707a812587af8c37b0873bb2cde88963e9520574cc45bc0128c"
   },
@@ -812,6 +812,107 @@
     "size": 75285703,
     "sha256": "fb8f91761c5b1b7f75e020c3c3d1233269a7282080b030b85cb039d7ce8515a0",
     "published": "2026-07-04T15:01:46Z",
+    "notes": ""
+   }
+  },
+  {
+   "pkg": "com.tyshi00.aventura",
+   "name": "Aventura",
+   "repo": "tyshi00/Aventura",
+   "category": "games",
+   "summary": "A port of Soto, a quest app for LightOS",
+   "upstream": "",
+   "latest": {
+    "version": "1.1.2",
+    "versionCode": 4,
+    "apk": "https://github.com/tyshi00/Aventura/releases/download/v1.1.2/aventura-release.apk",
+    "size": 65011838,
+    "sha256": "5ffe815422e39b06508534d2a2ba1f28df038704e7f69b5943dde6ce9bbd282e",
+    "published": "2026-07-29T17:00:18Z",
+    "notes": "**Full Changelog**: https://github.com/tyshi00/Aventura/compare/v1.1.1...v1.1.2"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "downloads": 19,
+   "firstSeen": "2026-08-08",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
+  },
+  {
+   "pkg": "com.tyshi00.games",
+   "name": "Light-Games-Passatempo",
+   "repo": "tyshi00/Light-Games-Passatempo",
+   "category": "utilities",
+   "summary": "A small collection of games for LightOS.",
+   "upstream": "",
+   "latest": {
+    "version": "V0.10.2",
+    "versionCode": 16,
+    "apk": "https://github.com/tyshi00/Light-Games-Passatempo/releases/download/V0.10.2/games.apk",
+    "size": 70804292,
+    "sha256": "c4a0887f45147301670c9e7d362b025775efcfb0320563fd71da64d431a8ea13",
+    "published": "2026-08-04T21:46:22Z",
+    "notes": "New:\r\n-Added 2 new games, Solitaire (Klondike) and BlackJack. Klondike was ported/forked from a standalone version that another creator made. Please refer to readme for more information. "
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Light-Games-Passatempo/main/screenshots/brick-breaker.png",
+     "name": "brick-breaker.png",
+     "size": 9739
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Light-Games-Passatempo/main/screenshots/connect-four.png",
+     "name": "connect-four.png",
+     "size": 27691
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Light-Games-Passatempo/main/screenshots/dice.png",
+     "name": "dice.png",
+     "size": 20955
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Light-Games-Passatempo/main/screenshots/home.png",
+     "name": "home.png",
+     "size": 81032
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Light-Games-Passatempo/main/screenshots/pong.png",
+     "name": "pong.png",
+     "size": 8757
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Light-Games-Passatempo/main/screenshots/snake.png",
+     "name": "snake.png",
+     "size": 20902
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Light-Games-Passatempo/main/screenshots/sudoku.png",
+     "name": "sudoku.png",
+     "size": 116494
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Light-Games-Passatempo/main/screenshots/tic-tac-toe.png",
+     "name": "tic-tac-toe.png",
+     "size": 17304
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Light-Games-Passatempo/main/screenshots/word-search.png",
+     "name": "word-search.png",
+     "size": 66404
+    }
+   ],
+   "downloads": 109,
+   "firstSeen": "2026-08-08",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28",
+   "preview": {
+    "version": "latest",
+    "versionCode": 16,
+    "apk": "https://github.com/tyshi00/Light-Games-Passatempo/releases/download/latest/games.apk",
+    "size": 70804292,
+    "sha256": "c4a0887f45147301670c9e7d362b025775efcfb0320563fd71da64d431a8ea13",
+    "published": "2026-07-07T22:09:06Z",
     "notes": ""
    }
   },
@@ -947,7 +1048,7 @@
      "size": 59435
     }
    ],
-   "downloads": 3234,
+   "downloads": 3237,
    "firstSeen": "2026-08-08",
    "signer": "a10ce031ca47c84a78998757f9afec57174c0d17061e7efd286a10596bdb9cc7"
   },
@@ -1049,7 +1150,7 @@
      "size": 73420
     }
    ],
-   "downloads": 36,
+   "downloads": 37,
    "firstSeen": "2026-08-07",
    "signer": "9276d2b4ec2e238059119a23459164bd15201e9183180029fb30de2632f6fd21"
   }
