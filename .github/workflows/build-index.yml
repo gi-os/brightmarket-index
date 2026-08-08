@@ -9,7 +9,7 @@ on:
     - cron: '7,22,37,52 * * * *'
   push:
     branches: [main]
-    paths: ['apps.yml', 'scripts/build_index.py', 'icons/**']
+    paths: ['apps/**', 'scripts/build_index.py', 'icons/**']
   # Bright app repos POST here on release so the index updates in seconds
   # rather than waiting up to an hour.
   repository_dispatch:

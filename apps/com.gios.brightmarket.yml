@@ -1,0 +1,5 @@
+pkg: com.gios.brightmarket
+name: BrightMarket
+repo: gi-os/BrightMarket
+category: utilities
+summary: The marketplace itself. Browse, install and update Light Phone apps.

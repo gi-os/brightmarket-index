@@ -1,0 +1,6 @@
+pkg: org.woheller69.whobird.chirp
+name: Chirp
+repo: barry7007/LightBirdIdentifier
+upstream: woheller69/whoBIRD
+category: utilities
+summary: Identify bird sounds. Restyled from whoBird.

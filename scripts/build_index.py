@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rebuild index-v1.json from apps.yml plus the GitHub Releases API.
+"""Rebuild index-v1.json from apps/ plus the GitHub Releases API.
 
 Design notes worth keeping in mind before changing anything here:
 
@@ -232,10 +232,39 @@ def build_preview(pkg: str, prereleases: list, carried: dict | None) -> dict | N
     }
 
 
+def load_catalogue(root: str) -> list[dict]:
+    """Every app, one YAML file each, under apps/.
+
+    This was a single apps.yml holding one list. Every submission appended to the
+    end of it, so any two submissions open at the same time modified the same
+    line and the second to be merged always conflicted -- through no fault of
+    either author. One file per app means two submissions cannot touch the same
+    bytes, so they cannot conflict, and no amount of merge order matters.
+
+    Filenames are the applicationId, which the validator already refuses to
+    duplicate, so uniqueness comes for free.
+
+    Order here is irrelevant: every client sorts by name, date or downloads.
+    Sorted anyway, so a rebuild that changes nothing produces no diff.
+    """
+    directory = os.path.join(root, "apps")
+    apps = []
+    for name in sorted(os.listdir(directory)):
+        if not name.endswith((".yml", ".yaml")):
+            continue
+        with open(os.path.join(directory, name)) as f:
+            entry = yaml.safe_load(f)
+        if not entry or "pkg" not in entry:
+            warn(f"apps/{name}: no pkg, skipped")
+            continue
+        apps.append(entry)
+    return apps
+
+
 def load_previous(path: str) -> tuple[dict, dict]:
     """The last published index, keyed by pkg and also by repo.
 
-    By repo as well because the pkg in apps.yml can be wrong -- it is only
+    By repo as well because the pkg in a catalogue file can be wrong -- it is only
     authoritative once read out of the APK -- and the repo is the one key that
     is known before anything is downloaded. That is what makes it possible to
     ask "is this the same release as last time?" without fetching it first.
@@ -275,8 +304,7 @@ def main() -> int:
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     index_path = os.path.join(root, "index-v1.json")
 
-    with open(os.path.join(root, "apps.yml")) as f:
-        apps = yaml.safe_load(f)["apps"]
+    apps = load_catalogue(root)
 
     previous, previous_by_repo = load_previous(index_path)
     today = datetime.date.today().isoformat()
@@ -319,12 +347,12 @@ def main() -> int:
         asset = latest_assets[0]
 
         # Deliberately NOT `previous.get(pkg)` yet: pkg here is still whatever
-        # apps.yml claims, and it can be wrong. Looked up after the APK has had
+        # the catalogue claims, and it can be wrong. Looked up after the APK has had
         # its say, below.
         prev: dict = {}
 
         # One extra API call per app; cheap, and it means a developer adding a
-        # screenshot sees it appear without touching apps.yml.
+        # screenshot sees it appear without touching the catalogue.
         try:
             repo_meta = get(f"{API}/repos/{repo}")
             screenshots = find_screenshots(repo, repo_meta.get("default_branch", "main"))
@@ -332,7 +360,7 @@ def main() -> int:
             screenshots = None
 
         # Nothing to learn from bytes that haven't moved. Keyed on repo because
-        # the pkg in apps.yml may be wrong and the APK is what settles it -- and
+        # the pkg in the catalogue may be wrong and the APK is what settles it -- and
         # that is the thing we are trying not to download.
         carried = previous_by_repo.get(repo.lower())
         if unchanged(carried, asset):
@@ -364,17 +392,17 @@ def main() -> int:
             warn(f"{pkg}: fell back to the tag for versionCode ({version_code})")
         elif not skipped_download:
             version_code, apk_pkg, signer = parsed
-            # apps.yml is hand-written and the APK is not. If they disagree the
+            # The catalogue entry is hand-written and the APK is not. If they disagree the
             # APK wins, because that is the identity Android will actually use --
             # and a mismatch means the client would compare against a package
             # that isn't installed and offer an eternal "update".
             if apk_pkg != pkg:
-                warn(f"{pkg}: apps.yml disagrees with the APK ({apk_pkg}) -- using the APK")
+                warn(f"{pkg}: the catalogue disagrees with the APK ({apk_pkg}) -- using the APK")
                 pkg = apk_pkg
 
         # Now that pkg is the one Android will use, and therefore the one the
         # previous index is keyed by. Doing this earlier meant an app whose
-        # apps.yml pkg was wrong looked new on every single run: firstSeen reset
+        # catalogue pkg was wrong looked new on every single run: firstSeen reset
         # daily, and -- the part that actually matters -- the signing
         # certificate never pinned, because there was never a previous entry to
         # pin it against. The app would have looked exactly as trustworthy as

@@ -3,8 +3,12 @@
 The database behind [BrightMarket](https://github.com/gi-os/BrightMarket). There is
 no server: this repo *is* the backend.
 
-- **`apps.yml`** — the curated list. The only file a human edits.
-- **`index-v1.json`** — rebuilt hourly by CI from `apps.yml` + the GitHub Releases
+- **`apps/`** — the curated list, one YAML file per app named after its
+  applicationId. One file each rather than one list: every submission used to
+  append to the end of a single `apps.yml`, so any two open at once modified the
+  same line and whichever was merged second always conflicted. Separate files
+  cannot collide, so merge order stops mattering.
+- **`index-v1.json`** — rebuilt by CI from `apps/` + the GitHub Releases
   API, and served from GitHub Pages. This is the single file the app fetches.
 - **`submit.html`** — the submission portal (GitHub OAuth, read-only).
 

@@ -2,10 +2,14 @@
 """Rebuild every open submission branch on top of current main.
 
 Why this exists: a submission branch is cut from main when its checks run, and
-every new listing appends to the end of apps.yml. So the second submission to
-arrive conflicts with the first the moment the first is merged -- same file,
-same last line, and neither author did anything wrong. Three of the first four
-outside submissions hit this and had to be rebuilt by hand.
+every listing used to append to the end of one apps.yml, so the second
+submission to arrive conflicted with the first the moment the first was merged.
+That cause is gone -- each app is its own file under apps/ now, and two
+submissions cannot touch the same bytes.
+
+This remains useful for the other reason a branch goes stale: a submission whose
+own repo has cut a new release since the checks ran, so the entry would be built
+from information that has since moved.
 
 Rebuilding rather than merging is the point. The validator is the only thing
 that has ever written these entries; re-running it against current main repeats
@@ -80,14 +84,14 @@ def main() -> int:
         )
         print(result.stdout.strip() or result.stderr.strip())
 
-        if run("git", "diff", "--quiet", "apps.yml", check=False).returncode == 0:
+        if run("git", "diff", "--quiet", "--", "apps", check=False).returncode == 0:
             # Either the validator refused, or the app is already in main by
             # another route. Both mean: don't touch the branch.
             print(f"PR #{num}: nothing to add on top of main, leaving it")
             run("git", "checkout", "--force", "main")
             continue
 
-        run("git", "add", "apps.yml")
+        run("git", "add", "apps")
         run("git", "commit", "-m", f"index: submit from #{issue_no} (rebuilt on {base})")
         run("git", "push", "--force", "origin", f"refresh-{num}:{branch}")
         print(f"PR #{num}: refreshed onto {base}")

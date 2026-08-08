@@ -1,0 +1,6 @@
+pkg: com.thelightphone.lightnycsubway
+name: BrightTransit
+repo: gi-os/BrightTransit
+upstream: lightphone/light-sdk
+category: utilities
+summary: Live MTA subway arrivals.

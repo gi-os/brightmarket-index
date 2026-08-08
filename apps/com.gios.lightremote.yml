@@ -1,0 +1,5 @@
+pkg: com.gios.lightremote
+name: BrightRemote
+repo: gi-os/BrightRemote
+category: utilities
+summary: Apple TV remote, speaking the Companion protocol natively.

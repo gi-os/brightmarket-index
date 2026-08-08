@@ -1,0 +1,6 @@
+pkg: com.lightrss.reader
+name: BrightNews
+repo: gi-os/BrightNews
+upstream: zachattack323/LightRSS
+category: reading
+summary: RSS, Atom and Gmail newsletters in one reader.

@@ -1,0 +1,7 @@
+pkg: app.lightphonekeyboard
+name: LightKeyboard
+repo: gi-os/LightKeyboard
+upstream: adam-weber/light-keyboard
+category: hardware
+summary: A fork of the Light Phone keyboard, adding swipe typing and autocorrect from
+  a bundled dictionary. Works offline.

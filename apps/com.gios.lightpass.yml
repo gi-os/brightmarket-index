@@ -1,0 +1,5 @@
+pkg: com.gios.lightpass
+name: BrightPasses
+repo: gi-os/BrightPasses
+category: utilities
+summary: Photograph a ticket, keep the stub.

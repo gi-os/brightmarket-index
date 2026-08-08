@@ -1,0 +1,6 @@
+pkg: com.lightphone.spotify
+name: BrightMusic
+repo: gi-os/BrightMusic
+upstream: jonathancaudill/phono
+category: media
+summary: Spotify, NTSradio + Radio, Podcasts + more! Forked from Jonathancaudill/phono

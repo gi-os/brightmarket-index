@@ -1,0 +1,5 @@
+pkg: com.gios.lightcontrol
+name: BrightControl
+repo: gi-os/BrightControl
+category: hardware
+summary: The wheel and camera button, working phone-wide.

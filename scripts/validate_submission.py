@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Validate a submission issue and, if it passes, append it to apps.yml.
+"""Validate a submission issue and, if it passes, write it into apps/.
 
 Run by .github/workflows/submit.yml on every issue labelled `submission`.
-On pass it writes the new apps.yml and prints a PR body; on fail it prints the
+On pass it writes the app's own file under apps/ and prints a PR body; on fail it prints the
 reason, which the workflow posts back as an issue comment.
 
 The checks exist for specific reasons, not as generic hygiene:
@@ -218,24 +218,52 @@ def validate(repo: str) -> dict:
     }
 
 
+def write_entry(path: str, entry: dict) -> None:
+    with open(path, "w") as f:
+        yaml.safe_dump(entry, f, sort_keys=False, default_flow_style=False, allow_unicode=True)
+
+
+def slug(pkg: str) -> str:
+    """Filename for an app. The applicationId, which is already unique here."""
+    return re.sub(r"[^a-z0-9.]+", "-", pkg.lower()) + ".yml"
+
+
+def load_catalogue(apps_dir: str) -> list[tuple[str, dict]]:
+    """Every listed app as (path, entry)."""
+    out = []
+    for name in sorted(os.listdir(apps_dir)):
+        if not name.endswith((".yml", ".yaml")):
+            continue
+        path = os.path.join(apps_dir, name)
+        with open(path) as f:
+            entry = yaml.safe_load(f)
+        if entry and "pkg" in entry:
+            out.append((path, entry))
+    return out
+
+
 def main() -> int:
     body = os.environ.get("ISSUE_BODY", "")
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    apps_path = os.path.join(root, "apps.yml")
+    # One file per app, so two submissions never write the same bytes and can
+    # never conflict with each other. This was a single apps.yml with one list;
+    # every submission appended to its last line, so whichever was merged second
+    # always conflicted, no matter how carefully either was written.
+    apps_dir = os.path.join(root, "apps")
 
     try:
         req = parse_issue(body)
         repo, action = req["repo"], req["action"]
 
-        with open(apps_path) as f:
-            doc = yaml.safe_load(f)
-        existing = doc["apps"]
+        catalogue = load_catalogue(apps_dir)
+        existing = [entry for _, entry in catalogue]
+        path_of = {id(entry): path for path, entry in catalogue}
 
         if action == "remove":
             match = next((a for a in existing if a["repo"].lower() == repo.lower()), None)
             if not match:
                 raise Reject(f"`{repo}` isn't in BrightMarket, so there's nothing to remove.")
-            existing.remove(match)
+            os.remove(path_of[id(match)])
             summary = f"Removed **{match['name']}** (`{match['pkg']}`) at the owner's request."
             out_pkg, out_name = match["pkg"], match["name"]
 
@@ -266,25 +294,26 @@ def main() -> int:
                         f"Package `{info['pkg']}` is already indexed as **{a['name']}** "
                         f"(`{a['repo']}`). Two apps can't share an applicationId."
                     )
-            existing.append(
-                {
-                    "pkg": info["pkg"],
-                    # What the submitter asked to be called, falling back to the
-                    # repo's own name and description when they said nothing.
-                    "name": req["name"] or info["name"],
-                    "repo": repo,
-                    "category": req["category"],
-                    "summary": req["summary"] or info["summary"],
-                }
-            )
+            entry = {
+                "pkg": info["pkg"],
+                # What the submitter asked to be called, falling back to the
+                # repo's own name and description when they said nothing.
+                "name": req["name"] or info["name"],
+                "repo": repo,
+                "category": req["category"],
+                "summary": req["summary"] or info["summary"],
+            }
+            write_entry(os.path.join(apps_dir, slug(info["pkg"])), entry)
             summary = (
                 f"Validated **{req['name'] or info['name']}** (`{info['pkg']}`) — latest "
                 f"release `{info['version']}`, one asset `{info['apk']}`."
             )
             out_pkg, out_name = info["pkg"], req["name"] or info["name"]
 
-        with open(apps_path, "w") as f:
-            yaml.safe_dump(doc, f, sort_keys=False, default_flow_style=False, allow_unicode=True)
+        # An edit rewrites only its own file; a new listing and a removal have
+        # already written or deleted theirs.
+        if action == "edit":
+            write_entry(path_of[id(match)], match)
 
         with open(os.environ.get("GITHUB_OUTPUT", "/dev/null"), "a") as f:
             f.write("status=pass\n")

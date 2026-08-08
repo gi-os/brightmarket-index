@@ -1,13 +1,13 @@
 name: Refresh open submissions
 
-# A submission branch is cut from main when its checks run, and every new
-# listing appends to the end of apps.yml -- so the second submission to arrive
-# conflicts with the first as soon as the first is merged. See
-# scripts/refresh_submissions.py for why this rebuilds rather than merges.
+# Rebuilds open submission branches on current main. Conflicts between two
+# submissions are gone -- each app is its own file under apps/ -- but a branch
+# can still be stale if the submitted repo has released since its checks ran.
+# See scripts/refresh_submissions.py.
 on:
   push:
     branches: [main]
-    paths: ['apps.yml']
+    paths: ['apps/**']
   workflow_dispatch:
 
 permissions:

@@ -1,0 +1,5 @@
+pkg: com.gios.lightnonogram
+name: BrightNonogram
+repo: gi-os/BrightNonogram
+category: games
+summary: Picross, plus a generator that only ships solvable puzzles.

@@ -1,0 +1,6 @@
+pkg: com.gios.lightchat
+name: BrightChat
+repo: gi-os/BrightChat
+upstream: craigeley/chat
+category: utilities
+summary: iMessage over a self-hosted BlueBubbles server.

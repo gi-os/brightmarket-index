@@ -1,0 +1,5 @@
+pkg: com.gios.lighttip
+name: BrightTip
+repo: gi-os/BrightTip
+category: productivity
+summary: Tip calculator, and a receipt splitter that reads the line items off a photo.

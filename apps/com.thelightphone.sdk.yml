@@ -1,0 +1,5 @@
+pkg: com.thelightphone.sdk
+name: Sanntid
+repo: barry7007/LightNorwayTransit
+category: utilities
+summary: Live departure times for public transport in Norway
