@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T05:53:08.662785+00:00",
+ "generated": "2026-08-08T07:06:54.502668+00:00",
  "apps": [
   {
    "pkg": "app.lightphonekeyboard",
@@ -60,7 +60,7 @@
      "size": 57213
     }
    ],
-   "downloads": 138,
+   "downloads": 141,
    "firstSeen": "2026-08-06",
    "signer": "c15078bcb72a89c67efb54d1a9fc1b00cc88da578891f8e96233a7d279550df6",
    "preview": {
@@ -260,7 +260,7 @@
      "size": 49896
     }
    ],
-   "downloads": 101,
+   "downloads": 102,
    "firstSeen": "2026-08-06",
    "signer": "4d2a3bb63292bc7cdfec383a3b041da3b4a483058cfa0575a33d06fb88c9973a"
   },
@@ -615,7 +615,7 @@
      "size": 51624
     }
    ],
-   "downloads": 147,
+   "downloads": 149,
    "firstSeen": "2026-08-06",
    "signer": "32ec6e7a87ee30c5c50ae7a245fc2e34f6b6f8d9f7b3394e8a14dc65ae9fecbc"
   },
@@ -638,7 +638,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 92,
+   "downloads": 94,
    "firstSeen": "2026-08-07",
    "signer": "ee7dc895039a92fe58dc0836730ab70f516ddb7eab7813faec98b3aef14680ec"
   },
@@ -677,7 +677,7 @@
      "size": 143880
     }
    ],
-   "downloads": 125,
+   "downloads": 126,
    "firstSeen": "2026-08-06",
    "signer": "c6902aa1870b4ffa2fd0cd627643dc8ddee7cc0fdbd1752febb3d911092d8ec5"
   },
@@ -779,7 +779,7 @@
      "size": 42506
     }
    ],
-   "downloads": 107,
+   "downloads": 108,
    "firstSeen": "2026-08-06",
    "signer": "386edb7091947707a812587af8c37b0873bb2cde88963e9520574cc45bc0128c"
   },
@@ -834,7 +834,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 21,
+   "downloads": 22,
    "firstSeen": "2026-08-08",
    "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
   },
@@ -903,7 +903,7 @@
      "size": 66404
     }
    ],
-   "downloads": 112,
+   "downloads": 113,
    "firstSeen": "2026-08-08",
    "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28",
    "preview": {
@@ -1048,7 +1048,7 @@
      "size": 59435
     }
    ],
-   "downloads": 3268,
+   "downloads": 3286,
    "firstSeen": "2026-08-08",
    "signer": "a10ce031ca47c84a78998757f9afec57174c0d17061e7efd286a10596bdb9cc7"
   },
