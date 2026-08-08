@@ -1,0 +1,5 @@
+pkg: com.gios.brightway
+name: BrightWay
+repo: gi-os/BrightWay
+category: utilities
+summary: Walking and subway directions, text-first — one big instruction, the wheel scrolls the trip.
