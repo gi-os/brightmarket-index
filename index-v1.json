@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T13:29:00.715472+00:00",
+ "generated": "2026-08-08T13:31:38.081208+00:00",
  "apps": [
   {
    "pkg": "app.lightphonekeyboard",
@@ -187,13 +187,13 @@
    "summary": "The wheel and camera button, working phone-wide.",
    "upstream": "",
    "latest": {
-    "version": "2.3.62",
-    "versionCode": 62,
-    "apk": "https://github.com/gi-os/BrightControl/releases/download/v2.3.62/LightControl-v2.3.62.apk",
+    "version": "2.4.64",
+    "versionCode": 64,
+    "apk": "https://github.com/gi-os/BrightControl/releases/download/v2.4.64/LightControl-v2.4.64.apk",
     "size": 18365257,
-    "sha256": "d2348f8eba90976d330551c220009af1774df8c4086fd7db40d2248f2f05e55e",
-    "published": "2026-08-08T02:36:38Z",
-    "notes": "## v2.3 \u2014 a text message no longer turns the filter off\n\n### Fixed\n- **Every notification ping was 30 seconds of dead keys.** `USAGE_NOTIFICATION` and `USAGE_NOTIFICATION_EVENT` counted as \"ringing\", and ringing carries a 30-second hands-off grace window. So a text arriving meant half a minute where every key passed through untouched: home went to LightOS and stranded you on the idle face, brightness and swipe went dead \u2014 and nothing was logged, because the refusal sat upstream of every log line. Intermittent, self-healing, invisible. The ring guard now covers exactly what it was built for: alarms, ringing calls, and calls in progress.\n\n### Diagnostics\n- The whole-filter refusal logs itself: a key declined because the filter is switched off, dormant, or inside a ring window writes `filter down \u2014 ringing` / `dormant` / `switched off` to the key log, one line per reason per five seconds. This refusal can never go silent again.\n\n### Notes\n- Includes v2.1 (home door before the hands-off gate; SWIPE respects the mode switch) and v2.2 (launcher-entry fallback; named home refusals). No permission changes; installs over the top.\n- To verify the fix: trigger a notification with sound, press home within 30 seconds. On v2.2 that reproduced the stuck-on-LightOS bug; on v2.3 it must not.\n"
+    "sha256": "b2e8a5ca0b3fe3e3b9cb0365dcc77448fea28467ee9646396ab2c01617886f17",
+    "published": "2026-08-08T13:31:05Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightControl/compare/v2.3.62...v2.4.64"
    },
    "deprecated": false,
    "supersededBy": "",
@@ -561,7 +561,7 @@
      "size": 110065
     }
    ],
-   "downloads": 66,
+   "downloads": 67,
    "firstSeen": "2026-08-08",
    "signer": "7efd747de5be4bad82575a7486830353f4954c76db667fdf45eca988495d4423"
   },
@@ -1100,7 +1100,7 @@
      "size": 59435
     }
    ],
-   "downloads": 3398,
+   "downloads": 3402,
    "firstSeen": "2026-08-08",
    "signer": "a10ce031ca47c84a78998757f9afec57174c0d17061e7efd286a10596bdb9cc7"
   },
