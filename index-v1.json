@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T11:36:28.791143+00:00",
+ "generated": "2026-08-08T11:58:31.142968+00:00",
  "apps": [
   {
    "pkg": "app.lightphonekeyboard",
@@ -1048,7 +1048,7 @@
      "size": 59435
     }
    ],
-   "downloads": 3362,
+   "downloads": 3369,
    "firstSeen": "2026-08-08",
    "signer": "a10ce031ca47c84a78998757f9afec57174c0d17061e7efd286a10596bdb9cc7"
   },
