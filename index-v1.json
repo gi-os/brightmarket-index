@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T21:59:50.469894+00:00",
+ "generated": "2026-08-08T22:03:44.543110+00:00",
  "apps": [
   {
    "pkg": "app.lightphonekeyboard",
@@ -33,13 +33,13 @@
    "summary": "The marketplace itself. Browse, install and update Light Phone apps.",
    "upstream": "",
    "latest": {
-    "version": "1.20.38",
-    "versionCode": 38,
-    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.20.38/BrightMarket-v1.20.38.apk",
-    "size": 22700186,
-    "sha256": "eeb66a642dcd7c50a260bd812c278a6cb0a718dbff466966ad6c214d16538ff5",
-    "published": "2026-08-08T21:59:10Z",
-    "notes": "\n**Room between Update and Uninstall.** There was supposed to be a gap. There\nwasn't: the uninstall's own top padding is part of its tap target, and it\nextended upward through almost the whole spacer, leaving about 1dp of clear\nspace between \"update this app\" and \"remove it\". Android asks for at least 8.\n\nNow there's a wide gap, a short rule to mark uninstall as a different kind of\nthing, and another gap \u2014 about 38dp of clear space, and no top padding on the\ntarget so it can't creep back up into it. Update also got a proper tap target of\nits own; it was the bare height of the letters, which is a strange thing for the\nbutton you actually came to press.\n\n"
+    "version": "1.21.39",
+    "versionCode": 39,
+    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.21.39/BrightMarket-v1.21.39.apk",
+    "size": 22716570,
+    "sha256": "2f0465db6376b6e33adccc097dac8d27501a0046d69e87a1f42190e791666671",
+    "published": "2026-08-08T22:03:13Z",
+    "notes": "\n**Tracked apps no longer depend on GitHub's API budget.**\n\nv1.19 explained the \"no APK release found\" message properly and cut how often\nthe app asks. It didn't fix the underlying problem, which is worse than it\nlooked: GitHub allows 60 unauthenticated API requests an hour **per IP address**,\nand on a mobile network that address is shared with everyone else behind the same\ncarrier NAT. The allowance can be gone before this phone has made a single\nrequest. That's why one tracked app could work and then all of them fail at once\nwithout you doing anything differently.\n\nSo when the API refuses, the app now asks github.com instead, which has no such\nlimit. It reads the same two things the API gave it \u2014 the newest release that\nisn't a prerelease, and the name of the APK attached to it \u2014 from the ordinary\nrelease pages. Checked against the eight apps this was reported with: all eight\nresolve, every one matching what the API says.\n\nYou'll still see the rate limit message if both routes fail, which now means\nsomething is genuinely wrong rather than that you have several apps.\n\n"
    },
    "deprecated": false,
    "supersededBy": "",
