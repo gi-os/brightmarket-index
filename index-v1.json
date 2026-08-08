@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T01:42:59.309398+00:00",
+ "generated": "2026-08-08T01:43:27.653020+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -315,13 +315,13 @@
    "summary": "The wheel and camera button, working phone-wide.",
    "upstream": "",
    "latest": {
-    "version": "2.1.58",
-    "versionCode": 58,
-    "apk": "https://github.com/gi-os/BrightControl/releases/download/v2.1.58/LightControl-v2.1.58.apk",
-    "size": 18365257,
-    "sha256": "aa552d552ac27fdde47cdd1f663d43256ca4431e37d229f1155895a01d2859b9",
-    "published": "2026-08-07T21:19:15Z",
-    "notes": "## v2.1 \u2014 the home button works everywhere again, and SWIPE stops eating brightness\n\n### Fixed\n- **Home no longer strands you on LightOS's screens.** The hands-off gate ran before the home button's own door, so on the dashboard or after a wake the tap binding never fired \u2014 not even in shadow mode. Press home, get the idle face, press again, idle face: stuck. Home is now routed to its door first; hands-off is one of that door's refusals, and a tap that names its own destination (Luma, Resume, any app) takes the key wherever you are standing.\n- **A shadow tap no longer fires behind the keyguard or a dark screen.** The launch was dropped silently but still stamped the launch throttle, so the real press just after the unlock read as a repeat and was declined \u2014 home presses that \"did nothing\" right after waking the phone.\n- **SWIPE apps now follow the mode switch.** Double-tapping the wheel to BRIGHTNESS changes what a turn does in swipe-scrolled apps too, the way it always has for scroll-through apps \u2014 instead of flipping the readout while every notch kept swiping. The per-app rule decides how a scroll is delivered, not what a turn is allowed to mean.\n\n### Notes\n- Base version bumped to 2.1. No permission or binding changes; installs over the top.\n"
+    "version": "2.2.60",
+    "versionCode": 60,
+    "apk": "https://github.com/gi-os/BrightControl/releases/download/v2.2.60/LightControl-v2.2.60.apk",
+    "size": 18365253,
+    "sha256": "3a8147e5b974aedd5db91bc5c4d93b54163bc78ef71fcf26b7ae158f8ba8b785",
+    "published": "2026-08-08T01:43:00Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightControl/compare/v2.1.58...v2.2.60"
    },
    "deprecated": false,
    "supersededBy": "",
