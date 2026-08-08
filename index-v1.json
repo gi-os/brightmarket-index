@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T04:04:01.946842+00:00",
+ "generated": "2026-08-08T05:06:16.064658+00:00",
  "apps": [
   {
    "pkg": "app.lightphonekeyboard",
@@ -60,7 +60,7 @@
      "size": 57213
     }
    ],
-   "downloads": 137,
+   "downloads": 138,
    "firstSeen": "2026-08-06",
    "signer": "c15078bcb72a89c67efb54d1a9fc1b00cc88da578891f8e96233a7d279550df6",
    "preview": {
@@ -638,7 +638,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 89,
+   "downloads": 92,
    "firstSeen": "2026-08-07",
    "signer": "ee7dc895039a92fe58dc0836730ab70f516ddb7eab7813faec98b3aef14680ec"
   },
@@ -779,7 +779,7 @@
      "size": 42506
     }
    ],
-   "downloads": 106,
+   "downloads": 107,
    "firstSeen": "2026-08-06",
    "signer": "386edb7091947707a812587af8c37b0873bb2cde88963e9520574cc45bc0128c"
   },
@@ -834,7 +834,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 19,
+   "downloads": 21,
    "firstSeen": "2026-08-08",
    "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
   },
@@ -903,7 +903,7 @@
      "size": 66404
     }
    ],
-   "downloads": 109,
+   "downloads": 112,
    "firstSeen": "2026-08-08",
    "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28",
    "preview": {
@@ -935,7 +935,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 38,
+   "downloads": 39,
    "firstSeen": "2026-08-08",
    "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
   },
@@ -1048,7 +1048,7 @@
      "size": 59435
     }
    ],
-   "downloads": 3237,
+   "downloads": 3254,
    "firstSeen": "2026-08-08",
    "signer": "a10ce031ca47c84a78998757f9afec57174c0d17061e7efd286a10596bdb9cc7"
   },
