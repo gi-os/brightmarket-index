@@ -1,0 +1,32 @@
+name: Refresh open submissions
+
+# A submission branch is cut from main when its checks run, and every new
+# listing appends to the end of apps.yml -- so the second submission to arrive
+# conflicts with the first as soon as the first is merged. See
+# scripts/refresh_submissions.py for why this rebuilds rather than merges.
+on:
+  push:
+    branches: [main]
+    paths: ['apps.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: read
+  issues: read
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pyyaml pyaxmlparser
+      - name: Rebuild open submission branches on main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 scripts/refresh_submissions.py
