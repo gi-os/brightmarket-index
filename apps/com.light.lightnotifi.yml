@@ -1,0 +1,5 @@
+pkg: com.light.lightnotifi
+name: LightNotifi
+repo: ruditimmermans/LightNotifi
+category: utilities
+summary: An LightOS Notification tool that helps you keep track of your app notifications.
