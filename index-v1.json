@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T01:21:17.224301+00:00",
+ "generated": "2026-08-08T01:24:02.810032+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -792,6 +792,69 @@
    "downloads": 73,
    "firstSeen": "2026-08-07",
    "signer": "ee7dc895039a92fe58dc0836730ab70f516ddb7eab7813faec98b3aef14680ec"
+  },
+  {
+   "pkg": "io.github.jabberbox.pokey",
+   "name": "Pokey",
+   "repo": "jabberbox/pokey",
+   "category": "utilities",
+   "summary": "A tracker for your GLP1 shot and weight",
+   "upstream": "",
+   "latest": {
+    "version": "1.2",
+    "versionCode": 3,
+    "apk": "https://github.com/jabberbox/pokey/releases/download/v1.2/pokey-v1.2.apk",
+    "size": 65076566,
+    "sha256": "ac8d6bc5361e6272c1b2586e0ab43deb01cc5f51bfe0d4d851cb81b2bbdf09de",
+    "published": "2026-07-06T20:50:40Z",
+    "notes": "- Home screen countdown now covers the full cycle: days out, hours in the final day, \"Shot Due\" right at the moment it's due, then hours and days overdue after that, all replacing the old static \"Reminder: Shot day!\" banner.\r\n- Made it a bit harder to accidentally hit \"Delete entry\" while adjusting values on an edit screen."
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/pokey/main/screenshots/history.png",
+     "name": "history.png",
+     "size": 48981
+    },
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/pokey/main/screenshots/home.png",
+     "name": "home.png",
+     "size": 73462
+    },
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/pokey/main/screenshots/log-menu.png",
+     "name": "log-menu.png",
+     "size": 28055
+    },
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/pokey/main/screenshots/log-shot.png",
+     "name": "log-shot.png",
+     "size": 49749
+    },
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/pokey/main/screenshots/log-weight.png",
+     "name": "log-weight.png",
+     "size": 48753
+    },
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/pokey/main/screenshots/profile.png",
+     "name": "profile.png",
+     "size": 75975
+    }
+   ],
+   "downloads": 12,
+   "firstSeen": "2026-08-08",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28",
+   "preview": {
+    "version": "1.0",
+    "versionCode": 1,
+    "apk": "https://github.com/jabberbox/pokey/releases/download/v1.0/pokey-v1.0.apk",
+    "size": 65060170,
+    "sha256": "1caa6f1387c530ac73e083b5d0591080a82872a415daf1009a572e39153c5c7c",
+    "published": "2026-07-03T01:37:38Z",
+    "notes": ""
+   }
   }
  ]
 }
