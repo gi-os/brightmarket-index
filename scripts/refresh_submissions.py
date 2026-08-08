@@ -84,14 +84,18 @@ def main() -> int:
         )
         print(result.stdout.strip() or result.stderr.strip())
 
-        if run("git", "diff", "--quiet", "--", "apps", check=False).returncode == 0:
+        # Stage first, then ask. `git diff` reports only tracked files, and a new
+        # listing is now a NEW file under apps/ -- so the check said "nothing
+        # changed" about a file that had just been created, and every rebuild
+        # quietly did nothing. It was only ever right back when every app lived
+        # in one already-tracked apps.yml.
+        run("git", "add", "-A", "apps")
+        if run("git", "diff", "--cached", "--quiet", "--", "apps", check=False).returncode == 0:
             # Either the validator refused, or the app is already in main by
             # another route. Both mean: don't touch the branch.
             print(f"PR #{num}: nothing to add on top of main, leaving it")
             run("git", "checkout", "--force", "main")
             continue
-
-        run("git", "add", "apps")
         run("git", "commit", "-m", f"index: submit from #{issue_no} (rebuilt on {base})")
         run("git", "push", "--force", "origin", f"refresh-{num}:{branch}")
         print(f"PR #{num}: refreshed onto {base}")
