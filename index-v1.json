@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T21:13:44.106003+00:00",
+ "generated": "2026-08-08T21:30:01.258244+00:00",
  "apps": [
   {
    "pkg": "app.lightphonekeyboard",
@@ -33,13 +33,13 @@
    "summary": "The marketplace itself. Browse, install and update Light Phone apps.",
    "upstream": "",
    "latest": {
-    "version": "1.18.35",
-    "versionCode": 35,
-    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.18.35/BrightMarket-v1.18.35.apk",
+    "version": "1.19.37",
+    "versionCode": 37,
+    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.19.37/BrightMarket-v1.19.37.apk",
     "size": 22700182,
-    "sha256": "139a683a26a8be480d29ec49c17f04630538958edd231d4d42686b6ddb76346b",
-    "published": "2026-08-08T00:43:13Z",
-    "notes": "\n**Uninstall actually works.** It needed `REQUEST_DELETE_PACKAGES` in the\nmanifest, which wasn't there. Without it Android refuses the request before any\nUI appears, so the button did nothing regardless of how big it was \u2014 v1.12 made\nthe tap target larger, which was a real problem but not this one. The permission\ngrants no power to remove anything: the system still shows its own confirmation\nand you still have to agree. It only buys the right to ask.\n\nIt's also gone from the downloads list. One place to uninstall from, and it's\nthe app's own page \u2014 a destructive action repeated down every row of a list you\nscroll is asking for it.\n\n"
+    "sha256": "3b5c27d1ae93f02dba8aee232fefce152d8eb7f011a3a885bc4183840ebc7ff8",
+    "published": "2026-08-08T21:29:08Z",
+    "notes": "\n**Forks now credit their upstream.** The catalogue index carries an `upstream`\nfield for every app that forks a community tool (BrightChat, BrightLibrary,\nBrightMusic, BrightNews, BrightTransit, LightKeyboard, Chirp), and the app's\ndetail page shows a \"Fork of github.com/owner/repo\" line under the version.\nThe browse site shows the same credit as a link. Original apps are unchanged --\na blank field renders nothing.\n\n"
    },
    "deprecated": false,
    "supersededBy": "",
@@ -1069,7 +1069,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 217,
+   "downloads": 218,
    "firstSeen": "2026-08-08",
    "signer": "72d287c65b8bd0604f2439195f1c6b55594de8efe0e1e455eb4f3d2d5cbe7043"
   },
@@ -1123,7 +1123,7 @@
      "size": 59435
     }
    ],
-   "downloads": 3546,
+   "downloads": 3549,
    "firstSeen": "2026-08-08",
    "signer": "a10ce031ca47c84a78998757f9afec57174c0d17061e7efd286a10596bdb9cc7"
   },
