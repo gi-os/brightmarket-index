@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T02:34:31.686250+00:00",
+ "generated": "2026-08-08T02:37:05.609223+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -315,13 +315,13 @@
    "summary": "The wheel and camera button, working phone-wide.",
    "upstream": "",
    "latest": {
-    "version": "2.2.60",
-    "versionCode": 60,
-    "apk": "https://github.com/gi-os/BrightControl/releases/download/v2.2.60/LightControl-v2.2.60.apk",
-    "size": 18365253,
-    "sha256": "3a8147e5b974aedd5db91bc5c4d93b54163bc78ef71fcf26b7ae158f8ba8b785",
-    "published": "2026-08-08T01:43:00Z",
-    "notes": "## v2.2 \u2014 launching a launcher works, and the key log learns to explain itself\n\n### Fixed\n- **Home bound to a launcher no longer lands on LightOS.** `getLaunchIntentForPackage` returns null for a launcher that publishes no `CATEGORY_LAUNCHER` entry (Luma), and that null read as \"cannot be opened\" \u2014 whose deliberate fallback is home. On the one binding whose entire point is reaching a launcher that isn't the default, that inverted the request: home \u2192 Luma became home \u2192 LightOS, deterministically. A HOME intent scoped to the package now resolves the launcher's own front door first.\n\n### Diagnostics\n- Home refusals log under their own names \u2014 `takeover off`, `screen off`, `keyguard locked`, `no overlay appop` \u2014 instead of one opaque `not consumable`.\n- The clock refusal logs instead of being silent; it sits above every other check, so a key eaten there was indistinguishable from a key that never arrived.\n- LightOS is never read as a clock, whatever alarm intents its package declares.\n- A launch with no resolvable entry logs `no entry at all` before falling back.\n\n### Notes\n- Includes everything in v2.1 (home door before the hands-off gate; SWIPE respects the mode switch). No permission changes; installs over the top.\n"
+    "version": "2.3.62",
+    "versionCode": 62,
+    "apk": "https://github.com/gi-os/BrightControl/releases/download/v2.3.62/LightControl-v2.3.62.apk",
+    "size": 18365257,
+    "sha256": "d2348f8eba90976d330551c220009af1774df8c4086fd7db40d2248f2f05e55e",
+    "published": "2026-08-08T02:36:38Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightControl/compare/v2.2.60...v2.3.62"
    },
    "deprecated": false,
    "supersededBy": "",
