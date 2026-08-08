@@ -312,6 +312,9 @@ def main() -> int:
 
     for app in apps:
         pkg, repo = app["pkg"], app["repo"]
+        # Keyed on repo, which is known now; pkg isn't trustworthy until the APK
+        # has been read. Two things below need it.
+        carried = previous_by_repo.get(repo.lower())
         try:
             releases = get(f"{API}/repos/{repo}/releases?per_page=100")
         except urllib.error.HTTPError as e:
@@ -351,18 +354,30 @@ def main() -> int:
         # its say, below.
         prev: dict = {}
 
-        # One extra API call per app; cheap, and it means a developer adding a
-        # screenshot sees it appear without touching the catalogue.
-        try:
-            repo_meta = get(f"{API}/repos/{repo}")
-            screenshots = find_screenshots(repo, repo_meta.get("default_branch", "main"))
-        except urllib.error.HTTPError:
-            screenshots = None
+        # Hunting for screenshots costs a /repos call for the default branch plus
+        # one /contents call per candidate directory -- two to four requests per
+        # app, which was most of this job's API traffic. And it was being spent
+        # every fifteen minutes on something a developer changes maybe monthly,
+        # while the download counts everyone assumes are the expensive part ride
+        # along free on the releases call we have to make regardless.
+        #
+        # So the screenshots are what gets checked once a day, not the counts.
+        shots_checked = (carried or {}).get("shotsChecked", "")
+        if carried is not None and shots_checked == today:
+            screenshots = carried.get("screenshots", [])
+        else:
+            try:
+                repo_meta = get(f"{API}/repos/{repo}")
+                screenshots = find_screenshots(repo, repo_meta.get("default_branch", "main"))
+                shots_checked = today
+            except urllib.error.HTTPError:
+                # Unknown, not empty. Falls back to the carried list below rather
+                # than blanking a listing because one request failed.
+                screenshots = None
 
         # Nothing to learn from bytes that haven't moved. Keyed on repo because
         # the pkg in the catalogue may be wrong and the APK is what settles it -- and
         # that is the thing we are trying not to download.
-        carried = previous_by_repo.get(repo.lower())
         if unchanged(carried, asset):
             prev_latest = carried["latest"]
             sha256 = prev_latest["sha256"]
@@ -460,6 +475,7 @@ def main() -> int:
                 "deprecated": bool(app.get("deprecated", False)),
                 "supersededBy": app.get("supersededBy", ""),
                 "screenshots": screenshots,
+                "shotsChecked": shots_checked,
                 "downloads": downloads,
                 # Carried forward, never recomputed -- see module docstring.
                 "firstSeen": prev.get("firstSeen") or today,
