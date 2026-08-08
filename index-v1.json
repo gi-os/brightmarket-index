@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T00:57:11.701191+00:00",
+ "generated": "2026-08-08T01:05:47.831079+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -37,7 +37,7 @@
      "size": 55824
     }
    ],
-   "downloads": 104,
+   "downloads": 106,
    "firstSeen": "2026-08-06",
    "signer": "eece33e8486e95a327518bb7798df9ae99c683a2a80c4439fe0b7bf30ae1a5d7"
   },
@@ -76,7 +76,7 @@
      "size": 49896
     }
    ],
-   "downloads": 92,
+   "downloads": 94,
    "firstSeen": "2026-08-06",
    "signer": "4d2a3bb63292bc7cdfec383a3b041da3b4a483058cfa0575a33d06fb88c9973a"
   },
@@ -99,7 +99,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 108,
+   "downloads": 110,
    "firstSeen": "2026-08-06",
    "signer": "4662590c434c98e8642244cbb1ebe5818ca63ae692eff8f3cab2f8407cf4d386"
   },
@@ -111,13 +111,13 @@
    "summary": "Live scores and standings across thirteen leagues.",
    "upstream": "",
    "latest": {
-    "version": "1.12.24",
-    "versionCode": 24,
-    "apk": "https://github.com/gi-os/BrightSports/releases/download/v1.12.24/LightSports-v1.12.24.apk",
+    "version": "1.13.25",
+    "versionCode": 25,
+    "apk": "https://github.com/gi-os/BrightSports/releases/download/v1.13.25/LightSports-v1.13.25.apk",
     "size": 19480245,
-    "sha256": "13c457bfa87ac99a44536e3314bfcbeede991b3162cdccd5d660935a85462681",
-    "published": "2026-08-07T13:42:21Z",
-    "notes": "**Full Changelog**: https://github.com/gi-os/BrightSports/compare/v1.11.23...v1.12.24"
+    "sha256": "55913c8ae33e5f5d8428b71b3d9878c1e082de3ec6485c8c7b9f5c7be447907a",
+    "published": "2026-08-08T01:04:50Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightSports/compare/v1.12.24...v1.13.25"
    },
    "deprecated": false,
    "supersededBy": "",
@@ -138,7 +138,7 @@
      "size": 55168
     }
    ],
-   "downloads": 103,
+   "downloads": 105,
    "firstSeen": "2026-08-06",
    "signer": "4ea28ba461cfa1d5d8cee38e71ce8eacfab570afee83f248c5fec8c5cca4cb5f"
   },
@@ -177,7 +177,7 @@
      "size": 57213
     }
    ],
-   "downloads": 123,
+   "downloads": 125,
    "firstSeen": "2026-08-06",
    "signer": "c15078bcb72a89c67efb54d1a9fc1b00cc88da578891f8e96233a7d279550df6",
    "preview": {
@@ -240,7 +240,7 @@
      "size": 51624
     }
    ],
-   "downloads": 137,
+   "downloads": 139,
    "firstSeen": "2026-08-06",
    "signer": "32ec6e7a87ee30c5c50ae7a245fc2e34f6b6f8d9f7b3394e8a14dc65ae9fecbc"
   },
@@ -274,7 +274,7 @@
      "size": 36611
     }
    ],
-   "downloads": 102,
+   "downloads": 104,
    "firstSeen": "2026-08-06",
    "signer": "88fa9df840f139a9079aaf8ab8a54f64022a9da276bacac99227a464c0b1eeda"
   },
@@ -303,7 +303,7 @@
      "size": 88062
     }
    ],
-   "downloads": 120,
+   "downloads": 122,
    "firstSeen": "2026-08-06",
    "signer": "0829436c50e0f0904edcc1719f25e1237281303691c6406d2b06dc9a521c64eb"
   },
@@ -326,7 +326,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 115,
+   "downloads": 117,
    "firstSeen": "2026-08-06",
    "signer": "a38858d990bb61057ef53d1f8aa3c5854d01f68585b34f115793b06298b593e8"
   },
@@ -365,7 +365,7 @@
      "size": 809265
     }
    ],
-   "downloads": 129,
+   "downloads": 131,
    "firstSeen": "2026-08-06",
    "signer": "ceca3d378bf9709bc0d0b3eea84cc8bf7994777a628e5df8079a619cf7a7bda8"
   },
@@ -404,7 +404,7 @@
      "size": 40635
     }
    ],
-   "downloads": 98,
+   "downloads": 100,
    "firstSeen": "2026-08-06",
    "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28",
    "preview": {
@@ -442,7 +442,7 @@
      "size": 42506
     }
    ],
-   "downloads": 91,
+   "downloads": 94,
    "firstSeen": "2026-08-06",
    "signer": "386edb7091947707a812587af8c37b0873bb2cde88963e9520574cc45bc0128c"
   },
@@ -476,7 +476,7 @@
      "size": 66903
     }
    ],
-   "downloads": 92,
+   "downloads": 94,
    "firstSeen": "2026-08-06",
    "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
   },
@@ -515,7 +515,7 @@
      "size": 143880
     }
    ],
-   "downloads": 117,
+   "downloads": 119,
    "firstSeen": "2026-08-06",
    "signer": "c6902aa1870b4ffa2fd0cd627643dc8ddee7cc0fdbd1752febb3d911092d8ec5"
   },
@@ -554,7 +554,7 @@
      "size": 208010
     }
    ],
-   "downloads": 82,
+   "downloads": 84,
    "firstSeen": "2026-08-06",
    "signer": "f32ea67db48b7d40573ce88f03b3da33e0f3e814e1f08e9f5f4007ff7bea6e9f"
   },
@@ -577,7 +577,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 91,
+   "downloads": 94,
    "firstSeen": "2026-08-06",
    "signer": "7844d8cc52fc12b5a2b5879b028605d90391a0a06cc4d87ef92a59350226d203"
   },
@@ -600,7 +600,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 112,
+   "downloads": 114,
    "firstSeen": "2026-08-06",
    "signer": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c"
   },
@@ -654,7 +654,7 @@
      "size": 89898
     }
    ],
-   "downloads": 194,
+   "downloads": 197,
    "firstSeen": "2026-08-06",
    "signer": "d11cf9eecbfd5b482946e317f1dbf785a594234e313d7aa92042be3616b66dc3"
   },
@@ -688,7 +688,7 @@
      "size": 17692
     }
    ],
-   "downloads": 78,
+   "downloads": 80,
    "firstSeen": "2026-08-06",
    "signer": "8e8dee395ca68f83870fa5fc9e62d723ff7e960f2c94f93427e6c62513236420"
   },
@@ -727,7 +727,7 @@
      "size": 74191
     }
    ],
-   "downloads": 28,
+   "downloads": 30,
    "firstSeen": "2026-08-07",
    "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
   },
@@ -766,7 +766,7 @@
      "size": 73420
     }
    ],
-   "downloads": 29,
+   "downloads": 31,
    "firstSeen": "2026-08-07",
    "signer": "9276d2b4ec2e238059119a23459164bd15201e9183180029fb30de2632f6fd21"
   },
@@ -789,7 +789,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 69,
+   "downloads": 72,
    "firstSeen": "2026-08-07",
    "signer": "ee7dc895039a92fe58dc0836730ab70f516ddb7eab7813faec98b3aef14680ec"
   }
