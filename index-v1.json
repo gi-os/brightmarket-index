@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T02:11:39.607985+00:00",
+ "generated": "2026-08-08T02:31:08.611137+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -138,7 +138,7 @@
      "size": 55168
     }
    ],
-   "downloads": 111,
+   "downloads": 113,
    "firstSeen": "2026-08-06",
    "signer": "4ea28ba461cfa1d5d8cee38e71ce8eacfab570afee83f248c5fec8c5cca4cb5f"
   },
@@ -240,7 +240,7 @@
      "size": 51624
     }
    ],
-   "downloads": 144,
+   "downloads": 145,
    "firstSeen": "2026-08-06",
    "signer": "32ec6e7a87ee30c5c50ae7a245fc2e34f6b6f8d9f7b3394e8a14dc65ae9fecbc"
   },
@@ -778,18 +778,18 @@
    "summary": "Spotify, NTSradio + Radio, Podcasts + more! Forked from Jonathancaudill/phono",
    "upstream": "jonathancaudill/phono",
    "latest": {
-    "version": "build-74",
-    "versionCode": 74,
-    "apk": "https://github.com/gi-os/BrightMusic/releases/download/build-74/LightPhono-v0.26.74.apk",
-    "size": 24236355,
-    "sha256": "92e2cb8611ba156bfdd27b33084b51399e8d19bfeb60991e8b44cb8e67b337ae",
-    "published": "2026-08-08T01:49:43Z",
-    "notes": "Automated build from `af8f63106f8f30fc8cde039cf275e82e016fec99`.\n\n`versionCode` is the workflow run number (74), so this\nupgrades an installed build in place.\n\n**First install needs one adb grant** for colour album art:\n\n```\nadb shell pm grant com.lightphone.spotify android.permission.WRITE_SECURE_SETTINGS\n```\n\nWithout it covers stay greyscale \u2014 nothing else changes. Text entry also needs a\nsystem IME on the device (`adb shell ime list -s`); see the README.\n"
+    "version": "build-75",
+    "versionCode": 75,
+    "apk": "https://github.com/gi-os/BrightMusic/releases/download/build-75/LightPhono-v0.27.75.apk",
+    "size": 24236351,
+    "sha256": "a94454e07affbaa3ebdbd537f4407bdf7cf0613388db340912e71ecfb835e571",
+    "published": "2026-08-08T02:17:33Z",
+    "notes": "Automated build from `a13d9a9cfd2033ee390faeb8e2ab546ea075375a`.\n\n`versionCode` is the workflow run number (75), so this\nupgrades an installed build in place.\n\n**First install needs one adb grant** for colour album art:\n\n```\nadb shell pm grant com.lightphone.spotify android.permission.WRITE_SECURE_SETTINGS\n```\n\nWithout it covers stay greyscale \u2014 nothing else changes. Text entry also needs a\nsystem IME on the device (`adb shell ime list -s`); see the README.\n"
    },
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 79,
+   "downloads": 81,
    "firstSeen": "2026-08-07",
    "signer": "ee7dc895039a92fe58dc0836730ab70f516ddb7eab7813faec98b3aef14680ec"
   },
@@ -906,7 +906,7 @@
      "size": 59435
     }
    ],
-   "downloads": 3208,
+   "downloads": 3211,
    "firstSeen": "2026-08-08",
    "signer": "a10ce031ca47c84a78998757f9afec57174c0d17061e7efd286a10596bdb9cc7"
   }
