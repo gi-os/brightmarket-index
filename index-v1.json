@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T21:49:00.033111+00:00",
+ "generated": "2026-08-08T21:59:50.469894+00:00",
  "apps": [
   {
    "pkg": "app.lightphonekeyboard",
@@ -33,13 +33,13 @@
    "summary": "The marketplace itself. Browse, install and update Light Phone apps.",
    "upstream": "",
    "latest": {
-    "version": "1.19.37",
-    "versionCode": 37,
-    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.19.37/BrightMarket-v1.19.37.apk",
-    "size": 22700182,
-    "sha256": "3b5c27d1ae93f02dba8aee232fefce152d8eb7f011a3a885bc4183840ebc7ff8",
-    "published": "2026-08-08T21:29:08Z",
-    "notes": "\n**Forks now credit their upstream.** The catalogue index carries an `upstream`\nfield for every app that forks a community tool (BrightChat, BrightLibrary,\nBrightMusic, BrightNews, BrightTransit, LightKeyboard, Chirp), and the app's\ndetail page shows a \"Fork of github.com/owner/repo\" line under the version.\nThe browse site shows the same credit as a link. Original apps are unchanged --\na blank field renders nothing.\n\n"
+    "version": "1.20.38",
+    "versionCode": 38,
+    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.20.38/BrightMarket-v1.20.38.apk",
+    "size": 22700186,
+    "sha256": "eeb66a642dcd7c50a260bd812c278a6cb0a718dbff466966ad6c214d16538ff5",
+    "published": "2026-08-08T21:59:10Z",
+    "notes": "\n**Room between Update and Uninstall.** There was supposed to be a gap. There\nwasn't: the uninstall's own top padding is part of its tap target, and it\nextended upward through almost the whole spacer, leaving about 1dp of clear\nspace between \"update this app\" and \"remove it\". Android asks for at least 8.\n\nNow there's a wide gap, a short rule to mark uninstall as a different kind of\nthing, and another gap \u2014 about 38dp of clear space, and no top padding on the\ntarget so it can't creep back up into it. Update also got a proper tap target of\nits own; it was the bare height of the letters, which is a strange thing for the\nbutton you actually came to press.\n\n"
    },
    "deprecated": false,
    "supersededBy": "",
@@ -656,13 +656,13 @@
    "summary": "Spotify, NTSradio + Radio, Podcasts + more! Forked from Jonathancaudill/phono",
    "upstream": "jonathancaudill/phono",
    "latest": {
-    "version": "build-83",
-    "versionCode": 83,
-    "apk": "https://github.com/gi-os/BrightMusic/releases/download/build-83/LightPhono-v0.34.83.apk",
-    "size": 24252739,
-    "sha256": "a2be293f5384693555863c61cafad4067142f99053e8db5f284bd1d10e8a0f00",
-    "published": "2026-08-08T13:34:48Z",
-    "notes": "Automated build from `5f3f88ca5233c056df3107aa74b8d489fbbd07ec`.\n\n`versionCode` is the workflow run number (83), so this\nupgrades an installed build in place.\n\n**First install needs one adb grant** for colour album art:\n\n```\nadb shell pm grant com.lightphone.spotify android.permission.WRITE_SECURE_SETTINGS\n```\n\nWithout it covers stay greyscale \u2014 nothing else changes. Text entry also needs a\nsystem IME on the device (`adb shell ime list -s`); see the README.\n"
+    "version": "build-84",
+    "versionCode": 84,
+    "apk": "https://github.com/gi-os/BrightMusic/releases/download/build-84/LightPhono-v0.35.84.apk",
+    "size": 24236355,
+    "sha256": "804ba855dd1ba6bebb5a48aa8494e406d6a1a9e8aaa928c84f812fad2bb39fe2",
+    "published": "2026-08-08T21:50:56Z",
+    "notes": "Automated build from `cd6548d7e369d53d5aceec063fa5258452d531da`.\n\n`versionCode` is the workflow run number (84), so this\nupgrades an installed build in place.\n\n**First install needs one adb grant** for colour album art:\n\n```\nadb shell pm grant com.lightphone.spotify android.permission.WRITE_SECURE_SETTINGS\n```\n\nWithout it covers stay greyscale \u2014 nothing else changes. Text entry also needs a\nsystem IME on the device (`adb shell ime list -s`); see the README.\n"
    },
    "deprecated": false,
    "supersededBy": "",
@@ -964,7 +964,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 10,
+   "downloads": 11,
    "firstSeen": "2026-08-08",
    "signer": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c"
   },
@@ -1069,7 +1069,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 219,
+   "downloads": 220,
    "firstSeen": "2026-08-08",
    "signer": "72d287c65b8bd0604f2439195f1c6b55594de8efe0e1e455eb4f3d2d5cbe7043"
   },
@@ -1123,7 +1123,7 @@
      "size": 59435
     }
    ],
-   "downloads": 3555,
+   "downloads": 3558,
    "firstSeen": "2026-08-08",
    "signer": "a10ce031ca47c84a78998757f9afec57174c0d17061e7efd286a10596bdb9cc7"
   },
