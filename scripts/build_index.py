@@ -232,12 +232,43 @@ def build_preview(pkg: str, prereleases: list, carried: dict | None) -> dict | N
     }
 
 
-def load_previous(path: str) -> dict:
+def load_previous(path: str) -> tuple[dict, dict]:
+    """The last published index, keyed by pkg and also by repo.
+
+    By repo as well because the pkg in apps.yml can be wrong -- it is only
+    authoritative once read out of the APK -- and the repo is the one key that
+    is known before anything is downloaded. That is what makes it possible to
+    ask "is this the same release as last time?" without fetching it first.
+    """
     try:
         with open(path) as f:
-            return {a["pkg"]: a for a in json.load(f)["apps"]}
+            apps = json.load(f)["apps"]
     except (FileNotFoundError, KeyError, json.JSONDecodeError):
-        return {}
+        return {}, {}
+    return (
+        {a["pkg"]: a for a in apps},
+        {a["repo"].lower(): a for a in apps if a.get("repo")},
+    )
+
+
+def unchanged(prev: dict | None, asset: dict) -> bool:
+    """True when the previous entry already describes this exact asset.
+
+    Every run downloaded every APK in full, purely to recompute a hash of bytes
+    that had not moved. That is tens of gigabytes a day at a fifteen minute
+    schedule -- and, measurably, +2 on each app's GitHub download counter per
+    run, which would have made the Popular sort a measure of how long an app had
+    been listed rather than how many people wanted it.
+    """
+    if not prev:
+        return False
+    latest = prev.get("latest") or {}
+    return (
+        latest.get("apk") == asset["browser_download_url"]
+        and latest.get("size") == asset["size"]
+        and bool(latest.get("sha256"))
+        and latest.get("versionCode") is not None
+    )
 
 
 def main() -> int:
@@ -247,7 +278,7 @@ def main() -> int:
     with open(os.path.join(root, "apps.yml")) as f:
         apps = yaml.safe_load(f)["apps"]
 
-    previous = load_previous(index_path)
+    previous, previous_by_repo = load_previous(index_path)
     today = datetime.date.today().isoformat()
     out = []
 
@@ -300,24 +331,38 @@ def main() -> int:
         except urllib.error.HTTPError:
             screenshots = None
 
-        # Download once: the same bytes give us the hash the client verifies and
-        # the versionCode it compares against.
-        try:
-            blob = get_bytes(asset["browser_download_url"])
-        except urllib.error.HTTPError as e:
-            warn(f"{pkg}: could not download the APK ({e.code}) -- skipped")
-            continue
-        sha256 = hashlib.sha256(blob).hexdigest()
+        # Nothing to learn from bytes that haven't moved. Keyed on repo because
+        # the pkg in apps.yml may be wrong and the APK is what settles it -- and
+        # that is the thing we are trying not to download.
+        carried = previous_by_repo.get(repo.lower())
+        if unchanged(carried, asset):
+            prev_latest = carried["latest"]
+            sha256 = prev_latest["sha256"]
+            version_code = prev_latest["versionCode"]
+            pkg = carried["pkg"]
+            signer = carried.get("signer", "")
+            parsed = None
+            skipped_download = True
+        else:
+            skipped_download = False
+            # Download once: the same bytes give us the hash the client verifies
+            # and the versionCode it compares against.
+            try:
+                blob = get_bytes(asset["browser_download_url"])
+            except urllib.error.HTTPError as e:
+                warn(f"{pkg}: could not download the APK ({e.code}) -- skipped")
+                continue
+            sha256 = hashlib.sha256(blob).hexdigest()
+            parsed = read_apk(blob)
+            signer = ""
 
-        parsed = read_apk(blob)
-        signer = ""
-        if parsed is None:
+        if not skipped_download and parsed is None:
             version_code = version_code_from_tag(latest_release["tag_name"])
             if version_code is None:
                 warn(f"{pkg}: couldn't read versionCode from the APK or the tag -- skipped")
                 continue
             warn(f"{pkg}: fell back to the tag for versionCode ({version_code})")
-        else:
+        elif not skipped_download:
             version_code, apk_pkg, signer = parsed
             # apps.yml is hand-written and the APK is not. If they disagree the
             # APK wins, because that is the identity Android will actually use --
