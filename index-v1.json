@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T02:55:53.786474+00:00",
+ "generated": "2026-08-08T02:56:58.998021+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -425,13 +425,13 @@
    "summary": "Klondike, draw one, unlimited redeals.",
    "upstream": "",
    "latest": {
-    "version": "1.2.2",
-    "versionCode": 5,
-    "apk": "https://github.com/gi-os/BrightSolitaire/releases/download/v1.2.2/LightSolitaire-1.2.2.apk",
-    "size": 25770192,
-    "sha256": "75ffcc269a4139dfd52afc926494372519b1ba230e0eb22cfe48f5f4441d7c70",
-    "published": "2026-07-28T22:09:02Z",
-    "notes": "Klondike solitaire for the Light Phone III, versionCode 5.\n\nInstall with `adb install -r LightSolitaire-1.2.2.apk`, or track this\nrepository in [Obtainium](https://github.com/ImranR98/Obtainium) with the APK filter\n`LightSolitaire-.*\\.apk` to get updates automatically. See\n[INSTALL.md](https://github.com/gi-os/LightSolitaire/blob/main/INSTALL.md).\n\nSigned with a personal sideload key, not by Light. Updates have to come from this same\nrepository; an APK signed with a different key cannot install over it.\n\n\n**Full Changelog**: https://github.com/gi-os/LightSolitaire/compare/v1.2.1...v1.2.2"
+    "version": "1.2.3",
+    "versionCode": 6,
+    "apk": "https://github.com/gi-os/BrightSolitaire/releases/download/v1.2.3/LightSolitaire-1.2.3.apk",
+    "size": 25770196,
+    "sha256": "673e3cfd8f220e3dc78627bbd6d023846acfa7fea03b4ca15b609acb9c4fd524",
+    "published": "2026-08-08T02:56:26Z",
+    "notes": "Klondike solitaire for the Light Phone III, versionCode 6.\n\nInstall with `adb install -r LightSolitaire-1.2.3.apk`, or track this\nrepository in [Obtainium](https://github.com/ImranR98/Obtainium) with the APK filter\n`LightSolitaire-.*\\.apk` to get updates automatically. See\n[INSTALL.md](https://github.com/gi-os/LightSolitaire/blob/main/INSTALL.md).\n\nSigned with a personal sideload key, not by Light. Updates have to come from this same\nrepository; an APK signed with a different key cannot install over it.\n\n\n**Full Changelog**: https://github.com/gi-os/BrightSolitaire/compare/v1.2.2...v1.2.3"
    },
    "deprecated": false,
    "supersededBy": "",
@@ -906,7 +906,7 @@
      "size": 59435
     }
    ],
-   "downloads": 3216,
+   "downloads": 3220,
    "firstSeen": "2026-08-08",
    "signer": "a10ce031ca47c84a78998757f9afec57174c0d17061e7efd286a10596bdb9cc7"
   }
