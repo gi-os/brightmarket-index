@@ -131,3 +131,8 @@ apps:
   repo: jabberbox/molly-light
   category: utilities
   summary: Molly (Signal) designed to fit the LightOS UI
+- pkg: com.thelightphone.tracker
+  name: Tracker
+  repo: tyshi00/Tracker
+  category: utilities
+  summary: A lightweight health Tracker for LightOS
