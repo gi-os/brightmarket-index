@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T14:40:31.381858+00:00",
+ "generated": "2026-08-08T15:12:59.716260+00:00",
  "apps": [
   {
    "pkg": "app.lightphonekeyboard",
@@ -198,7 +198,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 131,
+   "downloads": 132,
    "firstSeen": "2026-08-06",
    "signer": "a38858d990bb61057ef53d1f8aa3c5854d01f68585b34f115793b06298b593e8"
   },
@@ -706,7 +706,7 @@
      "size": 143880
     }
    ],
-   "downloads": 126,
+   "downloads": 127,
    "firstSeen": "2026-08-06",
    "signer": "c6902aa1870b4ffa2fd0cd627643dc8ddee7cc0fdbd1752febb3d911092d8ec5"
   },
@@ -1046,7 +1046,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 192,
+   "downloads": 194,
    "firstSeen": "2026-08-08",
    "signer": "72d287c65b8bd0604f2439195f1c6b55594de8efe0e1e455eb4f3d2d5cbe7043"
   },
@@ -1100,7 +1100,7 @@
      "size": 59435
     }
    ],
-   "downloads": 3424,
+   "downloads": 3434,
    "firstSeen": "2026-08-08",
    "signer": "a10ce031ca47c84a78998757f9afec57174c0d17061e7efd286a10596bdb9cc7"
   },
