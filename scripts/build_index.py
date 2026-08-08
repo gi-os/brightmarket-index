@@ -261,6 +261,9 @@ def load_catalogue(root: str) -> list[dict]:
     return apps
 
 
+PUBLISHED_INDEX = "https://brightmarket.gzl.dev/index-v1.json"
+
+
 def load_previous(path: str) -> tuple[dict, dict]:
     """The last published index, keyed by pkg and also by repo.
 
@@ -268,12 +271,44 @@ def load_previous(path: str) -> tuple[dict, dict]:
     authoritative once read out of the APK -- and the repo is the one key that
     is known before anything is downloaded. That is what makes it possible to
     ask "is this the same release as last time?" without fetching it first.
+
+    Read from the LIVE SITE, not from the working tree. The index is no longer
+    committed -- it is deployed straight to Pages -- so the published file is the
+    only record of firstSeen, the pinned signing certificates, and the hashes
+    that let an unchanged release skip its download.
+
+    A failure here is fatal on purpose. Carrying on with an empty history would
+    silently reset every firstSeen, re-pin every signer against whatever is being
+    served right now, and re-download every APK. The first two are security
+    properties; quietly rebuilding them from scratch is precisely what a pinned
+    certificate exists to prevent. A stale site for fifteen minutes is the far
+    better failure.
     """
+    apps = None
     try:
-        with open(path) as f:
-            apps = json.load(f)["apps"]
-    except (FileNotFoundError, KeyError, json.JSONDecodeError):
-        return {}, {}
+        req = urllib.request.Request(
+            f"{PUBLISHED_INDEX}?t={int(datetime.datetime.now().timestamp())}",
+            headers={"User-Agent": "brightmarket-index"},
+        )
+        with urllib.request.urlopen(req, timeout=60) as r:
+            apps = json.load(r)["apps"]
+    except Exception as e:
+        # Local runs and the very first deploy have no published index yet; a
+        # file on disk is an acceptable stand-in for those, and only those.
+        try:
+            with open(path) as f:
+                apps = json.load(f)["apps"]
+            warn(f"couldn't read the published index ({e}); used the local copy")
+        except (FileNotFoundError, KeyError, json.JSONDecodeError):
+            if os.environ.get("ALLOW_EMPTY_HISTORY") == "1":
+                warn("no previous index anywhere; starting fresh because ALLOW_EMPTY_HISTORY=1")
+                return {}, {}
+            raise SystemExit(
+                f"FATAL: could not read the previous index from {PUBLISHED_INDEX} ({e}) "
+                "and no local copy exists. Refusing to publish an index with no "
+                "history: it would reset every firstSeen and re-pin every signing "
+                "certificate. Set ALLOW_EMPTY_HISTORY=1 only for a genuine first run."
+            )
     return (
         {a["pkg"]: a for a in apps},
         {a["repo"].lower(): a for a in apps if a.get("repo")},
