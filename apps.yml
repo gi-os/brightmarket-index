@@ -136,3 +136,8 @@ apps:
   repo: tyshi00/Tracker
   category: utilities
   summary: A lightweight health Tracker for LightOS
+- pkg: com.light.medication
+  name: LightMedication
+  repo: ruditimmermans/LightMedication
+  category: productivity
+  summary: Simple Medication tool for the LP3
