@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T13:05:47.472868+00:00",
+ "generated": "2026-08-08T13:24:02.472696+00:00",
  "apps": [
   {
    "pkg": "app.lightphonekeyboard",
@@ -537,6 +537,35 @@
    "signer": "eece33e8486e95a327518bb7798df9ae99c683a2a80c4439fe0b7bf30ae1a5d7"
   },
   {
+   "pkg": "com.light.lightnotifi",
+   "name": "LightNotifi",
+   "repo": "ruditimmermans/LightNotifi",
+   "category": "utilities",
+   "summary": "An LightOS Notification tool that helps you keep track of your app notifications.",
+   "upstream": "",
+   "latest": {
+    "version": "4.5-Uma.2",
+    "versionCode": 37,
+    "apk": "https://github.com/ruditimmermans/LightNotifi/releases/download/v4.5-Uma.2/LightNotifi-v4.5.Uma.2-release.apk",
+    "size": 43902981,
+    "sha256": "40b05b51199d1dcbf76153dc137202c2e5a4d55fac6a4f2f5411c4ce9c5abdf3",
+    "published": "2026-08-08T12:50:58Z",
+    "notes": "### LightNotifi-v4.5 Uma.2\r\n\r\n- You can now swipe notification cards up or down to dismiss them. Vertical swiping is used to prevent conflict with the horizontal navigation between notifications.\r\n\r\n- This will be the last update for a while; I think I\u2019ve programmed everything necessary into it now.\r\n\r\n**Full Changelog**: https://github.com/ruditimmermans/LightNotifi/compare/v4.4-Uma.2...v4.5-Uma.2"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/ruditimmermans/LightNotifi/main/screenshots/combined.png",
+     "name": "combined.png",
+     "size": 110065
+    }
+   ],
+   "downloads": 66,
+   "firstSeen": "2026-08-08",
+   "signer": "7efd747de5be4bad82575a7486830353f4954c76db667fdf45eca988495d4423"
+  },
+  {
    "pkg": "com.light.medication",
    "name": "LightMedication",
    "repo": "ruditimmermans/LightMedication",
@@ -638,7 +667,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 99,
+   "downloads": 100,
    "firstSeen": "2026-08-07",
    "signer": "ee7dc895039a92fe58dc0836730ab70f516ddb7eab7813faec98b3aef14680ec"
   },
@@ -999,6 +1028,29 @@
    "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
   },
   {
+   "pkg": "com.vandam.ritual",
+   "name": "Ritual",
+   "repo": "KEZO555/Ritual",
+   "category": "utilities",
+   "summary": "An AeroPress recipe guide for the Light Phone III.",
+   "upstream": "",
+   "latest": {
+    "version": "1.12.0",
+    "versionCode": 34,
+    "apk": "https://github.com/KEZO555/Ritual/releases/download/v1.12.0/ritual_1.12.0.apk",
+    "size": 28762862,
+    "sha256": "359b8f651ec6d5012df705e3c4bcb8ce83cd4a6f7ca14537b7ed7b676ae26517",
+    "published": "2026-07-21T14:29:57Z",
+    "notes": "## What's Changed\n- Optional brew methods: dropdown defaults to AeroPress + V60 (1.12.0)\n"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "downloads": 185,
+   "firstSeen": "2026-08-08",
+   "signer": "72d287c65b8bd0604f2439195f1c6b55594de8efe0e1e455eb4f3d2d5cbe7043"
+  },
+  {
    "pkg": "im.mollylight.app",
    "name": "Molly Light",
    "repo": "jabberbox/molly-light",
@@ -1048,7 +1100,7 @@
      "size": 59435
     }
    ],
-   "downloads": 3391,
+   "downloads": 3398,
    "firstSeen": "2026-08-08",
    "signer": "a10ce031ca47c84a78998757f9afec57174c0d17061e7efd286a10596bdb9cc7"
   },
