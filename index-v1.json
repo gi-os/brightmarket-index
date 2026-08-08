@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T01:24:02.810032+00:00",
+ "generated": "2026-08-08T01:30:21.580701+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -855,6 +855,60 @@
     "published": "2026-07-03T01:37:38Z",
     "notes": ""
    }
+  },
+  {
+   "pkg": "im.mollylight.app",
+   "name": "Molly Light",
+   "repo": "jabberbox/molly-light",
+   "category": "utilities",
+   "summary": "Molly (Signal) designed to fit the LightOS UI",
+   "upstream": "",
+   "latest": {
+    "version": "1.6",
+    "versionCode": 181907,
+    "apk": "https://github.com/jabberbox/molly-light/releases/download/v1.6/app-prod-website-release.apk",
+    "size": 198635136,
+    "sha256": "c639fbf197e35e1a0d85fa568aca71b5633ba2158c0735a30341d62218562009",
+    "published": "2026-07-28T01:51:17Z",
+    "notes": "## Bug fix\n\n- **PIN keypad cut off at larger display sizes** \u2014 if you had Android's Display Size set above the default, the keypad only showed rows 1\u20132 (keys 1\u20136). Rows now use proportional weight-based layout so all 12 keys are always visible."
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/molly-light/main/docs/screenshots/app-icon.png",
+     "name": "app-icon.png",
+     "size": 12738
+    },
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/molly-light/main/docs/screenshots/attach-sheet.png",
+     "name": "attach-sheet.png",
+     "size": 35300
+    },
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/molly-light/main/docs/screenshots/chatlist.png",
+     "name": "chatlist.png",
+     "size": 28091
+    },
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/molly-light/main/docs/screenshots/compose.png",
+     "name": "compose.png",
+     "size": 39714
+    },
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/molly-light/main/docs/screenshots/conversation.png",
+     "name": "conversation.png",
+     "size": 61233
+    },
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/molly-light/main/docs/screenshots/welcome.png",
+     "name": "welcome.png",
+     "size": 59435
+    }
+   ],
+   "downloads": 3192,
+   "firstSeen": "2026-08-08",
+   "signer": "a10ce031ca47c84a78998757f9afec57174c0d17061e7efd286a10596bdb9cc7"
   }
  ]
 }
