@@ -28,6 +28,7 @@ apps:
 - pkg: com.lightfastread
   name: BrightLibrary
   repo: gi-os/BrightLibrary
+  upstream: fluffyspace/FastRead
   category: reading
   summary: EPUB, comics and Calibre, with a cover shelf and a page view.
 - pkg: com.gios.lightremote
@@ -38,6 +39,7 @@ apps:
 - pkg: com.gios.lightchat
   name: BrightChat
   repo: gi-os/BrightChat
+  upstream: craigeley/chat
   category: utilities
   summary: iMessage over a self-hosted BlueBubbles server.
 - pkg: com.gios.lightcontrol
@@ -63,11 +65,13 @@ apps:
 - pkg: com.thelightphone.lightnycsubway
   name: BrightTransit
   repo: gi-os/BrightTransit
+  upstream: lightphone/light-sdk
   category: utilities
   summary: Live MTA subway arrivals.
 - pkg: com.lightrss.reader
   name: BrightNews
   repo: gi-os/BrightNews
+  upstream: zachattack323/LightRSS
   category: reading
   summary: RSS, Atom and Gmail newsletters in one reader.
 - pkg: com.gios.lightpass
@@ -78,6 +82,7 @@ apps:
 - pkg: app.lightphonekeyboard
   name: LightKeyboard
   repo: gi-os/LightKeyboard
+  upstream: adam-weber/light-keyboard
   category: hardware
   summary: A fork of the Light Phone keyboard, adding swipe typing and autocorrect
     from a bundled dictionary. Works offline.
@@ -107,10 +112,12 @@ apps:
 - pkg: org.woheller69.whobird.chirp
   name: Chirp
   repo: barry7007/LightBirdIdentifier
+  upstream: woheller69/whoBIRD
   category: utilities
   summary: Identify bird sounds. Restyled from whoBird.
 - pkg: com.lightphone.spotify
   name: BrightMusic
   repo: gi-os/BrightMusic
+  upstream: jonathancaudill/phono
   category: media
   summary: Spotify, NTSradio + Radio, Podcasts + more! Forked from Jonathancaudill/phono

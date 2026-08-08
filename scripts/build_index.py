@@ -370,6 +370,9 @@ def main() -> int:
                 "repo": repo,
                 "category": app.get("category", "utilities"),
                 "summary": app.get("summary", ""),
+                # The community tool this app forks, as owner/repo. Empty for
+                # original apps; the UI shows a "fork of" link when present.
+                "upstream": app.get("upstream", ""),
                 "latest": {
                     "version": latest_release["tag_name"].lstrip("v"),
                     "versionCode": version_code,

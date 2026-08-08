@@ -340,6 +340,9 @@
           <div style="font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:#6a6a70;">BY</div>
           <a href="https://github.com/${esc(dev(app))}" target="_blank" rel="noopener"
              style="font-family:var(--mono); font-size:11px; letter-spacing:.08em; border-bottom:1px solid var(--edge);">${esc(dev(app))}</a>
+          ${app.upstream ? `<div style="font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:#6a6a70;">· FORK OF</div>
+          <a href="https://github.com/${esc(app.upstream)}" target="_blank" rel="noopener"
+             style="font-family:var(--mono); font-size:11px; letter-spacing:.08em; border-bottom:1px solid var(--edge);">${esc(app.upstream)}</a>` : ""}
         </div>
         <div style="font-size:15px; line-height:1.55; color:#d8d8dc; max-width:52ch;">${esc(app.summary)}</div>
         <div class="stats">
