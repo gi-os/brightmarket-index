@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T22:11:46.676284+00:00",
+ "generated": "2026-08-08T22:29:52.064672+00:00",
  "apps": [
   {
    "pkg": "app.lightphonekeyboard",
@@ -33,13 +33,13 @@
    "summary": "The marketplace itself. Browse, install and update Light Phone apps.",
    "upstream": "",
    "latest": {
-    "version": "1.21.39",
-    "versionCode": 39,
-    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.21.39/BrightMarket-v1.21.39.apk",
+    "version": "1.22.40",
+    "versionCode": 40,
+    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.22.40/BrightMarket-v1.22.40.apk",
     "size": 22716570,
-    "sha256": "2f0465db6376b6e33adccc097dac8d27501a0046d69e87a1f42190e791666671",
-    "published": "2026-08-08T22:03:13Z",
-    "notes": "\n**Tracked apps no longer depend on GitHub's API budget.**\n\nv1.19 explained the \"no APK release found\" message properly and cut how often\nthe app asks. It didn't fix the underlying problem, which is worse than it\nlooked: GitHub allows 60 unauthenticated API requests an hour **per IP address**,\nand on a mobile network that address is shared with everyone else behind the same\ncarrier NAT. The allowance can be gone before this phone has made a single\nrequest. That's why one tracked app could work and then all of them fail at once\nwithout you doing anything differently.\n\nSo when the API refuses, the app now asks github.com instead, which has no such\nlimit. It reads the same two things the API gave it \u2014 the newest release that\nisn't a prerelease, and the name of the APK attached to it \u2014 from the ordinary\nrelease pages. Checked against the eight apps this was reported with: all eight\nresolve, every one matching what the API says.\n\nYou'll still see the rate limit message if both routes fail, which now means\nsomething is genuinely wrong rather than that you have several apps.\n\n"
+    "sha256": "ca7a6c7d0804dce0c8e06b6af61785402d4dde703808333c0ba2659f0a498910",
+    "published": "2026-08-08T22:29:16Z",
+    "notes": "\n**If both routes to GitHub fail, the app offers to tell me.** Same chip as a\ncrash \u2014 a small prompt in the corner, which you can ignore \u2014 and tapping it sends\nthe exact reason rather than \"it didn't work\".\n\nThe report carries the HTTP code, how much of the rate limit was left, when it\nresets, and precisely where the fallback gave up: whether the release page\nredirected somewhere unexpected, or the assets fragment 404'd, or no `.apk` was\nlinked on it. Those are different problems with different fixes, and from the\noutside they look identical.\n\nIt only asks when *both* the API and the plain web pages have failed, which\nafter v1.21 should be close to never. One prompt per repo per hour, so an app\nthat fails on every refresh doesn't nag you into turning reporting off.\n\n"
    },
    "deprecated": false,
    "supersededBy": "",
@@ -60,7 +60,7 @@
      "size": 57213
     }
    ],
-   "downloads": 161,
+   "downloads": 162,
    "firstSeen": "2026-08-06",
    "signer": "c15078bcb72a89c67efb54d1a9fc1b00cc88da578891f8e96233a7d279550df6",
    "preview": {
@@ -667,7 +667,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 108,
+   "downloads": 109,
    "firstSeen": "2026-08-07",
    "signer": "ee7dc895039a92fe58dc0836730ab70f516ddb7eab7813faec98b3aef14680ec"
   },
@@ -1069,7 +1069,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 220,
+   "downloads": 222,
    "firstSeen": "2026-08-08",
    "signer": "72d287c65b8bd0604f2439195f1c6b55594de8efe0e1e455eb4f3d2d5cbe7043"
   },
@@ -1123,7 +1123,7 @@
      "size": 59435
     }
    ],
-   "downloads": 3564,
+   "downloads": 3568,
    "firstSeen": "2026-08-08",
    "signer": "a10ce031ca47c84a78998757f9afec57174c0d17061e7efd286a10596bdb9cc7"
   },
