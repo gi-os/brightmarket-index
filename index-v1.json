@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T00:33:55.627239+00:00",
+ "generated": "2026-08-08T00:44:12.839944+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -145,12 +145,12 @@
    "category": "utilities",
    "summary": "The marketplace itself. Browse, install and update Light Phone apps.",
    "latest": {
-    "version": "1.17.34",
-    "versionCode": 34,
-    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.17.34/BrightMarket-v1.17.34.apk",
+    "version": "1.18.35",
+    "versionCode": 35,
+    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.18.35/BrightMarket-v1.18.35.apk",
     "size": 22700182,
-    "sha256": "0423c0a569731b8fda3ebdd6a26ba2d12caac4722d64d5256087e48a74d1f3f8",
-    "published": "2026-08-07T22:19:47Z",
+    "sha256": "139a683a26a8be480d29ec49c17f04630538958edd231d4d42686b6ddb76346b",
+    "published": "2026-08-08T00:43:13Z",
     "notes": "\n**Uninstall actually works.** It needed `REQUEST_DELETE_PACKAGES` in the\nmanifest, which wasn't there. Without it Android refuses the request before any\nUI appears, so the button did nothing regardless of how big it was \u2014 v1.12 made\nthe tap target larger, which was a real problem but not this one. The permission\ngrants no power to remove anything: the system still shows its own confirmation\nand you still have to agree. It only buys the right to ask.\n\nIt's also gone from the downloads list. One place to uninstall from, and it's\nthe app's own page \u2014 a destructive action repeated down every row of a list you\nscroll is asking for it.\n\n"
    },
    "deprecated": false,
@@ -636,7 +636,7 @@
      "size": 89898
     }
    ],
-   "downloads": 192,
+   "downloads": 193,
    "firstSeen": "2026-08-06",
    "signer": "d11cf9eecbfd5b482946e317f1dbf785a594234e313d7aa92042be3616b66dc3"
   },
@@ -669,7 +669,7 @@
      "size": 17692
     }
    ],
-   "downloads": 76,
+   "downloads": 77,
    "firstSeen": "2026-08-06",
    "signer": "8e8dee395ca68f83870fa5fc9e62d723ff7e960f2c94f93427e6c62513236420"
   },
@@ -707,7 +707,7 @@
      "size": 74191
     }
    ],
-   "downloads": 26,
+   "downloads": 27,
    "firstSeen": "2026-08-07",
    "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
   },
@@ -745,7 +745,7 @@
      "size": 73420
     }
    ],
-   "downloads": 27,
+   "downloads": 28,
    "firstSeen": "2026-08-07",
    "signer": "9276d2b4ec2e238059119a23459164bd15201e9183180029fb30de2632f6fd21"
   },
@@ -767,7 +767,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 63,
+   "downloads": 66,
    "firstSeen": "2026-08-07",
    "signer": "ee7dc895039a92fe58dc0836730ab70f516ddb7eab7813faec98b3aef14680ec"
   }
