@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T02:56:58.998021+00:00",
+ "generated": "2026-08-08T03:39:57.350999+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -138,7 +138,7 @@
      "size": 55168
     }
    ],
-   "downloads": 113,
+   "downloads": 116,
    "firstSeen": "2026-08-06",
    "signer": "4ea28ba461cfa1d5d8cee38e71ce8eacfab570afee83f248c5fec8c5cca4cb5f"
   },
@@ -177,7 +177,7 @@
      "size": 57213
     }
    ],
-   "downloads": 132,
+   "downloads": 136,
    "firstSeen": "2026-08-06",
    "signer": "c15078bcb72a89c67efb54d1a9fc1b00cc88da578891f8e96233a7d279550df6",
    "preview": {
@@ -240,7 +240,7 @@
      "size": 51624
     }
    ],
-   "downloads": 145,
+   "downloads": 147,
    "firstSeen": "2026-08-06",
    "signer": "32ec6e7a87ee30c5c50ae7a245fc2e34f6b6f8d9f7b3394e8a14dc65ae9fecbc"
   },
@@ -274,7 +274,7 @@
      "size": 36611
     }
    ],
-   "downloads": 109,
+   "downloads": 110,
    "firstSeen": "2026-08-06",
    "signer": "88fa9df840f139a9079aaf8ab8a54f64022a9da276bacac99227a464c0b1eeda"
   },
@@ -326,7 +326,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 127,
+   "downloads": 128,
    "firstSeen": "2026-08-06",
    "signer": "a38858d990bb61057ef53d1f8aa3c5854d01f68585b34f115793b06298b593e8"
   },
@@ -365,7 +365,7 @@
      "size": 809265
     }
    ],
-   "downloads": 136,
+   "downloads": 137,
    "firstSeen": "2026-08-06",
    "signer": "ceca3d378bf9709bc0d0b3eea84cc8bf7994777a628e5df8079a619cf7a7bda8"
   },
@@ -442,7 +442,7 @@
      "size": 42506
     }
    ],
-   "downloads": 99,
+   "downloads": 101,
    "firstSeen": "2026-08-06",
    "signer": "386edb7091947707a812587af8c37b0873bb2cde88963e9520574cc45bc0128c"
   },
@@ -577,7 +577,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 99,
+   "downloads": 100,
    "firstSeen": "2026-08-06",
    "signer": "7844d8cc52fc12b5a2b5879b028605d90391a0a06cc4d87ef92a59350226d203"
   },
@@ -778,18 +778,18 @@
    "summary": "Spotify, NTSradio + Radio, Podcasts + more! Forked from Jonathancaudill/phono",
    "upstream": "jonathancaudill/phono",
    "latest": {
-    "version": "build-78",
-    "versionCode": 78,
-    "apk": "https://github.com/gi-os/BrightMusic/releases/download/build-78/LightPhono-v0.29.78.apk",
+    "version": "build-81",
+    "versionCode": 81,
+    "apk": "https://github.com/gi-os/BrightMusic/releases/download/build-81/LightPhono-v0.32.81.apk",
     "size": 24252739,
-    "sha256": "dfa637785f45184d4cb3050ae94bb5bb000123de6848c2b8fb0b6bc42b2ef83e",
-    "published": "2026-08-08T02:54:31Z",
-    "notes": "Automated build from `2bdb752ed308a462cad5f764a220bcaabfaf4f99`.\n\n`versionCode` is the workflow run number (78), so this\nupgrades an installed build in place.\n\n**First install needs one adb grant** for colour album art:\n\n```\nadb shell pm grant com.lightphone.spotify android.permission.WRITE_SECURE_SETTINGS\n```\n\nWithout it covers stay greyscale \u2014 nothing else changes. Text entry also needs a\nsystem IME on the device (`adb shell ime list -s`); see the README.\n"
+    "sha256": "18af8cfcc444b32de994b2278eeca7ba99853191c18b2092446ff5be0286f607",
+    "published": "2026-08-08T03:30:48Z",
+    "notes": "Automated build from `cc315ff3cb1928888ced948239f8401fc3da0f11`.\n\n`versionCode` is the workflow run number (81), so this\nupgrades an installed build in place.\n\n**First install needs one adb grant** for colour album art:\n\n```\nadb shell pm grant com.lightphone.spotify android.permission.WRITE_SECURE_SETTINGS\n```\n\nWithout it covers stay greyscale \u2014 nothing else changes. Text entry also needs a\nsystem IME on the device (`adb shell ime list -s`); see the README.\n"
    },
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 83,
+   "downloads": 86,
    "firstSeen": "2026-08-07",
    "signer": "ee7dc895039a92fe58dc0836730ab70f516ddb7eab7813faec98b3aef14680ec"
   },
@@ -906,9 +906,41 @@
      "size": 59435
     }
    ],
-   "downloads": 3220,
+   "downloads": 3229,
    "firstSeen": "2026-08-08",
    "signer": "a10ce031ca47c84a78998757f9afec57174c0d17061e7efd286a10596bdb9cc7"
+  },
+  {
+   "pkg": "com.thelightphone.tracker",
+   "name": "Tracker",
+   "repo": "tyshi00/Tracker",
+   "category": "utilities",
+   "summary": "A lightweight health Tracker for LightOS",
+   "upstream": "",
+   "latest": {
+    "version": "2.5.1",
+    "versionCode": 40,
+    "apk": "https://github.com/tyshi00/Tracker/releases/download/v2.5.1/tracker.apk",
+    "size": 75285703,
+    "sha256": "fb8f91761c5b1b7f75e020c3c3d1233269a7282080b030b85cb039d7ce8515a0",
+    "published": "2026-07-29T16:26:05Z",
+    "notes": "Fix: small UI change for toggle icon. "
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "downloads": 57,
+   "firstSeen": "2026-08-08",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28",
+   "preview": {
+    "version": "latest",
+    "versionCode": 40,
+    "apk": "https://github.com/tyshi00/Tracker/releases/download/latest/tracker.apk",
+    "size": 75285703,
+    "sha256": "fb8f91761c5b1b7f75e020c3c3d1233269a7282080b030b85cb039d7ce8515a0",
+    "published": "2026-07-04T15:01:46Z",
+    "notes": ""
+   }
   }
  ]
 }
