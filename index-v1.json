@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T18:15:00.755007+00:00",
+ "generated": "2026-08-08T19:02:05.335548+00:00",
  "apps": [
   {
    "pkg": "app.lightphonekeyboard",
@@ -146,7 +146,7 @@
      "size": 89898
     }
    ],
-   "downloads": 203,
+   "downloads": 204,
    "firstSeen": "2026-08-06",
    "signer": "d11cf9eecbfd5b482946e317f1dbf785a594234e313d7aa92042be3616b66dc3"
   },
@@ -493,7 +493,7 @@
      "size": 55168
     }
    ],
-   "downloads": 118,
+   "downloads": 119,
    "firstSeen": "2026-08-06",
    "signer": "4ea28ba461cfa1d5d8cee38e71ce8eacfab570afee83f248c5fec8c5cca4cb5f"
   },
@@ -561,7 +561,7 @@
      "size": 110065
     }
    ],
-   "downloads": 68,
+   "downloads": 69,
    "firstSeen": "2026-08-08",
    "signer": "7efd747de5be4bad82575a7486830353f4954c76db667fdf45eca988495d4423"
   },
@@ -644,7 +644,7 @@
      "size": 51624
     }
    ],
-   "downloads": 152,
+   "downloads": 153,
    "firstSeen": "2026-08-06",
    "signer": "32ec6e7a87ee30c5c50ae7a245fc2e34f6b6f8d9f7b3394e8a14dc65ae9fecbc"
   },
@@ -667,7 +667,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 105,
+   "downloads": 106,
    "firstSeen": "2026-08-07",
    "signer": "ee7dc895039a92fe58dc0836730ab70f516ddb7eab7813faec98b3aef14680ec"
   },
@@ -808,7 +808,7 @@
      "size": 42506
     }
    ],
-   "downloads": 110,
+   "downloads": 111,
    "firstSeen": "2026-08-06",
    "signer": "386edb7091947707a812587af8c37b0873bb2cde88963e9520574cc45bc0128c"
   },
@@ -831,7 +831,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 58,
+   "downloads": 59,
    "firstSeen": "2026-08-08",
    "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28",
    "preview": {
@@ -964,7 +964,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 8,
+   "downloads": 10,
    "firstSeen": "2026-08-08",
    "signer": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c"
   },
@@ -1069,7 +1069,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 205,
+   "downloads": 208,
    "firstSeen": "2026-08-08",
    "signer": "72d287c65b8bd0604f2439195f1c6b55594de8efe0e1e455eb4f3d2d5cbe7043"
   },
@@ -1123,7 +1123,7 @@
      "size": 59435
     }
    ],
-   "downloads": 3492,
+   "downloads": 3507,
    "firstSeen": "2026-08-08",
    "signer": "a10ce031ca47c84a78998757f9afec57174c0d17061e7efd286a10596bdb9cc7"
   },
