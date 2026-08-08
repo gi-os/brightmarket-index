@@ -141,3 +141,8 @@ apps:
   repo: ruditimmermans/LightMedication
   category: productivity
   summary: Simple Medication tool for the LP3
+- pkg: com.tyshi00.trinkets
+  name: Trinkets
+  repo: tyshi00/Trinkets
+  category: utilities
+  summary: A small collection of things to read and a countdown timer for LightOS.
