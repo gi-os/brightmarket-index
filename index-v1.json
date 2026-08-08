@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T16:14:00.259215+00:00",
+ "generated": "2026-08-08T16:16:10.570340+00:00",
  "apps": [
   {
    "pkg": "app.lightphonekeyboard",
@@ -944,6 +944,29 @@
     "published": "2026-07-07T22:09:06Z",
     "notes": ""
    }
+  },
+  {
+   "pkg": "com.tyshi00.translator",
+   "name": "Light-Translator",
+   "repo": "tyshi00/Light-Translator",
+   "category": "utilities",
+   "summary": "An offline translator for LightOS",
+   "upstream": "",
+   "latest": {
+    "version": "1.0.0",
+    "versionCode": 1,
+    "apk": "https://github.com/tyshi00/Light-Translator/releases/download/v1.0.0/light-translator-1.0.0.apk",
+    "size": 88475243,
+    "sha256": "2001cccaf6896e7c7f19963cda56fdd0f17ded8abb2b30b68f0db59530692090",
+    "published": "2026-08-08T13:48:09Z",
+    "notes": "First release of light-translator. Offline **text** translation for the Light Phone III using NLLB-200.\r\n\r\n## Installation\r\n\r\nDownload `light-translator-1.0.0.apk` below and sideload, or add this repo to [Obtainium](https://obtainium.imranr.dev/) for automatic updates.\r\n\r\n## First-time setup\r\n\r\nOn first launch, the app will prompt to download the translation model (about 1.5 GB). Please note:\r\n\r\n* The download takes around 5 minutes on a stable Wi-Fi connection, sometimes  a bit longer\r\n* Keep the phone awake during the download. If the screen turns off or the app is backgrounded, the download can pause or fail entirely, which may require you to restart the process\r\n\r\nOnce the model is downloaded, translations work fully offline.\r\n\r\n## What this app does\r\n\r\nSee the [README](https://github.com/tyshi00/light-translator#readme) for full features, requirements, and known limitations."
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "downloads": 3,
+   "firstSeen": "2026-08-08",
+   "signer": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c"
   },
   {
    "pkg": "com.tyshi00.trinkets",
