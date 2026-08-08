@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T02:37:05.609223+00:00",
+ "generated": "2026-08-08T02:55:53.786474+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -111,13 +111,13 @@
    "summary": "Live scores and standings across thirteen leagues.",
    "upstream": "",
    "latest": {
-    "version": "1.14.26",
-    "versionCode": 26,
-    "apk": "https://github.com/gi-os/BrightSports/releases/download/v1.14.26/LightSports-v1.14.26.apk",
+    "version": "1.15.27",
+    "versionCode": 27,
+    "apk": "https://github.com/gi-os/BrightSports/releases/download/v1.15.27/LightSports-v1.15.27.apk",
     "size": 19480245,
-    "sha256": "ec8f1c30effc6bfe43d8e568a722ca2114968e1179993bb38bfb963b77cda055",
-    "published": "2026-08-08T02:11:11Z",
-    "notes": "**Full Changelog**: https://github.com/gi-os/BrightSports/compare/v1.13.25...v1.14.26"
+    "sha256": "88dc733827604408f9f9f855cdce069d1ccb6d6b2ae01d414819c9674dea18e5",
+    "published": "2026-08-08T02:55:16Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightSports/compare/v1.14.26...v1.15.27"
    },
    "deprecated": false,
    "supersededBy": "",
@@ -321,12 +321,12 @@
     "size": 18365257,
     "sha256": "d2348f8eba90976d330551c220009af1774df8c4086fd7db40d2248f2f05e55e",
     "published": "2026-08-08T02:36:38Z",
-    "notes": "**Full Changelog**: https://github.com/gi-os/BrightControl/compare/v2.2.60...v2.3.62"
+    "notes": "## v2.3 \u2014 a text message no longer turns the filter off\n\n### Fixed\n- **Every notification ping was 30 seconds of dead keys.** `USAGE_NOTIFICATION` and `USAGE_NOTIFICATION_EVENT` counted as \"ringing\", and ringing carries a 30-second hands-off grace window. So a text arriving meant half a minute where every key passed through untouched: home went to LightOS and stranded you on the idle face, brightness and swipe went dead \u2014 and nothing was logged, because the refusal sat upstream of every log line. Intermittent, self-healing, invisible. The ring guard now covers exactly what it was built for: alarms, ringing calls, and calls in progress.\n\n### Diagnostics\n- The whole-filter refusal logs itself: a key declined because the filter is switched off, dormant, or inside a ring window writes `filter down \u2014 ringing` / `dormant` / `switched off` to the key log, one line per reason per five seconds. This refusal can never go silent again.\n\n### Notes\n- Includes v2.1 (home door before the hands-off gate; SWIPE respects the mode switch) and v2.2 (launcher-entry fallback; named home refusals). No permission changes; installs over the top.\n- To verify the fix: trigger a notification with sound, press home within 30 seconds. On v2.2 that reproduced the stuck-on-LightOS bug; on v2.3 it must not.\n"
    },
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 125,
+   "downloads": 127,
    "firstSeen": "2026-08-06",
    "signer": "a38858d990bb61057ef53d1f8aa3c5854d01f68585b34f115793b06298b593e8"
   },
@@ -778,18 +778,18 @@
    "summary": "Spotify, NTSradio + Radio, Podcasts + more! Forked from Jonathancaudill/phono",
    "upstream": "jonathancaudill/phono",
    "latest": {
-    "version": "build-75",
-    "versionCode": 75,
-    "apk": "https://github.com/gi-os/BrightMusic/releases/download/build-75/LightPhono-v0.27.75.apk",
-    "size": 24236351,
-    "sha256": "a94454e07affbaa3ebdbd537f4407bdf7cf0613388db340912e71ecfb835e571",
-    "published": "2026-08-08T02:17:33Z",
-    "notes": "Automated build from `a13d9a9cfd2033ee390faeb8e2ab546ea075375a`.\n\n`versionCode` is the workflow run number (75), so this\nupgrades an installed build in place.\n\n**First install needs one adb grant** for colour album art:\n\n```\nadb shell pm grant com.lightphone.spotify android.permission.WRITE_SECURE_SETTINGS\n```\n\nWithout it covers stay greyscale \u2014 nothing else changes. Text entry also needs a\nsystem IME on the device (`adb shell ime list -s`); see the README.\n"
+    "version": "build-78",
+    "versionCode": 78,
+    "apk": "https://github.com/gi-os/BrightMusic/releases/download/build-78/LightPhono-v0.29.78.apk",
+    "size": 24252739,
+    "sha256": "dfa637785f45184d4cb3050ae94bb5bb000123de6848c2b8fb0b6bc42b2ef83e",
+    "published": "2026-08-08T02:54:31Z",
+    "notes": "Automated build from `2bdb752ed308a462cad5f764a220bcaabfaf4f99`.\n\n`versionCode` is the workflow run number (78), so this\nupgrades an installed build in place.\n\n**First install needs one adb grant** for colour album art:\n\n```\nadb shell pm grant com.lightphone.spotify android.permission.WRITE_SECURE_SETTINGS\n```\n\nWithout it covers stay greyscale \u2014 nothing else changes. Text entry also needs a\nsystem IME on the device (`adb shell ime list -s`); see the README.\n"
    },
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 81,
+   "downloads": 83,
    "firstSeen": "2026-08-07",
    "signer": "ee7dc895039a92fe58dc0836730ab70f516ddb7eab7813faec98b3aef14680ec"
   },
@@ -906,7 +906,7 @@
      "size": 59435
     }
    ],
-   "downloads": 3213,
+   "downloads": 3216,
    "firstSeen": "2026-08-08",
    "signer": "a10ce031ca47c84a78998757f9afec57174c0d17061e7efd286a10596bdb9cc7"
   }
