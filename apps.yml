@@ -146,3 +146,8 @@ apps:
   repo: tyshi00/Trinkets
   category: utilities
   summary: A small collection of things to read and a countdown timer for LightOS.
+- pkg: com.tyshi00.worldclocks
+  name: World-Clocks
+  repo: tyshi00/World-Clocks
+  category: utilities
+  summary: A time zone tracker/global clock of sorts for LightOS.
