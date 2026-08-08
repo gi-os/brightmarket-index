@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T03:39:57.350999+00:00",
+ "generated": "2026-08-08T03:42:57.495151+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -425,13 +425,13 @@
    "summary": "Klondike, draw one, unlimited redeals.",
    "upstream": "",
    "latest": {
-    "version": "1.2.3",
-    "versionCode": 6,
-    "apk": "https://github.com/gi-os/BrightSolitaire/releases/download/v1.2.3/LightSolitaire-1.2.3.apk",
-    "size": 25770196,
-    "sha256": "673e3cfd8f220e3dc78627bbd6d023846acfa7fea03b4ca15b609acb9c4fd524",
-    "published": "2026-08-08T02:56:26Z",
-    "notes": "Klondike solitaire for the Light Phone III, versionCode 6.\n\nInstall with `adb install -r LightSolitaire-1.2.3.apk`, or track this\nrepository in [Obtainium](https://github.com/ImranR98/Obtainium) with the APK filter\n`LightSolitaire-.*\\.apk` to get updates automatically. See\n[INSTALL.md](https://github.com/gi-os/LightSolitaire/blob/main/INSTALL.md).\n\nSigned with a personal sideload key, not by Light. Updates have to come from this same\nrepository; an APK signed with a different key cannot install over it.\n\n\n**Full Changelog**: https://github.com/gi-os/BrightSolitaire/compare/v1.2.2...v1.2.3"
+    "version": "1.2.4",
+    "versionCode": 7,
+    "apk": "https://github.com/gi-os/BrightSolitaire/releases/download/v1.2.4/LightSolitaire-1.2.4.apk",
+    "size": 25770192,
+    "sha256": "377bf6f9a40949b539a503bdd71909b55e97cb76b1fa831f8161ee5ff20b05ba",
+    "published": "2026-08-08T03:40:11Z",
+    "notes": "Klondike solitaire for the Light Phone III, versionCode 7.\n\nInstall with `adb install -r LightSolitaire-1.2.4.apk`, or track this\nrepository in [Obtainium](https://github.com/ImranR98/Obtainium) with the APK filter\n`LightSolitaire-.*\\.apk` to get updates automatically. See\n[INSTALL.md](https://github.com/gi-os/LightSolitaire/blob/main/INSTALL.md).\n\nSigned with a personal sideload key, not by Light. Updates have to come from this same\nrepository; an APK signed with a different key cannot install over it.\n\n\n**Full Changelog**: https://github.com/gi-os/BrightSolitaire/compare/v1.2.3...v1.2.4"
    },
    "deprecated": false,
    "supersededBy": "",
@@ -941,6 +941,117 @@
     "published": "2026-07-04T15:01:46Z",
     "notes": ""
    }
+  },
+  {
+   "pkg": "com.light.medication",
+   "name": "LightMedication",
+   "repo": "ruditimmermans/LightMedication",
+   "category": "productivity",
+   "summary": "Simple Medication tool for the LP3",
+   "upstream": "",
+   "latest": {
+    "version": "2.2",
+    "versionCode": 12,
+    "apk": "https://github.com/ruditimmermans/LightMedication/releases/download/v2.2/MediLight-v2.2-release.apk",
+    "size": 23946607,
+    "sha256": "989d2ea37de586a8f4766961b376566cbf39b7559a87ed6d38930cbdb0f31ac2",
+    "published": "2026-08-07T18:35:09Z",
+    "notes": "### MediLight v2.2\r\n\r\n- I have completed the removal of the Ko-fi donation link and button from the project.\r\n\r\n**Full Changelog**: https://github.com/ruditimmermans/LightMedication/compare/v2.1...v2.2"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/ruditimmermans/LightMedication/main/screenshots/combined.png",
+     "name": "combined.png",
+     "size": 75674
+    }
+   ],
+   "downloads": 20,
+   "firstSeen": "2026-08-08",
+   "signer": "7efd747de5be4bad82575a7486830353f4954c76db667fdf45eca988495d4423"
+  },
+  {
+   "pkg": "com.tyshi00.trinkets",
+   "name": "Trinkets",
+   "repo": "tyshi00/Trinkets",
+   "category": "utilities",
+   "summary": "A small collection of things to read and a countdown timer for LightOS.",
+   "upstream": "",
+   "latest": {
+    "version": "1.1.0",
+    "versionCode": 6,
+    "apk": "https://github.com/tyshi00/Trinkets/releases/download/v1.1.0/tool-release.apk",
+    "size": 65611754,
+    "sha256": "3e75581b8d0dafd7e3f597a3a350f7b46c0a34a693bb5300e4f558e9b4adb67e",
+    "published": "2026-08-06T23:40:34Z",
+    "notes": "New: \r\n-Added a split home screen so you can see two Trinkets at once. Enable/disable split view in Settings, then pick which feature goes on top and which goes on the bottom. It has a 60/40 split view. Countdowns can go in either slot, and you can now favorite a specific countdown on the countdown screen to choose which one shows up on your home screen. Leave it unstarred and it'll just show whichever one is coming up soonest.\r\n- Feature redundancy eliminated: Whatever feature is already on your home screen no longer shows up again in the features list, so there's less repetition."
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "downloads": 35,
+   "firstSeen": "2026-08-08",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
+  },
+  {
+   "pkg": "com.tyshi00.worldclocks",
+   "name": "World-Clocks",
+   "repo": "tyshi00/World-Clocks",
+   "category": "utilities",
+   "summary": "A time zone tracker/global clock of sorts for LightOS.",
+   "upstream": "",
+   "latest": {
+    "version": "V1.1.2",
+    "versionCode": 4,
+    "apk": "https://github.com/tyshi00/World-Clocks/releases/download/V1.1.2/worldclocks-release-candidate.apk",
+    "size": 74897958,
+    "sha256": "ba9c193ca389ea2b763d3e1ab51d643c624c6036c538c02fc47cb3bce6caf42f",
+    "published": "2026-07-29T17:26:28Z",
+    "notes": "Fix: small UI change for toggle icon."
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/World-Clocks/main/screenshots/add-location.png",
+     "name": "add-location.png",
+     "size": 84269
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/World-Clocks/main/screenshots/choose-a-location.png",
+     "name": "choose-a-location.png",
+     "size": 37691
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/World-Clocks/main/screenshots/compare.png",
+     "name": "compare.png",
+     "size": 26629
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/World-Clocks/main/screenshots/home-split.png",
+     "name": "home-split.png",
+     "size": 49862
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/World-Clocks/main/screenshots/home.png",
+     "name": "home.png",
+     "size": 27283
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/World-Clocks/main/screenshots/saved-locations.png",
+     "name": "saved-locations.png",
+     "size": 20236
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/World-Clocks/main/screenshots/settings.png",
+     "name": "settings.png",
+     "size": 27809
+    }
+   ],
+   "downloads": 7,
+   "firstSeen": "2026-08-08",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
   }
  ]
 }
