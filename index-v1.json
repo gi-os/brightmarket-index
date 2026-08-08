@@ -1,6 +1,6 @@
 {
  "format": 1,
- "generated": "2026-08-08T02:31:08.611137+00:00",
+ "generated": "2026-08-08T02:34:31.686250+00:00",
  "apps": [
   {
    "pkg": "com.gios.lighttip",
@@ -326,7 +326,7 @@
    "deprecated": false,
    "supersededBy": "",
    "screenshots": [],
-   "downloads": 124,
+   "downloads": 125,
    "firstSeen": "2026-08-06",
    "signer": "a38858d990bb61057ef53d1f8aa3c5854d01f68585b34f115793b06298b593e8"
   },
@@ -906,7 +906,7 @@
      "size": 59435
     }
    ],
-   "downloads": 3211,
+   "downloads": 3213,
    "firstSeen": "2026-08-08",
    "signer": "a10ce031ca47c84a78998757f9afec57174c0d17061e7efd286a10596bdb9cc7"
   }
