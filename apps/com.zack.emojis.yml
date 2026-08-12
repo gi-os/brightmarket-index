@@ -1,0 +1,6 @@
+pkg: com.zack.emojis
+name: Emojis
+repo: zacksimpson/emoji-tool
+category: utilities
+summary: A Emoji picker for LPIII that copies to the clipboard. Searchable by name
+  and keyword.
