@@ -1,0 +1,6 @@
+pkg: com.gios.lightsync
+name: BrightSync
+repo: gi-os/BrightSync
+category: utilities
+summary: IN DEV - Sync data and photos with local NAS every night, supports roll +
+  bright tools
