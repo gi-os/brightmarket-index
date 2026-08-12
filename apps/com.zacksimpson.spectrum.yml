@@ -1,0 +1,6 @@
+pkg: com.zacksimpson.spectrum
+name: Spectrum
+repo: zacksimpson/spectrum-tool
+category: utilities
+summary: A real-time audio frequency spectrum analyzer and decibel meter for the Light
+  Phone III.
