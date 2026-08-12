@@ -1,0 +1,5 @@
+pkg: com.zacksimpson.composer
+name: Composer
+repo: zacksimpson/composer-tool
+category: productivity
+summary: A lightweight, Markdown-supported notes tool for the Light Phone III.
