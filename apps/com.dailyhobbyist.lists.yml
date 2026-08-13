@@ -1,0 +1,6 @@
+pkg: com.dailyhobbyist.lists
+name: Lists
+repo: cmg-ops/LP3-Lists
+category: utilities
+summary: A nested list app for the Light Phone III - lists inside lists as deep as
+  you want, with checklists, and A/B/C priority sorting.
