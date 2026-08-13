@@ -1,0 +1,6 @@
+pkg: com.dailyhobbyist.stopwatch
+name: StopWatch
+repo: cmg-ops/LP3-StopWatch
+category: utilities
+summary: A stopwatch for the Light Phone III with laps, best/slowest lap tracking,
+  and a saved history of past sessions.
