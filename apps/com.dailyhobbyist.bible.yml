@@ -1,0 +1,6 @@
+pkg: com.dailyhobbyist.bible
+name: Bible
+repo: cmg-ops/LP3-Bible
+category: utilities
+summary: An offline Bible app for the Light Phone III - downloadable translations,
+  bookmarks, saved verses, and full-text search.
