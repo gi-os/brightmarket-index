@@ -2,4 +2,6 @@ pkg: com.gios.brightrecorder
 name: BrightRecorder
 repo: gi-os/BrightRecorder
 category: utilities
-summary: IN DEV
+summary: A tape recorder for moments. Recordings are filed by where you were and when,
+  and the brightness wheel winds through all of them as one continuous tape — forwards
+  or backwards, at any speed, audible as it goes. In development.
