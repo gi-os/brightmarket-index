@@ -16,6 +16,18 @@ on:
   repository_dispatch:
     types: [app-released]
   workflow_dispatch:
+    inputs:
+      seed_index:
+        description: >-
+          Recovery only. Path to a recovered index-v1.json to take firstSeen and the signer
+          pins from instead of the published one. Leave empty for every normal run.
+        required: false
+        default: ''
+      allow_shrink:
+        description: >-
+          Publish even if the app count collapses. Only for a deliberate mass removal.
+        required: false
+        default: ''
 
 # No contents:write any more -- this workflow no longer commits anything. It
 # deploys the built site straight to Pages, which is what stopped the repo
@@ -45,6 +57,9 @@ jobs:
       - name: Build index
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Both empty on every trigger except a hand-run recovery; see the inputs above.
+          SEED_INDEX: ${{ inputs.seed_index }}
+          ALLOW_SHRINK: ${{ inputs.allow_shrink }}
         run: python3 scripts/build_index.py
 
       # Everything the site serves, generated files included. Built fresh here

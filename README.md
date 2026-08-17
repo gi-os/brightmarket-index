@@ -41,3 +41,30 @@ see and is free to differ.
 **`firstSeen` and the signer pin are carried forward from the previous index,
 never recomputed.** Recomputing would reset the New sort every hour, and would make
 the signer pin meaningless — anyone able to push one release could clear it.
+
+## An app is never dropped for an answer the API failed to give
+
+Learned the hard way on 2026-08-17. The Releases API spent part of the afternoon returning
+empty lists — HTTP 200, no error, just `[]` — and the builder read that as "this app has no
+releases" and dropped it. An HTTP *error* had always kept the previous entry; a successful
+empty response did not. So the published index fell 46 → 4 → 3 across three green runs, each
+one carrying less history than the last, and because the index is deployed rather than
+committed, the history went with it. Nothing failed, nothing was flagged, and a person had to
+notice the store was nearly empty.
+
+Two things hold that line now:
+
+- **Carry forward, don't drop.** An app already in the index that suddenly reports no release
+  keeps its previous entry, and so does one whose latest release is malformed. Stale is a far
+  better failure than absent. The lookup is keyed on **repo, not pkg**, because before an APK
+  has been downloaded the only pkg available is the catalogue's — the one this README already
+  warns can be wrong.
+- **Refuse to publish a collapse.** A build that indexes less than 75% of what the published
+  index had exits non-zero and deploys nothing, so the site keeps serving the last good file
+  and the run goes red. `ALLOW_SHRINK=1` for a deliberate mass removal.
+
+Because the pins and dates live only in the published file, losing it loses them. The Pages
+artifact of each run keeps for 24 hours, which is the window in which that is recoverable:
+`recovery/` holds the last known-good index from that incident, and `build-index.yml` takes a
+`seed_index` input that rebuilds history from such a file instead of from the live site. Both
+exist for recovery and nothing else — a normal run must never set them.

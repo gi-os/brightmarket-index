@@ -49,6 +49,11 @@ if TOKEN:
 
 warnings: list[str] = []
 
+# See the collapse guard at the end of main(). A floor rather than a fixed count so it scales
+# with the catalogue, and a minimum so that the first few submissions are not fighting it.
+SHRINK_FLOOR = 0.75
+SHRINK_MIN = 10
+
 
 def warn(msg: str) -> None:
     warnings.append(msg)
@@ -285,6 +290,26 @@ def load_previous(path: str) -> tuple[dict, dict]:
     better failure.
     """
     apps = None
+
+    # One-time recovery hatch. When the published index has lost history -- as it did on
+    # 2026-08-17, when a Releases API degradation emptied it down to three apps and took every
+    # firstSeen with it -- there is nowhere left to carry those fields forward from, because the
+    # published file is the only place they live. Pointing this at a recovered copy (the Pages
+    # artifact of the last good run keeps for a day) restores them in a single run.
+    #
+    # Deliberately explicit and deliberately loud: it overrides the live index, which is the one
+    # thing that must never happen by accident. Passed per-run through workflow_dispatch, never
+    # set as a repository variable.
+    seed = os.environ.get("SEED_INDEX", "").strip()
+    if seed:
+        with open(seed) as f:
+            apps = json.load(f)["apps"]
+        warn(f"history seeded from {seed} ({len(apps)} apps), NOT from the published index")
+        return (
+            {a["pkg"]: a for a in apps},
+            {a["repo"].lower(): a for a in apps if a.get("repo")},
+        )
+
     try:
         req = urllib.request.Request(
             f"{PUBLISHED_INDEX}?t={int(datetime.datetime.now().timestamp())}",
@@ -354,8 +379,11 @@ def main() -> int:
             releases = get(f"{API}/repos/{repo}/releases?per_page=100")
         except urllib.error.HTTPError as e:
             warn(f"{pkg}: cannot read releases for {repo} ({e.code}) -- keeping previous entry")
-            if pkg in previous:
-                out.append(previous[pkg])
+            # carried first, for the same reason as the empty-list branch below: the catalogue's
+            # pkg can be wrong, and repo is the only key that is trustworthy before a download.
+            keep = carried or previous.get(pkg)
+            if keep:
+                out.append(keep)
             continue
 
         # Drafts and prereleases are never the default. A prerelease is now a
@@ -371,7 +399,29 @@ def main() -> int:
         apk_releases = [(r, assets) for r, assets in apk_releases if assets]
 
         if not apk_releases:
-            warn(f"{pkg}: {repo} has no published release with an .apk asset -- skipped")
+            # An app already in the index does not quietly stop having releases. When the API
+            # says it has none, that is far more often the API than the developer -- so the
+            # previous entry is kept and the listing survives, stale at worst.
+            #
+            # This asymmetry is what wiped the store on 2026-08-17. An HTTP error here already
+            # kept the previous entry (see above), but a *successful* response with an empty
+            # list was treated as "this app genuinely has no release" and dropped it. During a
+            # Releases API degradation every app got exactly that, so the published index fell
+            # 46 -> 4 -> 3 over a few hourly runs, each one carrying less history than the last.
+            # "The API told me nothing" and "there is nothing" are not the same answer.
+            # Keyed on repo first, not pkg. Nothing has been downloaded at this point, so the
+            # only pkg available is the catalogue's -- and that is exactly the one the file
+            # warns can be wrong. com.thelightphone.sdk is listed under a pkg its APK does not
+            # have, so a pkg-keyed lookup silently fails to find it and drops it anyway.
+            keep = carried or previous.get(pkg)
+            if keep:
+                warn(
+                    f"{pkg}: {repo} reports no published release with an .apk -- "
+                    "keeping previous entry"
+                )
+                out.append(keep)
+            else:
+                warn(f"{pkg}: {repo} has no published release with an .apk asset -- skipped")
             continue
 
         downloads = sum(a["download_count"] for _, assets in apk_releases for a in assets)
@@ -380,7 +430,14 @@ def main() -> int:
         if len(latest_assets) > 1:
             # Two APKs on one release is exactly how an updater ends up installing
             # a debug build with the wrong signature over the release one.
+            #
+            # The bad release is refused, but the app keeps its last good listing rather than
+            # disappearing from the store: the mistake is in one release, not in the app, and
+            # removing it would also take its firstSeen and its signer pin with it.
             warn(f"{pkg}: latest release has {len(latest_assets)} .apk assets -- skipped")
+            keep = carried or previous.get(pkg)
+            if keep:
+                out.append(keep)
             continue
         asset = latest_assets[0]
 
@@ -520,6 +577,32 @@ def main() -> int:
                 **({"preview": preview} if preview else {}),
             }
         )
+
+    # Refuse to publish a collapse.
+    #
+    # The carry-forward above should make this unreachable, which is the point of having it: it
+    # is the backstop for the next failure nobody predicted, not for the one that already
+    # happened. On 2026-08-17 the index shrank 46 -> 4 -> 3 across three green runs and nothing
+    # said a word; the store was broken for hours and a person had to notice. A failed run leaves
+    # the last good site deployed and puts a red mark in the Actions list, which is the outcome
+    # that was wanted all along -- the same reasoning load_previous already applies to missing
+    # history: a stale site for fifteen minutes is the far better failure.
+    #
+    # A removal takes one app at a time, so the floor only has to clear ordinary churn. Set
+    # ALLOW_SHRINK=1 for a deliberate mass removal.
+    if len(previous) >= SHRINK_MIN and len(out) < len(previous) * SHRINK_FLOOR:
+        lost = sorted(set(previous) - {a["pkg"] for a in out})
+        if os.environ.get("ALLOW_SHRINK") != "1":
+            raise SystemExit(
+                f"FATAL: this build indexed {len(out)} apps, down from {len(previous)} in the "
+                f"published index -- more than the {int((1 - SHRINK_FLOOR) * 100)}% drop this "
+                f"refuses to publish.\n"
+                f"Missing: {', '.join(lost)}\n"
+                "Nothing has been deployed, so the site still serves the previous index. Read "
+                "the warnings above: an upstream outage is the usual cause and the next run "
+                "normally recovers on its own. Set ALLOW_SHRINK=1 for a deliberate removal."
+            )
+        warn(f"publishing a {len(previous)} -> {len(out)} shrink because ALLOW_SHRINK=1")
 
     doc = {
         "format": 1,
