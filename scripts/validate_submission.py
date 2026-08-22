@@ -63,6 +63,99 @@ def field(body: str, label: str) -> str:
     return m.group(1).strip() if m else ""
 
 
+ADB_MODES = {"allow", "deny", "ignore", "default"}
+
+_PKG = r"[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z0-9_]+)+"
+_CLS = r"[A-Za-z0-9_.$]+"
+
+ADB_FORMS = (
+    re.compile(rf"^pm grant ({_PKG}) ([A-Za-z0-9_.]+)$"),
+    re.compile(rf"^appops set ({_PKG}) ([A-Za-z0-9_]+) ([A-Za-z]+)$"),
+    re.compile(rf"^cmd notification allow_listener ({_PKG})/({_CLS})$"),
+    re.compile(rf"^(?:enable )?accessibility(?: service)? ({_PKG})/({_CLS})$", re.I),
+)
+
+
+def normalize_adb(line: str) -> str:
+    """Strip the parts of a README line that are about running it from a computer.
+
+    `adb shell pm grant ...` and `pm grant ...` are the same request, and so is a line pasted
+    with a `$` prompt or wrapped in backticks. Whitespace collapses first: a line copied out of
+    a README can carry `adb  shell` with two spaces, and peeling prefixes before normalising the
+    spacing leaves a stray `shell` on the front.
+    """
+    s = " ".join(line.split())
+    # Peeled until nothing changes, rather than in one pass: the decorations nest and interleave
+    # in whatever order the person pasting them happened to produce -- `` `adb shell ...`; ``
+    # has a semicolon outside the backticks, so stripping backticks once leaves both.
+    while True:
+        before = s
+        s = s.strip().strip("`").strip().rstrip(";").strip()
+        if s == "$":
+            return ""
+        for prefix in ("$ ", "adb ", "shell "):
+            if s.startswith(prefix):
+                s = s[len(prefix):]
+                break
+        s = " ".join(s.split())
+        if s == before:
+            return s
+
+
+def parse_adb(raw: str, pkg: str) -> list[str]:
+    """The ADB setup a submitter asked for, checked against the app they actually shipped.
+
+    Two gates, and the second is the one that matters:
+
+    1. **A known shape.** Only a permission, an app op, a notification listener or an
+       accessibility service. Anything else is refused rather than carried, so the catalogue
+       cannot come to hold `pm install` or a `settings put` that overwrites a system-wide value.
+    2. **Their own package, checked against the APK.** `pkg` here was read out of the uploaded
+       APK, not typed into the form, so a submitter cannot ask for a grant on somebody else's
+       app -- which is the whole attack this field would otherwise open. BrightControl checks
+       this again before running anything, but a bad line should never reach the catalogue in
+       the first place.
+
+    Commas separate commands, which is what the portal asks for. A command in any of the forms
+    above cannot contain one.
+    """
+    out: list[str] = []
+    for piece in raw.split(","):
+        line = normalize_adb(piece)
+        if not line:
+            continue
+        for form in ADB_FORMS:
+            m = form.match(line)
+            if not m:
+                continue
+            if m.group(1) != pkg:
+                raise Reject(
+                    f"`{piece.strip()}` names `{m.group(1)}`, but this submission is for "
+                    f"`{pkg}`. An app can only ask for setup on itself."
+                )
+            if form is ADB_FORMS[1] and m.group(3).lower() not in ADB_MODES:
+                raise Reject(
+                    f"`{piece.strip()}` — an app op mode has to be one of: "
+                    f"{', '.join(sorted(ADB_MODES))}."
+                )
+            out.append(line if line.startswith("accessibility") else f"adb shell {line}")
+            break
+        else:
+            raise Reject(
+                f"I can't accept `{piece.strip()}`. ADB setup can only be a permission "
+                f"(`pm grant`), an app op (`appops set`), a notification listener "
+                f"(`cmd notification allow_listener`) or an accessibility service "
+                f"(`accessibility {pkg}/.YourService`). Anything else has to be done by hand."
+            )
+    # Order is kept as written; duplicates are not, since running one twice does nothing.
+    seen, unique = set(), []
+    for c in out:
+        if c not in seen:
+            seen.add(c)
+            unique.append(c)
+    return unique
+
+
 def parse_issue(body: str) -> dict:
     """Pull the request out of either the issue-form rendering or the portal's
     plain `**Repo:** <url>` format.
@@ -98,6 +191,7 @@ def parse_issue(body: str) -> dict:
         "category": category,
         "name": field(body, "Name"),
         "summary": field(body, "Summary"),
+        "adb": field(body, "ADB"),
     }
 
 
@@ -277,6 +371,11 @@ def main() -> int:
                 if value and value != match.get(key):
                     changed.append(f"{key}: `{match.get(key)}` → `{value}`")
                     match[key] = value
+            if req.get("adb"):
+                adb = parse_adb(req["adb"], match["pkg"])
+                if adb != match.get("adb", []):
+                    changed.append(f"adb: {len(adb)} command(s)")
+                    match["adb"] = adb
             if not changed:
                 raise Reject("Nothing in that request differs from what's already listed.")
             summary = f"Updated **{match['name']}** — " + "; ".join(changed)
@@ -303,6 +402,11 @@ def main() -> int:
                 "category": req["category"],
                 "summary": req["summary"] or info["summary"],
             }
+            # Checked against the applicationId read out of the APK, so a submitter can only
+            # ask for grants on the app they actually shipped.
+            adb = parse_adb(req["adb"], info["pkg"])
+            if adb:
+                entry["adb"] = adb
             write_entry(os.path.join(apps_dir, slug(info["pkg"])), entry)
             summary = (
                 f"Validated **{req['name'] or info['name']}** (`{info['pkg']}`) — latest "

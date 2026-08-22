@@ -174,7 +174,7 @@ async function handleExchange(request, env, cors) {
 // then files the issue with SUBMIT_PAT, a credential the browser never sees.
 // ---------------------------------------------------------------------------
 async function handleSubmit(request, env, cors) {
-  const { session, repo, category } = await request.json();
+  const { session, repo, category, name, summary, adb } = await request.json();
   if (!session || !repo || !category) {
     return json({ error: "missing session, repo, or category" }, 400, cors);
   }
@@ -192,9 +192,22 @@ async function handleSubmit(request, env, cors) {
     return json({ error: "that repo isn't in your verified, owned repo list" }, 403, cors);
   }
 
+  // One line each, newlines stripped. The validator reads these as `**Label:** value`
+  // anchored to a line, so a value carrying its own newline could otherwise write a field
+  // the submitter never chose -- a summary containing "**Category:** hardware", say.
+  const oneLine = (v, max) => String(v ?? "").replace(/[\r\n]+/g, " ").trim().slice(0, max);
+
   const body = [
     `**Repo:** https://github.com/${repo}`,
     `**Category:** ${category}`,
+    // Name and Summary were collected by the portal and then dropped here, so the
+    // validator read two fields that were never written and every listing fell back to
+    // the repo's own name and description.
+    ...(oneLine(name, 40) ? [`**Name:** ${oneLine(name, 40)}`] : []),
+    ...(oneLine(summary, 140) ? [`**Summary:** ${oneLine(summary, 140)}`] : []),
+    // Checked properly on the validator side, against the applicationId read out of the
+    // APK. Carried verbatim here so the issue shows exactly what was asked for.
+    ...(oneLine(adb, 600) ? [`**ADB:** ${oneLine(adb, 600)}`] : []),
     `**Submitted by:** @${claims.login} (verified via GitHub OAuth, ownership confirmed server-side)`,
   ].join("\n");
 

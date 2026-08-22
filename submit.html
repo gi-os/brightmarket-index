@@ -309,6 +309,19 @@
       <input id="summary-input" type="text" maxlength="140" placeholder="What it does, in a sentence" autocomplete="off" />
       <div class="count" id="summary-count">0 / 140</div>
 
+      <!-- Apps that need a grant LightOS has no settings screen for. BrightControl
+           runs these on the phone so nobody has to find a computer, which is why
+           they are worth collecting here rather than leaving in a README. -->
+      <label for="adb-input">ADB setup <span class="opt">optional — separate commands with commas</span></label>
+      <input id="adb-input" type="text" maxlength="600" placeholder="adb shell pm grant your.app.id android.permission.WRITE_SECURE_SETTINGS" autocomplete="off" spellcheck="false" />
+      <div class="count" id="adb-help">
+        Only these four, and each must name your own app: <code>pm grant</code>,
+        <code>appops set</code>, <code>cmd notification allow_listener</code>, and
+        <code>accessibility your.app.id/.YourService</code> to switch on an
+        accessibility service. Anything else is rejected. Your app's page will
+        offer these as one button, and the phone shows them before running them.
+      </div>
+
       <button id="submit-btn" style="margin-top: calc(var(--unit) * 2.5);">
         <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5">
           <path d="M5 12h14M13 6l6 6-6 6"/>
@@ -517,6 +530,7 @@
           category: el("category-select").value,
           name: el("name-input").value,
           summary: el("summary-input").value,
+          adb: el("adb-input").value,
         }),
       });
       const data = await res.json();
