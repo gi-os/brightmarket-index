@@ -1,0 +1,6 @@
+pkg: com.lightphone.passes
+name: Passes
+repo: fenleon/passes
+category: utilities
+summary: Store and show QR codes, boarding passes, library cards, memberships, on
+  the Light Phone III.
