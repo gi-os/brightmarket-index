@@ -3,3 +3,5 @@ name: BrightNotebook
 repo: gi-os/BrightNotebook
 category: productivity
 summary: Notes and a calendar, with your day gathered in one place.
+adb:
+  - adb shell appops set com.gios.lightnotebook SYSTEM_ALERT_WINDOW allow

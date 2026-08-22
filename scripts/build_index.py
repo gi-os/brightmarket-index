@@ -566,6 +566,15 @@ def main() -> int:
                 # its history but shouldn't be installed fresh.
                 "deprecated": bool(app.get("deprecated", False)),
                 "supersededBy": app.get("supersededBy", ""),
+                # ADB setup this app needs, as its README writes it. Carried
+                # through verbatim: BrightMarket shows the same words to the
+                # person approving them, and BrightControl re-parses every line
+                # and rebuilds the command pinned to this package rather than
+                # running what it was handed. Hand-maintained, like name and
+                # summary -- the builder cannot read a README and know which
+                # lines are setup and which are examples.
+                **({"adb": [str(c) for c in app["adb"] if str(c).strip()]}
+                   if app.get("adb") else {}),
                 "screenshots": screenshots,
                 "shotsChecked": shots_checked,
                 "downloads": downloads,

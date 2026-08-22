@@ -4,3 +4,6 @@ repo: gi-os/BrightChat
 upstream: craigeley/chat
 category: utilities
 summary: iMessage over a self-hosted BlueBubbles server.
+adb:
+  - adb shell appops set com.gios.lightchat SYSTEM_ALERT_WINDOW allow
+  - adb shell pm grant com.gios.lightchat android.permission.WRITE_SECURE_SETTINGS

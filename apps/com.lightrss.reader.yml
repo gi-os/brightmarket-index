@@ -4,3 +4,5 @@ repo: gi-os/BrightNews
 upstream: zachattack323/LightRSS
 category: reading
 summary: RSS, Atom and Gmail newsletters in one reader.
+adb:
+  - adb shell pm grant com.lightrss.reader android.permission.WRITE_SECURE_SETTINGS

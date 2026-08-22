@@ -4,3 +4,7 @@ repo: gi-os/BrightMusic
 upstream: jonathancaudill/phono
 category: media
 summary: Spotify, NTSradio + Radio, Podcasts + more! Forked from Jonathancaudill/phono
+adb:
+  - adb shell appops set com.lightphone.spotify GET_USAGE_STATS allow
+  - adb shell appops set com.lightphone.spotify SYSTEM_ALERT_WINDOW allow
+  - adb shell pm grant com.lightphone.spotify android.permission.WRITE_SECURE_SETTINGS

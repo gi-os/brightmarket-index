@@ -4,3 +4,5 @@ repo: gi-os/BrightLibrary
 upstream: fluffyspace/FastRead
 category: reading
 summary: EPUB, comics and Calibre, with a cover shelf and a page view.
+adb:
+  - adb shell pm grant com.lightfastread android.permission.WRITE_SECURE_SETTINGS

@@ -3,3 +3,5 @@ name: BrightWay
 repo: gi-os/BrightWay
 category: utilities
 summary: Walking and subway directions, text-first — one big instruction, the wheel scrolls the trip.
+adb:
+  - adb shell pm grant com.gios.brightway android.permission.WRITE_SECURE_SETTINGS

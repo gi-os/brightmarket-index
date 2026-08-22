@@ -3,3 +3,5 @@ name: BrightPasses
 repo: gi-os/BrightPasses
 category: utilities
 summary: Photograph a ticket, keep the stub.
+adb:
+  - adb shell pm grant com.gios.lightpass android.permission.WRITE_SECURE_SETTINGS
