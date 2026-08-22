@@ -1,0 +1,5 @@
+pkg: com.lightphone.audiobooks
+name: Audiobooks
+repo: fenleon/audiobooks
+category: media
+summary: A local audiobook player for the Light Phone III
