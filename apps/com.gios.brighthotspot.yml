@@ -1,0 +1,6 @@
+pkg: com.gios.brighthotspot
+name: BrightHotspot
+repo: gi-os/BrightHotspot
+category: utilities
+summary: 'Instant-Hotspot clone for the Light Phone III: wakes the phone hotspot when
+  a paired iPad is near.'
