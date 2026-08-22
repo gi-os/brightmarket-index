@@ -38,7 +38,11 @@ const SESSION_TTL_SECONDS = 10 * 60; // the signed session is only good for 10 m
  * a guess -- which is what made the empty-repo-list bug take two rounds to
  * pin down.
  */
-const VERSION = "3-public-repos-endpoint";
+// Bumped on every change to this file. /health reports it, and the deploy workflow refuses to
+// go green until the running worker answers with the string that is in the source -- which is
+// the check that would have caught the ADB, Name and Summary fields shipping to a bundle that
+// was never redeployed.
+const VERSION = "4-adb-field";
 
 export default {
   async fetch(request, env) {

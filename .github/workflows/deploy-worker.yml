@@ -1,0 +1,70 @@
+name: Deploy worker
+
+# The submission portal is the one server-side piece in BrightMarket, and until now the only
+# way to ship a change to it was to remember to run `wrangler deploy` by hand. Twice now a
+# worker.js change sat merged and dead on main -- the form kept posting to the old bundle, so
+# fields that existed in the source arrived empty in the issue. Nothing in CI said so, because
+# nothing in CI knew the worker existed.
+#
+# Now a push that touches worker/ deploys it. Secrets live on Cloudflare's side and survive a
+# deploy, so this only ever ships code: OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, SESSION_SECRET
+# and SUBMIT_PAT stay exactly as `wrangler secret put` left them.
+on:
+  push:
+    branches: [main]
+    paths: ['worker/**']
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # A missing token is the expected state until the secret is added, and it is not a
+      # failure worth a red X on every push -- the job says what is missing and stops.
+      - name: Check for a Cloudflare token
+        id: gate
+        env:
+          TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "have=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::No CLOUDFLARE_API_TOKEN secret set, so the worker was not deployed."
+            echo "Add one at Settings > Secrets and variables > Actions."
+            echo "Create the token at dash.cloudflare.com > My Profile > API Tokens,"
+            echo "using the 'Edit Cloudflare Workers' template."
+          else
+            echo "have=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Deploy
+        if: steps.gate.outputs.have == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          workingDirectory: worker
+
+      # A deploy reports success as soon as Cloudflare accepts the upload, which is not the
+      # same as the running bundle being the new one. worker.js carries a VERSION string and
+      # /health reports it, so ask the live worker which bundle is actually answering and
+      # compare it to the source that was just pushed. This is the check that would have caught
+      # the ADB, Name and Summary fields living in a bundle nobody had redeployed.
+      - name: Verify the running bundle is the one we just pushed
+        if: steps.gate.outputs.have == 'true'
+        run: |
+          URL=$(grep -oE 'https://[a-z0-9.-]+\.workers\.dev' submit.html | head -1)
+          WANT=$(grep -oE 'const VERSION = "[^"]+"' worker/worker.js | sed -E 's/.*"([^"]+)".*/\1/')
+          echo "expecting $WANT at $URL"
+
+          # Cloudflare's edge takes a moment to pick up a new bundle.
+          for i in 1 2 3 4 5 6; do
+            GOT=$(curl -s --max-time 20 "$URL/health" \
+              | python3 -c 'import json,sys; print(json.load(sys.stdin).get("version",""))' 2>/dev/null || true)
+            echo "attempt $i: $GOT"
+            [ "$GOT" = "$WANT" ] && { echo "live worker is $GOT"; exit 0; }
+            sleep 10
+          done
+
+          echo "::error::worker still reports '$GOT', expected '$WANT'. Either the deploy did not take, or VERSION in worker.js was not bumped for this change."
+          exit 1

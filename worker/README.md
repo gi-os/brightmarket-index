@@ -27,12 +27,33 @@ rejected.
 
 ## Deploying
 
+**Normally you don't.** A push to `main` that touches `worker/` deploys it —
+see `.github/workflows/deploy-worker.yml`. It needs one repo secret,
+`CLOUDFLARE_API_TOKEN`, made from the "Edit Cloudflare Workers" template at
+dash.cloudflare.com → My Profile → API Tokens. Without that secret the job
+warns and skips rather than failing.
+
+**Bump `VERSION` in `worker.js` with every change.** `/health` reports it and
+the workflow refuses to go green until the live worker answers with the string
+that is in the source. That check exists because the ADB, Name and Summary
+fields once sat merged on `main` for a day while the form kept posting to an
+older bundle, and nothing anywhere said so.
+
+By hand, if you need to:
+
+```bash
+cd worker && wrangler deploy
+```
+
+Secrets live on Cloudflare and survive a deploy, so that is the whole command.
+The four `wrangler secret put` lines below are **first-time setup only** — they
+have already been run:
+
 ```bash
 wrangler secret put OAUTH_CLIENT_ID       # Ov23liUz650T0P6VGU5B
 wrangler secret put OAUTH_CLIENT_SECRET   # from the OAuth App, shown once
 wrangler secret put SESSION_SECRET        # openssl rand -hex 32
 wrangler secret put SUBMIT_PAT            # fine-grained PAT, see above
-wrangler deploy
 ```
 
 Then put the deployed URL into `WORKER_URL` at the top of `../submit.html`.
