@@ -1,0 +1,5 @@
+pkg: com.thelightphone.radio
+name: Radio
+repo: fenleon/radio-tool
+category: media
+summary: An online Radio Player for the Light Phone III
