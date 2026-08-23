@@ -75,6 +75,14 @@ ADB_FORMS = (
     re.compile(rf"^(?:enable )?accessibility(?: service)? ({_PKG})/({_CLS})$", re.I),
 )
 
+# The one form that names no package, so it is checked separately below.
+#
+# Everything above is "do X to yourself" and is validated by comparing a package name. This is
+# "start somebody else's service", so there is no package to compare and the safety comes from
+# the shape instead: it is a verb, not a command. BrightControl writes the actual shell line, and
+# a request carrying a path, an argument or a second command does not match this and is refused.
+SHIZUKU_FORM = re.compile(r"^(?:start|run) shizuku$", re.I)
+
 
 def normalize_adb(line: str) -> str:
     """Strip the parts of a README line that are about running it from a computer.
@@ -124,6 +132,11 @@ def parse_adb(raw: str, pkg: str) -> list[str]:
         line = normalize_adb(piece)
         if not line:
             continue
+        if SHIZUKU_FORM.match(line):
+            # Normalised to one spelling so the index carries a verb rather than whichever of
+            # "run shizuku" / "Start Shizuku" the README happened to use.
+            out.append("start shizuku")
+            continue
         for form in ADB_FORMS:
             m = form.match(line)
             if not m:
@@ -144,8 +157,9 @@ def parse_adb(raw: str, pkg: str) -> list[str]:
             raise Reject(
                 f"I can't accept `{piece.strip()}`. ADB setup can only be a permission "
                 f"(`pm grant`), an app op (`appops set`), a notification listener "
-                f"(`cmd notification allow_listener`) or an accessibility service "
-                f"(`accessibility {pkg}/.YourService`). Anything else has to be done by hand."
+                f"(`cmd notification allow_listener`), an accessibility service "
+                f"(`accessibility {pkg}/.YourService`) or `start shizuku`. Anything else has "
+                f"to be done by hand."
             )
     # Order is kept as written; duplicates are not, since running one twice does nothing.
     seen, unique = set(), []

@@ -4,3 +4,9 @@ repo: gi-os/BrightHotspot
 category: utilities
 summary: 'Instant-Hotspot clone for the Light Phone III: wakes the phone hotspot when
   a paired iPad is near.'
+adb:
+  # Not a grant on this app -- the one thing it needs a shell for is somebody else's service.
+  # Raising the hotspot is signature|privileged since Android 11, so it goes through Shizuku, and
+  # Shizuku's own way in is the wireless-debugging pairing flow that Android tears down on every
+  # reboot. BrightControl already holds an adb shell; this asks it to run the one line.
+  - start shizuku
