@@ -27,7 +27,7 @@
 //   SUBMIT_PAT            -- fine-grained PAT, brightmarket-index only, Issues:write only
 //
 // Required Worker vars (not secret, fine in wrangler.toml):
-//   ALLOWED_ORIGIN         -- the exact GitHub Pages origin, e.g. https://gi-os.github.io
+//   ALLOWED_ORIGIN         -- the exact origin the portal is served from, e.g. https://brightmarket.gzl.dev
 //   SUBMIT_REPO            -- "gi-os/brightmarket-index"
 
 const SESSION_TTL_SECONDS = 10 * 60; // the signed session is only good for 10 minutes
@@ -42,7 +42,7 @@ const SESSION_TTL_SECONDS = 10 * 60; // the signed session is only good for 10 m
 // go green until the running worker answers with the string that is in the source -- which is
 // the check that would have caught the ADB, Name and Summary fields shipping to a bundle that
 // was never redeployed.
-const VERSION = "4-adb-field";
+const VERSION = "5-custom-domain-origin";
 
 export default {
   async fetch(request, env) {
