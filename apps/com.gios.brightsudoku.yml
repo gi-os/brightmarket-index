@@ -1,0 +1,5 @@
+pkg: com.gios.brightsudoku
+name: BrightSudoku
+repo: gi-os/BrightSudoku
+category: games
+summary: Sudoku where every puzzle is proven to have one answer and need no guessing.
