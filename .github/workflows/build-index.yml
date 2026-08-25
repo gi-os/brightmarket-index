@@ -10,7 +10,16 @@ on:
     - cron: '7,22,37,52 * * * *'
   push:
     branches: [main]
-    paths: ['apps/**', 'scripts/build_index.py', 'icons/**']
+    # The pages themselves are here too. This workflow is what deploys the site,
+    # so a filter that lists only the data meant an edit to submit.html or
+    # browse.html sat on main until the next scheduled run happened to carry it
+    # -- fifteen minutes of a fix looking like it had not worked.
+    paths:
+      - 'apps/**'
+      - 'scripts/build_index.py'
+      - 'icons/**'
+      - 'assets/**'
+      - '*.html'
   # Bright app repos POST here on release so the index updates in seconds
   # rather than waiting up to an hour.
   repository_dispatch:
