@@ -1,0 +1,4 @@
+# The Pages job publishes `path: .`, so anything committed here is served
+# publicly. Byte-compiled scripts were, for months.
+__pycache__/
+*.pyc

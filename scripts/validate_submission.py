@@ -40,6 +40,24 @@ if os.environ.get("GH_TOKEN"):
 
 VALID_CATEGORIES = {"reading", "utilities", "games", "media", "productivity", "hardware"}
 
+# The display name is free text from the issue body, and it does not stay text:
+# it is written into a YAML file, into a PR title, and into a `git commit -m`
+# in a job holding contents:write. Unlike `category` it had nothing checking it
+# at all, so `$(...)` in a Name field executed in CI. Letters (any script),
+# digits, spaces, dots and hyphens -- everything a real app is called, and
+# nothing a shell or a YAML parser treats as syntax.
+NAME_RE = re.compile(r"[\w .\-]{1,60}", re.UNICODE)
+
+# The summary is only ever data, but it is data written into YAML that the
+# published index carries, so it gets a length bound rather than a shape.
+SUMMARY_MAX = 200
+
+# Refuse to pull an arbitrarily large file into memory over an unauthenticated
+# URL. The releases API already told us how big the asset is, so the check is
+# free; the read is bounded as well, because the size field is the submitter's
+# server's word rather than a fact.
+MAX_APK_BYTES = 200 * 1024 * 1024
+
 
 class Reject(Exception):
     pass
@@ -199,12 +217,29 @@ def parse_issue(body: str) -> dict:
     if action == "submit" and not category:
         raise Reject(f"No category found. Pick one of: {', '.join(sorted(VALID_CATEGORIES))}.")
 
+    # Both are optional -- a submission that names neither falls back to the
+    # repo's own name and description -- so an empty one is not a rejection.
+    # A present one has to be something an app is plausibly called.
+    name = field(body, "Name")
+    if name and not NAME_RE.fullmatch(name):
+        raise Reject(
+            f"`{name}` isn't usable as an app name. Names can be up to 60 characters of "
+            "letters, digits, spaces, dots, underscores and hyphens — nothing else."
+        )
+
+    summary = field(body, "Summary")
+    if len(summary) > SUMMARY_MAX:
+        raise Reject(
+            f"That summary is {len(summary)} characters. Keep it under {SUMMARY_MAX} — it has "
+            "to fit on a phone screen."
+        )
+
     return {
         "action": action,
         "repo": repo_m.group(1).removesuffix(".git"),
         "category": category,
-        "name": field(body, "Name"),
-        "summary": field(body, "Summary"),
+        "name": name,
+        "summary": summary,
         "adb": field(body, "ADB"),
     }
 
@@ -244,9 +279,22 @@ def validate(repo: str) -> dict:
     # rather than trusting anything they typed. AndroidManifest.xml inside an APK is
     # binary XML, but the applicationId appears verbatim in the string pool, so a
     # targeted scan avoids needing aapt2 (which is x86_64-only and awkward in CI).
+    size = apks[0].get("size") or 0
+    if size > MAX_APK_BYTES:
+        raise Reject(
+            f"`{apks[0]['name']}` is {size // (1024 * 1024)} MB. BrightMarket won't index an "
+            f"APK over {MAX_APK_BYTES // (1024 * 1024)} MB — it has to download onto a phone."
+        )
     req = urllib.request.Request(apks[0]["browser_download_url"], headers=HEADERS)
     with urllib.request.urlopen(req, timeout=300) as r:
-        blob = r.read()
+        # One byte past the cap, so a release whose asset metadata understates the
+        # real file still cannot fill the runner's memory.
+        blob = r.read(MAX_APK_BYTES + 1)
+    if len(blob) > MAX_APK_BYTES:
+        raise Reject(
+            f"`{apks[0]['name']}` is larger than {MAX_APK_BYTES // (1024 * 1024)} MB. "
+            "BrightMarket won't index an APK that big — it has to download onto a phone."
+        )
     try:
         with zipfile.ZipFile(io.BytesIO(blob)) as z:
             manifest = z.read("AndroidManifest.xml")

@@ -18,15 +18,37 @@ permissions:
 
 jobs:
   validate:
-    # Also ignores label events for anything other than 'submission', so adding
-    # 'edit' or 'remove' alongside it isn't a second trigger.
+    # Three conjuncts, and the first one is the load-bearing one:
+    #
+    # 1. The issue's author. The `submission` label is applied automatically by
+    #    .github/ISSUE_TEMPLATE/submit-app.yml to anything filed from the public
+    #    template, so the label proves nothing about who filed it -- and this job
+    #    holds contents:write and runs a `remove` action that deletes an indexed
+    #    app's file and pushes that to main. Anyone with a GitHub account could
+    #    have deleted any listing in the catalogue.
+    #
+    #    The submission portal does not file as the submitter: worker/worker.js
+    #    creates the issue with SUBMIT_PAT, a fine-grained PAT belonging to
+    #    `gi-os`, so every legitimate submission arrives authored by `gi-os`
+    #    (verified against every existing `submission`-labelled issue on this
+    #    repo). github.repository_owner is that same login, and writing it that
+    #    way means a rename of the org can't silently reopen the hole.
+    #
+    #    A hand-filed issue from anyone else now runs nothing. That is intended:
+    #    the portal is the supported route, and it proves repo ownership over
+    #    OAuth before it ever files.
+    #
+    # 2/3. Unchanged -- ignores label events for anything other than
+    #    'submission', so adding 'edit' or 'remove' alongside it isn't a second
+    #    trigger.
     if: >-
+      github.event.issue.user.login == github.repository_owner &&
       contains(github.event.issue.labels.*.name, 'submission') &&
       (github.event.action != 'labeled' || github.event.label.name == 'submission')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: '3.12'
       # pyaxmlparser reads the applicationId out of the binary manifest; the
@@ -51,6 +73,15 @@ jobs:
       # has looked at entering a list people install software from.
       - name: Apply an edit or removal directly
         if: steps.validate.outputs.status == 'pass' && steps.validate.outputs.action != 'submit'
+        # NAME is free text out of the issue body. ${{ }} is substituted into the
+        # script text before bash ever sees it, so interpolating it directly into
+        # this `git commit -m "..."` handed anyone who could file a submission a
+        # $(...) that ran with contents:write, issues:write and pull-requests:write.
+        # Through env it arrives as data in a variable and bash never parses it.
+        env:
+          ACTION: ${{ steps.validate.outputs.action }}
+          NAME: ${{ steps.validate.outputs.name }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           git config user.name  "brightmarket-bot"
           git config user.email "bot@users.noreply.github.com"
@@ -58,13 +89,13 @@ jobs:
           if git diff --staged --quiet; then
             echo "nothing changed"
           else
-            git commit -m "index: ${{ steps.validate.outputs.action }} ${{ steps.validate.outputs.name }} (closes #${{ github.event.issue.number }})"
+            git commit -m "index: $ACTION $NAME (closes #$ISSUE_NUMBER)"
             git push
           fi
 
       - name: Close the request
         if: steps.validate.outputs.status == 'pass' && steps.validate.outputs.action != 'submit'
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7.1.0
         with:
           script: |
             await github.rest.issues.update({
@@ -74,7 +105,12 @@ jobs:
 
       - name: Open PR
         if: steps.validate.outputs.status == 'pass' && steps.validate.outputs.action == 'submit'
-        uses: peter-evans/create-pull-request@v6
+        # These are `with:` inputs, not a shell script: the action receives them
+        # as INPUT_* and never passes them through a shell, so there is no
+        # command substitution to reach here. `name` is additionally bounded to
+        # ^[\w .\-]{1,60}$ by scripts/validate_submission.py, and `pkg` (which
+        # becomes a branch name) is read out of the APK rather than typed.
+        uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c # v6.1.0
         with:
           # One branch per app per action, so an edit and a removal for the same
           # app don't overwrite each other's branch.
@@ -101,7 +137,7 @@ jobs:
       # run posted the actual reason. Two comments, the first of them wrong.
       - name: Comment the result
         if: ${{ !cancelled() }}
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7.1.0
         env:
           STATUS: ${{ steps.validate.outputs.status }}
           REASON: ${{ steps.validate.outputs.reason }}
