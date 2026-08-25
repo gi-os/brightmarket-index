@@ -1,0 +1,5 @@
+pkg: com.gios.brightoura
+name: BrightOura
+repo: gi-os/BrightOura
+category: hardware
+summary: Reads your Oura ring straight off the ring over Bluetooth — no account, no cloud, nothing leaves the phone.
