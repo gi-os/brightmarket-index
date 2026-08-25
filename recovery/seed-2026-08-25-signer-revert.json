@@ -1,0 +1,2200 @@
+{
+ "format": 1,
+ "generated": "2026-08-25T19:00:58.883101+00:00",
+ "apps": [
+  {
+   "pkg": "app.lightphonekeyboard",
+   "name": "LightKeyboard",
+   "repo": "gi-os/LightKeyboard",
+   "category": "hardware",
+   "summary": "A fork of the Light Phone keyboard, adding swipe typing and autocorrect from a bundled dictionary. Works offline.",
+   "upstream": "adam-weber/light-keyboard",
+   "latest": {
+    "version": "1.0.27",
+    "versionCode": 27,
+    "apk": "https://github.com/gi-os/LightKeyboard/releases/download/v1.0.27/LightKeyboard-v1.0.27.apk",
+    "size": 11183479,
+    "sha256": "26fb19263065f73f24a9ac0ddd3ddaa8a06275a2caa3341f6f40cfd01fa3af21",
+    "published": "2026-08-25T00:19:58Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/LightKeyboard/compare/v1.0.25...v1.0.27"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 147,
+   "firstSeen": "2026-08-06",
+   "signer": "7844d8cc52fc12b5a2b5879b028605d90391a0a06cc4d87ef92a59350226d203"
+  },
+  {
+   "pkg": "com.dailyhobbyist.bible",
+   "name": "Bible",
+   "repo": "cmg-ops/LP3-Bible",
+   "category": "utilities",
+   "summary": "An offline Bible app for the Light Phone III - downloadable translations, bookmarks, saved verses, and full-text search.",
+   "upstream": "",
+   "latest": {
+    "version": "2.0",
+    "versionCode": 13,
+    "apk": "https://github.com/cmg-ops/LP3-Bible/releases/download/v2.0/tool-debug.apk",
+    "size": 74739955,
+    "sha256": "555025a296b8ca0da8483ddc2ccf360129d220b29302835e5dcc6b83095b707f",
+    "published": "2026-07-19T20:50:32Z",
+    "notes": "Bible on the LP3. Trying to keep it simple.\r\n"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 21,
+   "firstSeen": "2026-08-13",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
+  },
+  {
+   "pkg": "com.dailyhobbyist.lists",
+   "name": "Lists",
+   "repo": "cmg-ops/LP3-Lists",
+   "category": "utilities",
+   "summary": "A nested list app for the Light Phone III - lists inside lists as deep as you want, with checklists, and A/B/C priority sorting.",
+   "upstream": "",
+   "latest": {
+    "version": "V29",
+    "versionCode": 29,
+    "apk": "https://github.com/cmg-ops/LP3-Lists/releases/download/V29/tool-debug.apk",
+    "size": 81670941,
+    "sha256": "2c03f66555c8b1527d2f262341fa1147962404c15f201880eb04a0a7ad987f3d",
+    "published": "2026-07-28T13:59:08Z",
+    "notes": "V29, Nested lists for everything \u2014 groceries, projects, ideas inside ideas.\r\n\r\n"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 12,
+   "firstSeen": "2026-08-13",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28",
+   "preview": {
+    "version": "22",
+    "versionCode": 22,
+    "apk": "https://github.com/cmg-ops/LP3-Lists/releases/download/v22/tool-debug.apk",
+    "size": 75488231,
+    "sha256": "3e7d8b140c495c66a6b8e8d118ea616e6d36f7c8bebd77051a5966fd1a1e1399",
+    "published": "2026-07-19T20:46:59Z",
+    "notes": "Nested lists for everything \u2014 groceries, projects, ideas inside ideas.\r\n"
+   }
+  },
+  {
+   "pkg": "com.dailyhobbyist.stopwatch",
+   "name": "StopWatch",
+   "repo": "cmg-ops/LP3-StopWatch",
+   "category": "utilities",
+   "summary": "A stopwatch for the Light Phone III with laps, best/slowest lap tracking, and a saved history of past sessions.",
+   "upstream": "",
+   "latest": {
+    "version": "4",
+    "versionCode": 4,
+    "apk": "https://github.com/cmg-ops/LP3-StopWatch/releases/download/v4/tool-debug.apk",
+    "size": 74377915,
+    "sha256": "7c2cfb4e317e95a9703daf585e2fd06e04b2badc16664a53ac6dd87e194c4646",
+    "published": "2026-07-20T03:20:19Z",
+    "notes": "A stopwatch. It starts, it stops. That's the point.\r\n"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 8,
+   "firstSeen": "2026-08-13",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
+  },
+  {
+   "pkg": "com.gios.brightfantasy",
+   "name": "BrightFantasy",
+   "repo": "gi-os/BrightFantasy",
+   "category": "utilities",
+   "summary": "Your ESPN fantasy football matchup, lineup, standings and waiver wire.",
+   "upstream": "",
+   "latest": {
+    "version": "1.0.1",
+    "versionCode": 1,
+    "apk": "https://github.com/gi-os/BrightFantasy/releases/download/v1.0.1/BrightFantasy-v1.0.1.apk",
+    "size": 23087987,
+    "sha256": "74b3c6453b3cd90f2039723bd079ebd05027f03a47141438b6cd71a5436a8af4",
+    "published": "2026-08-25T00:39:56Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightFantasy/commits/v1.0.1"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 1,
+   "firstSeen": "2026-08-25",
+   "signer": "822b1e391635943586b81e3526cf95d9fc1a307f32dc16b2803053dfc0483027"
+  },
+  {
+   "pkg": "com.gios.brighthotspot",
+   "name": "BrightHotspot",
+   "repo": "gi-os/BrightHotspot",
+   "category": "utilities",
+   "summary": "Instant-Hotspot clone for the Light Phone III: wakes the phone hotspot when a paired iPad is near.",
+   "upstream": "",
+   "latest": {
+    "version": "1.0.3",
+    "versionCode": 3,
+    "apk": "https://github.com/gi-os/BrightHotspot/releases/download/v1.0.3/BrightHotspot-v1.0.3.apk",
+    "size": 18335774,
+    "sha256": "34cffe874a79280aed23a89cf037ed5764d0ed6882d7b59b9bb344faf5ff2d3d",
+    "published": "2026-08-25T00:20:40Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightHotspot/compare/v1.0.2...v1.0.3"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "adb": [
+    "start shizuku"
+   ],
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 9,
+   "firstSeen": "2026-08-22",
+   "signer": "fa0b678e4be352e2db7b52916d74b7dbf505e5057ba328ed7e85d2f3fd9b45e2"
+  },
+  {
+   "pkg": "com.gios.brightmarket",
+   "name": "BrightMarket",
+   "repo": "gi-os/BrightMarket",
+   "category": "utilities",
+   "summary": "The marketplace itself. Browse, install and update Light Phone apps.",
+   "upstream": "",
+   "latest": {
+    "version": "1.23.45",
+    "versionCode": 45,
+    "apk": "https://github.com/gi-os/BrightMarket/releases/download/v1.23.45/BrightMarket-v1.23.45.apk",
+    "size": 22732954,
+    "sha256": "f1769b0b40cae9e13d512c40e0e34383f3526de035f3b6461d78538491ed6622",
+    "published": "2026-08-22T01:52:03Z",
+    "notes": "\n**Tracked apps that publish more than one APK could try to install the wrong\none \u2014 and Android's error for it names nothing.**\n\nObtainium (tracked because it isn't in the catalogue) ships nine assets per\nrelease: three CPU-architecture builds, an F-Droid-flavored copy of each, and\na universal build. The F-Droid one isn't just a different build \u2014 it's a\ndifferent app, `dev.imranr.obtainium.fdroid` instead of `dev.imranr.obtainium`.\nBrightMarket was taking whichever `.apk` GitHub happened to list first, which\nis upload order and not something anyone chose. When that landed on the\nF-Droid build while the phone already had the regular one, the install session\nwas opened for one app and handed another. Android notices and refuses \u2014\nas `INSTALL_FAILED_INVALID_APK`, which reads exactly like a corrupt download.\nIt wasn't: the file matched its own published checksum byte for byte.\n\nPicking an asset out of a multi-APK release now prefers, in order: not an\nF-Droid-style flavor build, not a CPU-specific split, and the largest file if\nthere's still a tie \u2014 which lands on the universal build every time, the same\none most people would pick by hand. And if a mismatch like this ever happens\nagain anyway, for this repo or a new one, the install now stops before\ntouching the installer at all and says which two applicationIds it saw,\ninstead of leaving Android's string to be mistaken for a bad download.\n\n"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightMarket/main/docs/screenshots/01-browse.png",
+     "name": "01-browse.png",
+     "size": 82180
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightMarket/main/docs/screenshots/02-installed.png",
+     "name": "02-installed.png",
+     "size": 73076
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightMarket/main/docs/screenshots/03-settings.png",
+     "name": "03-settings.png",
+     "size": 57213
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 353,
+   "firstSeen": "2026-08-06",
+   "signer": "c15078bcb72a89c67efb54d1a9fc1b00cc88da578891f8e96233a7d279550df6",
+   "preview": {
+    "version": "nightly-1.23.48",
+    "versionCode": 48,
+    "apk": "https://github.com/gi-os/BrightMarket/releases/download/nightly-1.23.48/BrightMarket-v1.23.48.apk",
+    "size": 22732954,
+    "sha256": "da1f53a30c094ae51a5735313971579d31619d8e5a50cd4d43e0ed7ce93ffe10",
+    "published": "2026-08-25T17:24:50Z",
+    "notes": "\n**Tracked apps that publish more than one APK could try to install the wrong\none \u2014 and Android's error for it names nothing.**\n\nObtainium (tracked because it isn't in the catalogue) ships nine assets per\nrelease: three CPU-architecture builds, an F-Droid-flavored copy of each, and\na universal build. The F-Droid one isn't just a different build \u2014 it's a\ndifferent app, `dev.imranr.obtainium.fdroid` instead of `dev.imranr.obtainium`.\nBrightMarket was taking whichever `.apk` GitHub happened to list first, which\nis upload order and not something anyone chose. When that landed on the\nF-Droid build while the phone already had the regular one, the install session\nwas opened for one app and handed another. Android notices and refuses \u2014\nas `INSTALL_FAILED_INVALID_APK`, which reads exactly like a corrupt download.\nIt wasn't: the file matched its own published checksum byte for byte.\n\nPicking an asset out of a multi-APK release now prefers, in order: not an\nF-Droid-style flavor build, not a CPU-specific split, and the largest file if\nthere's still a tie \u2014 which lands on the universal build every time, the same\none most people would pick by hand. And if a mismatch like this ever happens\nagain anyway, for this repo or a new one, the install now stops before\ntouching the installer at all and says which two applicationIds it saw,\ninstead of leaving Android's string to be mistaken for a bad download.\n\n"
+   }
+  },
+  {
+   "pkg": "com.gios.brightrecorder",
+   "name": "BrightRecorder",
+   "repo": "gi-os/BrightRecorder",
+   "category": "media",
+   "summary": "A tape recorder for moments. Recordings are filed by where you were and when, and the brightness wheel winds through all of them as one continuous tape \u2014 forwards or backwards, at any speed, audible as it goes. Keep several tapes at once, each with its own name and pattern.",
+   "upstream": "",
+   "latest": {
+    "version": "1.17.25",
+    "versionCode": 25,
+    "apk": "https://github.com/gi-os/BrightRecorder/releases/download/v1.17.25/BrightRecorder-v1.17.25.apk",
+    "size": 18661913,
+    "sha256": "acf1d4ae5645abcd181b4503895be9aa587eb67db1ad7ab7d4a0f30e4fc37962",
+    "published": "2026-08-25T16:34:16Z",
+    "notes": "## BrightRecorder v1.17 \u2014 the notebook can see what you recorded\n\n**A provider for a day's clips.** BrightNotebook draws a day out of what the other apps know about\nit \u2014 where you were, what you played, who you talked to \u2014 and a recording was the one kind of\nevidence it would most obviously want and could not see. Tapes live in this app's `filesDir`, which\nnothing outside this process can read, so a bridge was the only way.\n\n`content://com.gios.brightrecorder.clips/clips/2026-08-25` answers with a row per clip that started\nthat day: when it started, how long it ran, the place you typed on it, and which tape it is on.\nCalendar dates, not journal days \u2014 this app has no opinion about where a day begins, and the caller\ndoes, so it asks for both dates and filters. Nothing is sorted here either, for the same reason: the\ncaller places these on an axis of its own.\n\n`.../clip/<tape>/<file>` opens one clip read-only, so anything that wants to play a recording can\nwithout a copy of it or a storage permission. Both segments are matched against the real directory\nlisting rather than joined onto a path \u2014 a name is a string that arrived from another process, and\n`../` is a string too.\n\nNothing is writable, and there is no permission on it, which is the same call the collection's other\nbridges make: what this reveals is that a recording happened, when, how long, and whatever place\nname you gave it, on a phone with one user and a hand-picked set of apps.\n\n## BrightRecorder v1.16 \u2014 Letting go of fast-forward finally plays\n\n**The reported fault, in its exact words: press play, fast-forward, let go \u2014 and it just stays\npaused.** Five releases have chased this, and the readout added in v1.11 did its job: it said\n`\u2192 PLAY`, and the tape did not play, which put the fault downstream of every rule in the deck.\n\nHere is where it was. A wind runs at 8x and a moment is a few seconds long, so fast-forwarding\nwhile playing reaches the **end of the tape almost every time you use it**. The head parks against\nthe end under your thumb \u2014 correctly. You let go, and the resume rule does its job \u2014 correctly:\nthe transport says playing. Then the very first audio block, 23 milliseconds later, finds the head\nat the end of a moving tape, reports it, and the transport stops. Play \"resumed\" for zero audible\nsamples. v1.11 looked straight at this and called it right \u2014 \"a start that instantly stops again\nis the correct thing for a tape that has run out\" \u2014 and that judgment, not any race or lost\nrelease, was the bug. The rule was never broken again after v1.7; it was being obeyed into\nsilence.\n\nThe play key has guarded against this exact dead button all along: pressing play with the head at\nthe very end moves it to the start first, because a start that instantly stops \"reads as a dead\nbutton.\" Letting go of a wind now gets the same answer \u2014 resume into play with the head parked at\nthe end, and the head goes back to the start of the tape. Rewind-to-the-front already behaved:\nletting go plays on from the beginning. Both directions now end in the same place: sound.\n\nThe rule in the deck is untouched and still has no exceptions \u2014 letting go goes back to what the\ntape was doing. Where the head sits was never the rule's business; it is the controller's, and the\ncontroller now answers it the way it always answered the play key.\n\n- 216 tests.\n\n---\n\n## BrightRecorder v1.15 \u2014 The double tap actually skips\n\n**v1.14 said a second tap of a wind key skips a moment. It did not \u2014 the notes shipped and the\nwiring did not.** The deck grew `cancelWind` and the tests for it, but the controller was never\ntouched: a second tap still ran the old 16x gear from v1.11, and nothing anywhere called the skip.\nSo double-tapping fast-forward wound at 16x instead of jumping, which on a tape of short moments\nreads as the machine ignoring you \u2014 and looks exactly like the resume rule being broken again,\nwhich it was not.\n\nThe wiring is in now, and it is the controller's four lines to own: a press that lands w"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 72,
+   "firstSeen": "2026-08-17",
+   "signer": "10ef78dea16c2cd0e45bd0b0d2f5649087a26dc37e1cd493e94b7f8b6f27b513"
+  },
+  {
+   "pkg": "com.gios.brightsudoku",
+   "name": "BrightSudoku",
+   "repo": "gi-os/BrightSudoku",
+   "category": "games",
+   "summary": "Sudoku where every puzzle is proven to have one answer and need no guessing.",
+   "upstream": "",
+   "latest": {
+    "version": "1.2.1",
+    "versionCode": 4,
+    "apk": "https://github.com/gi-os/BrightSudoku/releases/download/v1.2.1/BrightSudoku-1.2.1.apk",
+    "size": 70012019,
+    "sha256": "e62fd744a975e96d02e4ab58e2f1d164ab0d6db0545891fe679759cd2f0fd181",
+    "published": "2026-08-24T20:06:03Z",
+    "notes": "Sudoku for the Light Phone III, versionCode 4.\nEvery puzzle is made on the phone, proven to have one answer, and\nproven to need no guessing. No network, no permissions.\n\nInstall with `adb install -r BrightSudoku-1.2.1.apk`, or track\nthis repository in [Obtainium](https://github.com/ImranR98/Obtainium) with the APK\nfilter `BrightSudoku-.*\\.apk` to get updates automatically. See\n[INSTALL.md](https://github.com/gi-os/BrightSudoku/blob/main/INSTALL.md).\n\nSigned with a personal sideload key, not by Light. Android only accepts an update\nsigned by the same key that installed the app, so an APK signed with a different\nkey needs the old one uninstalled first.\n\n\n## What's Changed\n* Put the pad and the action row back on screen by @gi-os in https://github.com/gi-os/BrightSudoku/pull/3\n\n\n**Full Changelog**: https://github.com/gi-os/BrightSudoku/compare/v1.2.0...v1.2.1"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightSudoku/main/docs/screenshots/01-home.png",
+     "name": "01-home.png",
+     "size": 62419
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightSudoku/main/docs/screenshots/02-puzzle.png",
+     "name": "02-puzzle.png",
+     "size": 38333
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightSudoku/main/docs/screenshots/03-collection.png",
+     "name": "03-collection.png",
+     "size": 40635
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 10,
+   "firstSeen": "2026-08-24",
+   "signer": "725097de0feff651f0717af116212b748b5240d2f678fb6b924a485a0f5e6489"
+  },
+  {
+   "pkg": "com.gios.brightthumb",
+   "name": "BrightThumb",
+   "repo": "gi-os/brightthumb",
+   "category": "hardware",
+   "summary": "Thumb-Key port for the Light Phone III \u2014 a one-thumb keyboard with swipe typing, fully offline and private. Adapted to the LightOS black-and-white panel.",
+   "upstream": "dessalines/thumb-key",
+   "latest": {
+    "version": "1.2.0",
+    "versionCode": 4,
+    "apk": "https://github.com/gi-os/brightthumb/releases/download/v1.2.0/BrightThumb-v1.2.0.apk",
+    "size": 164772594,
+    "sha256": "4a15bd286ee81a4ecfaf3e441f2da332a7297877a147d97c8237a66c08b79d83",
+    "published": "2026-08-22T01:28:58Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/brightthumb/compare/v1.1.0...v1.2.0"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 13,
+   "firstSeen": "2026-08-13",
+   "signer": "0c3cad30b9b0f89abeed1f409872e94e8716e84f415091161c91994b06e48ed6"
+  },
+  {
+   "pkg": "com.gios.brightway",
+   "name": "BrightWay",
+   "repo": "gi-os/BrightWay",
+   "category": "utilities",
+   "summary": "Walking and subway directions, text-first \u2014 one big instruction, the wheel scrolls the trip.",
+   "upstream": "",
+   "latest": {
+    "version": "1.6.8",
+    "versionCode": 8,
+    "apk": "https://github.com/gi-os/BrightWay/releases/download/v1.6.8/BrightWay-v1.6.8.apk",
+    "size": 2846433,
+    "sha256": "03209c4cee3da0d94c05c56bda9bd61607c872e31039a8ac5d02938725ea3db1",
+    "published": "2026-08-25T17:37:38Z",
+    "notes": "## BrightWay v1.6 \u2014 a new signing key, and one reinstall to take it\n\n**You have to uninstall BrightWay and install it again.** Not an update \u2014 a full uninstall\nfirst. Android identifies an app by its package name *and* the certificate it was signed\nwith, so a build signed with a different key is a different app as far as the phone is\nconcerned. Installing this one over the old one fails with a bare `Failure: Invalid` and no\nexplanation. Uninstall, then install; it is a one-time cost and nothing after this release\nasks for it again.\n\nUninstalling clears the app's data, which for BrightWay is the API key, saved places and\nrecents. Have the key QR to hand before you start.\n\n**Why.** The release key was committed to this repository with its password written three\nlines under it in `app/build.gradle.kts`. Anyone who cloned it could build an APK that\nAndroid would accept as an update to the one on your phone \u2014 which is the whole of the\nprotection Android offers, handed out with the source. The old key is now retired and the\nnew one is a CI secret: the workflow decodes it at build time, `keystore/*.jks` is\ngitignored so a checkout cannot commit it back, and the certificate the release actually\ncarries is checked against `signing-fingerprint.txt` before anything is published.\n\nA build without the secret \u2014 a branch check, a local clone \u2014 still compiles and still\nproduces an APK. It just is not signed with the release key and will not install over one.\nThat is the right way for it to fail.\n\n**Also in this build.** Every GitHub Action the workflows use is pinned to a commit SHA\nrather than a moving tag, so a compromised or retagged action cannot quietly change what\nbuilds your APK. And a commit that touches `signing-fingerprint.txt` no longer skips the\nrelease workflow \u2014 it used to be on the ignore list, which meant the one commit that\nrotates a key was also the one commit that shipped nothing.\n\n## BrightWay v1.5 \u2014 somewhere to hand a place to\n\n**Another app can now say \"go here\".** BrightWay had no intent surface at all: one activity, one\nMAIN/LAUNCHER filter, and no way for anything on the phone to hand it a destination. So a calendar\nentry with an address on it \u2014 the thing every other phone lets you tap to start navigating \u2014 had\nnothing to tap *to*.\n\nThree shapes are understood, all of them landing in the search box:\n\n```\nbrightway://go?q=Regal+Union+Square    ours, used by BrightNotebook\ngeo:0,0?q=350+5th+Ave                  the standard one, from anything on the phone\ngeo:40.748,-73.985                     coordinates, searched as text\n```\n\n**Searched, never routed.** A calendar's location is a string somebody typed \u2014 \"Regal Union\nSquare\", \"moms\", half an address \u2014 and starting a route off it would mean walking somebody\nsomewhere on the strength of a guess. The results list, with what it matched and the address it\nmatched to, is one extra press and no wrong turns.\n\nTwo details worth knowing. `geo:` is an *opaque* URI, so `getQueryParameter` returns nothing and\nthe query has to be split by hand \u2014 and decoded by hand, because an address with a comma in it\narrives percent-encoded and \"350 5th Ave%2C New York\" on screen looks like this app mangled it.\nAnd the activity is `singleTask` now, so a second handover reuses the app that is already open\ninstead of stacking another copy of it behind the first.\n\n## BrightWay v1.4 \u2014 see where it is before you go\n\n- **Search results open on a map.** Tapping a result now shows the place pinned on a\n  map \u2014 name, address, how far away it is, your own position as the tiny marker. Wheel\n  zooms (11\u201319). GO hands it to the same routes screen as always; BACK returns to the\n  results.\n- Saved places and recents still route in one tap \u2014 you know where home is.\n- Same say-why-it-failed rule as the nav map: fetch errors show the reason and TAP TO\n  RETRY instead of loading forever.\n\n## BrightWay v1.3 \u2014 believe the GPS, not the magnetometer\n\n- **Heading from GPS while walking.** The magnetometer reports \"high"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "adb": [
+    "adb shell pm grant com.gios.brightway android.permission.WRITE_SECURE_SETTINGS"
+   ],
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 38,
+   "firstSeen": "2026-08-08",
+   "signer": ""
+  },
+  {
+   "pkg": "com.gios.lightauth",
+   "name": "BrightAuthenticator",
+   "repo": "gi-os/BrightAuthenticator",
+   "category": "utilities",
+   "summary": "IN DEVELOPMENT - TOTP codes on the Light Phone III, in a PIN-wrapped vault.",
+   "upstream": "",
+   "latest": {
+    "version": "1.2.11",
+    "versionCode": 11,
+    "apk": "https://github.com/gi-os/BrightAuthenticator/releases/download/v1.2.11/LightAuth-v1.2.11.apk",
+    "size": 23012407,
+    "sha256": "21079fb3aa943920b3bda8a3426e9fb4406439d7a82058172fb0a6db06b68859",
+    "published": "2026-08-06T23:15:05Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightAuthenticator/compare/v1.2.10...v1.2.11"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 118,
+   "firstSeen": "2026-08-06",
+   "signer": "4662590c434c98e8642244cbb1ebe5818ca63ae692eff8f3cab2f8407cf4d386"
+  },
+  {
+   "pkg": "com.gios.lightcamera",
+   "name": "Roll",
+   "repo": "gi-os/Roll",
+   "category": "media",
+   "summary": "Camera and album: a film-roll viewfinder, real-time filters, face detection and a QR mode.",
+   "upstream": "",
+   "latest": {
+    "version": "2.57.90",
+    "versionCode": 90,
+    "apk": "https://github.com/gi-os/Roll/releases/download/v2.57.90/LightCamera-v2.57.90.apk",
+    "size": 17561878,
+    "sha256": "37af2c9cd00d2975441d1c9b34829dc85fbfa4bcef6868858a5d8dfa0f7a2182",
+    "published": "2026-08-25T17:34:21Z",
+    "notes": "## Roll v2.57 \u2014 a new signing key, and a stranger can no longer choose where a photograph lands\n\n**Uninstall Roll before you install this one.** Every release up to v2.56 was signed with a key\nthat was committed to this repository with its password written three lines under it. Anybody who\ncloned the repo could build an APK that Android would accept as an update to yours, and that is\nthe whole of the trust model for a sideloaded app. The key has been replaced with a 4096-bit one\nthat exists only as a CI secret, and the old one is gone.\n\nAndroid identifies an app by package name *and* signing certificate, so there is no gentle way\nthrough this: v2.57 will not install over v2.56. `adb install -r` and Obtainium both stop with\n`INSTALL_FAILED_UPDATE_INCOMPATIBLE`. Uninstall once, install v2.57, and updates go back to being\nordinary from here on. Your photographs are in the shared gallery and are not touched by the\nuninstall. Roll's settings and any film roll you have not finished are in app storage and are.\n\n**Another app could pick the file Roll wrote to.** Roll answers `IMAGE_CAPTURE`, and the caller\nnames the destination in `EXTRA_OUTPUT`. Roll took that at its word and opened a stream on it \u2014\nwith Roll's identity, not the caller's. The activity is exported and shows over the lock screen,\nso an app holding no permission at all could point a capture at Roll's own database, at another\napp's file, at anything Roll could reach, and have Roll overwrite it with a JPEG.\n\nThe destination now has to be a `content:` Uri, it cannot belong to one of Roll's own providers,\nand the caller has to have proved it may write there \u2014 either by attaching the write grant to the\nintent, which is what a well-behaved caller already does, or by holding the grant itself. A\ncaller that fails all of that gets the photograph filed to the gallery as an ordinary shot rather\nthan written somewhere it had no business naming.\n\n**Everything CI runs is pinned to a commit.** The build job holds the signing key, so the actions\nit calls are pinned by SHA rather than by a tag anyone upstream can move.\n\n## Roll v2.56 \u2014 the roll is in colour too\n\n**Colour stopped at the viewfinder.** With the adb grant given, the camera and the full-screen\nviewer both lifted LightOS's greyscale, and the roll \u2014 a grid of nothing but colour photographs \u2014\nwas the one picture surface left in monochrome. Swipe up from a frame you had just taken in colour\nand the same frame was grey in the grid above it.\n\nThe roll now holds colour on the same terms as the viewfinder: it is on whenever the grid is the\npage you are looking at, and off the moment you leave the app. `ColorMode` already counted holders\nrather than flipping a flag, so the camera and the roll overlapping mid-swipe costs nothing and\nthere is no flicker at the hand-off.\n\n**The Colour setting says what it now means.** \"Viewfinder\" is called **Pictures** \u2014 the\nviewfinder, the roll and the viewer \u2014 and **Whole app** is what adds settings and the send picker\non top. Off is unchanged. The stored value did not change, so an existing choice carries over.\n\n## Roll v2.55 \u2014 the readouts turn with the phone, and 3.5x stops lying\n\n**`TORCH`, `3.5x`, `EV +1.0` were sideways every time you shot landscape.** The band is pinned\nsideways on purpose \u2014 turn the phone anticlockwise and the controls come round to the bottom edge,\nwhere a camera's controls belong. The readouts in the top corner were pinned with it, and they are\nnot controls. They are words you read, and words on their side are words you tilt your head at.\nThey now turn off the accelerometer like the scan sheet does, with the same 60\u00b0 of hysteresis, so\nthey stay upright whichever way you are holding the camera and do not flip while you compose.\n\n**And the zoom readout was stale.** Come back to the viewfinder from the roll and the lens is at\n1x, but the corner still read `3.5x`, and went on reading it until you touched the zoom again. The\nratio was being read back out of CameraX's `zoomState`"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "adb": [
+    "adb shell pm grant com.gios.lightcamera android.permission.WRITE_SECURE_SETTINGS"
+   ],
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/Roll/main/docs/screenshots/01-viewfinder.jpg",
+     "name": "01-viewfinder.jpg",
+     "size": 95657
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/Roll/main/docs/screenshots/02-mode-picker.jpg",
+     "name": "02-mode-picker.jpg",
+     "size": 77695
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/Roll/main/docs/screenshots/03-roll.jpg",
+     "name": "03-roll.jpg",
+     "size": 89035
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/Roll/main/docs/screenshots/04-bulge.jpg",
+     "name": "04-bulge.jpg",
+     "size": 99104
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/Roll/main/docs/screenshots/05-dither.jpg",
+     "name": "05-dither.jpg",
+     "size": 112485
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/Roll/main/docs/screenshots/06-film.jpg",
+     "name": "06-film.jpg",
+     "size": 89898
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 339,
+   "firstSeen": "2026-08-06",
+   "signer": ""
+  },
+  {
+   "pkg": "com.gios.lightchat",
+   "name": "BrightChat",
+   "repo": "gi-os/BrightChat",
+   "category": "utilities",
+   "summary": "iMessage over a self-hosted BlueBubbles server.",
+   "upstream": "craigeley/chat",
+   "latest": {
+    "version": "2.29.70",
+    "versionCode": 70,
+    "apk": "https://github.com/gi-os/BrightChat/releases/download/v2.29.70/LightChat-v2.29.70.apk",
+    "size": 4261460,
+    "sha256": "1ef7ea9dffc8dea19c1d6b8ea35f06fe6ee072a797100502bcaec7c3931575d9",
+    "published": "2026-08-25T18:13:00Z",
+    "notes": "## What's Changed\n* Bump light-common 1.2.1 \u2192 1.2.3 by @gi-os in https://github.com/gi-os/BrightChat/pull/3\n\n\n**Full Changelog**: https://github.com/gi-os/BrightChat/compare/v2.28.69...v2.29.70"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "adb": [
+    "adb shell appops set com.gios.lightchat SYSTEM_ALERT_WINDOW allow",
+    "adb shell pm grant com.gios.lightchat android.permission.WRITE_SECURE_SETTINGS"
+   ],
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightChat/develop/docs/screenshots/thread.png",
+     "name": "thread.png",
+     "size": 88062
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 204,
+   "firstSeen": "2026-08-06",
+   "signer": "0829436c50e0f0904edcc1719f25e1237281303691c6406d2b06dc9a521c64eb"
+  },
+  {
+   "pkg": "com.gios.lightcontrol",
+   "name": "BrightControl",
+   "repo": "gi-os/BrightControl",
+   "category": "hardware",
+   "summary": "The wheel and camera button, working phone-wide.",
+   "upstream": "",
+   "latest": {
+    "version": "3.32.157",
+    "versionCode": 157,
+    "apk": "https://github.com/gi-os/BrightControl/releases/download/v3.32.157/LightControl-v3.32.157.apk",
+    "size": 27679900,
+    "sha256": "1c8ddbcf27c8dfd772d99f305a53ecd9bc96944e0975db56d2558332586438a5",
+    "published": "2026-08-25T18:35:53Z",
+    "notes": "## BrightControl v3.32 \u2014 it stops standing itself down\n\n**Four presses of one binding no longer shut the service off.** The guard was written for somebody\nfighting their phone: four of the same action inside four seconds meant something was looping, and\na key filter that is wrong about what is happening should stop. In practice four presses of the\nflashlight in four seconds is a flashlight being used, and four presses of home is walking through\na menu \u2014 and the cost of being wrong was the wheel, every button and the lock face going silent\n*until somebody opened this app and noticed*. A guard whose false positive is \"your phone's buttons\nhave stopped working\" has to be worth more than that one was.\n\nIt is off now. The run is still logged \u2014 a genuine loop looks exactly like this in the key log, and\nthat line is where it shows up.\n\n**And a run of faults clears itself.** Three throws inside a minute is a real signal and still\nquiets the filter; what changed is that it comes back on its own a minute later instead of waiting\nto be found. Whatever threw has finished by then, and a wheel that is dead until somebody remembers\nthis app exists is the worse of the two failures.\n\nBoth are on one switch, **Diagnostics \u2192 Allowed to stand itself down**, off by default, for anybody\nwho would rather the app went quiet than kept trying. The master switch is unaffected either way:\nthat one is yours, this one was only ever the service's opinion of itself.\n\n**The switcher lists as many apps as fit the screen.** It listed eight, which is a number somebody\ntyped while looking at one phone \u2014 and eight rows plus a label plus the hint line is taller than the\nLPIII's panel at this type size, so the app furthest back was drawn below a fold on a list that\ndeliberately cannot be finger-scrolled. The count is worked out from the panel's height and the type\nit is drawn in, floored at three and capped at twelve.\n\n## BrightControl v3.30 \u2014 a dialog is not an app you switched to\n## BrightControl v3.30 \u2014 a new signing key, and the reports it closes\n\n**This release is signed with a different key, so it will not install over the last one.** Uninstall\nBrightControl and install this build fresh. It is a nuisance exactly once and it is worth it: the\nold key was committed to this repository with its password written three lines below it, which\nmeant anybody who had ever looked at the repo could build an APK Android would accept as an update\nto this app \u2014 the app that filters every key on the phone, draws the lock face and holds an adb\nshell. The key is a CI secret now, the keystore path is gitignored, and the build fails outright if\nthe certificate ever drifts from the one pinned in `signing-fingerprint.txt`.\n\nSettings, rules and the recents list are in app storage and do not survive an uninstall. The grants\ndo not either \u2014 `WRITE_SECURE_SETTINGS`, the accessibility service, the notification listener, the\noverlay appop \u2014 so run the ADB screen once after reinstalling, which is the one pass it was built\nfor.\n\n**The recents list no longer laps itself.** The wheel sends a whole key press per detent, 35 to 60\nmilliseconds apart, and the switcher moved one row per press against a list of eight \u2014 so an\nordinary flick ran the list two or three times over before your eye caught up. It now takes at most\none row every 120 ms, and Buttons \u203a Double press carries a **Switcher scroll speed** row with four\nsettings for anyone whose hand disagrees. *(light-reports#47)*\n\n**BrightControl appears in its own switcher.** It could not before, and not for the reason it\nlooked like: window events from this package are dropped on purpose, because the overlays this\nservice owns raise them too, so the settings screen was never recorded as an app you had been in.\nIt records itself now. Holding the click on its row does nothing \u2014 force-stopping the process that\nruns the key filter is not a thing this list is going to offer. *(light-reports#47)*\n\n**The lock face shows a charging bolt again.** It was "
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 323,
+   "firstSeen": "2026-08-06",
+   "signer": ""
+  },
+  {
+   "pkg": "com.gios.lightfog",
+   "name": "FogLight",
+   "repo": "gi-os/FogLight",
+   "category": "utilities",
+   "summary": "Fog of World companion: record where you go, watch the fog clear.",
+   "upstream": "",
+   "latest": {
+    "version": "0.12.1.49",
+    "versionCode": 49,
+    "apk": "https://github.com/gi-os/FogLight/releases/download/v0.12.1.49/LightFog-v0.12.1.49.apk",
+    "size": 47564218,
+    "sha256": "aae6bbfc5a1e3bb4b909b522530f55384d74e3d7ed124995b15a051b4c3dccef",
+    "published": "2026-08-04T20:11:55Z",
+    "notes": "## v0.12.1 \u2014 The GPS was already off; the Wi-Fi callback was the drain\n\nv0.12.0 did switch the radio off at work. The Record screen said so, the state was `PAUSED_ZONE`,\nand the battery still went. The pause was never the problem \u2014 what was left running around it was.\n\n**`onCapabilitiesChanged` is a firehose, not an event.** `WifiInfo` lives inside\n`NetworkCapabilities`, so every RSSI and link-speed change on the connected network is delivered to\nthe callback \u2014 seconds apart, all day. v0.12.0 ran the entire power policy on each one, *plus* a\nsecond run 2.5s later, and every run made a `WifiManager` binder call (which notes an app-op in\n`system_server`), read prefs, and looked up a sensor. On a quiet home router that is waste. In an\noffice \u2014 dozens of APs, constant roaming, a hundred other clients moving the RSSI around \u2014 it is a\nprocess that is never permitted to go idle. That asymmetry is exactly why home improved and work\ndid not.\n\nNow the SSID is read from the capabilities object already in hand, via\n`FLAG_INCLUDE_LOCATION_INFO`, and if it has not changed the callback returns having done nothing.\nNo binder call, no app-op, no prefs read. The sensor lookup is cached for the life of the process.\n\n**An unreadable name is no longer read as \"you left\".** This is the expensive one. `getSSID()`\nreturns `<unknown ssid>` whenever the platform declines, and a momentary app-op or\nlocation-attribution hiccup is enough. v0.12.0 took that as leaving the zone and started the GPS \u2014\nthen the next event stopped it again. Flapping costs more than either state, because a cold GPS\nreacquisition is the most expensive thing that receiver does, and doing it all day is worse than\nsimply having left it on. Presence now comes from the Wi-Fi transport (`hasTransport`, plain\n`ACCESS_NETWORK_STATE`, nothing to redact) and identity from the SSID; while Wi-Fi is up, an\nunreadable name keeps the last known one. The re-read is capped at two attempts, because an\nunconditional retry is how a poll gets built by accident.\n\n**\"Not recording \u2014 recorder module unavailable\" was never true.** A pre-existing bug, unrelated to\nbattery but visible the whole time: `start()` returns `null` to mean *started*, and the JS wrapper\nwas `RecorderModule?.start(\u2026) ?? \"recorder module unavailable\"`, so `??` turned every success into\nthat error. It also meant `if (!refused) setRecordOn(true)` never ran, so the Start button never\nstuck \u2014 recording only stayed on for anyone whose preference predated the bug.\n\n**Settings \u2192 Battery now shows the live SSID against the saved ones.** A saved network and a live\none that differ by a band suffix read identically in a sentence and not at all side by side.\n`NetworkCallback`'s flags constructor is API 31, so pre-31 keeps the no-arg one \u2014 `minSdk` is 24\nhere and a constructor that does not exist is a `NoSuchMethodError`, not a graceful fallback.\n\n\n---\n\n**Install / update via Obtainium** \u2014 point it at this repo:\n`https://github.com/gi-os/LightFog`\n\nOr sideload with ADB:\n`adb install -r LightFog-v0.12.1.49.apk`"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "adb": [
+    "adb shell pm grant com.gios.lightfog android.permission.ACCESS_BACKGROUND_LOCATION"
+   ],
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 122,
+   "firstSeen": "2026-08-06",
+   "signer": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c"
+  },
+  {
+   "pkg": "com.gios.lightnoise",
+   "name": "BrightNoise",
+   "repo": "gi-os/BrightNoise",
+   "category": "media",
+   "summary": "Twelve synthesised sounds, a two-layer mixer and a sleep timer.",
+   "upstream": "",
+   "latest": {
+    "version": "1.1.10",
+    "versionCode": 10,
+    "apk": "https://github.com/gi-os/BrightNoise/releases/download/v1.1.10/LightNoise-v1.1.10.apk",
+    "size": 22593759,
+    "sha256": "271b98883bb8231ec6215aa04d216b96e45c7eaf0b7c8cbb6b82d18dc2429908",
+    "published": "2026-08-06T23:19:18Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightNoise/compare/v1.1.9...v1.1.10"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightNoise/main/docs/screenshots/mix.png",
+     "name": "mix.png",
+     "size": 49377
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightNoise/main/docs/screenshots/sounds.png",
+     "name": "sounds.png",
+     "size": 65338
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightNoise/main/docs/screenshots/timer.png",
+     "name": "timer.png",
+     "size": 49896
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 114,
+   "firstSeen": "2026-08-06",
+   "signer": "4d2a3bb63292bc7cdfec383a3b041da3b4a483058cfa0575a33d06fb88c9973a"
+  },
+  {
+   "pkg": "com.gios.lightnonogram",
+   "name": "BrightNonogram",
+   "repo": "gi-os/BrightNonogram",
+   "category": "games",
+   "summary": "Picross, plus a generator that only ships solvable puzzles.",
+   "upstream": "",
+   "latest": {
+    "version": "0.4.0",
+    "versionCode": 11,
+    "apk": "https://github.com/gi-os/BrightNonogram/releases/download/v0.4.0/LightNonogram-0.4.0.apk",
+    "size": 70040643,
+    "sha256": "26bced33acc2be7bdd2aedce975bf53a1a002985358bdb216b5e81d1c26a1a63",
+    "published": "2026-07-30T02:24:38Z",
+    "notes": "Picross for the Light Phone III, versionCode 11.\n69 hand-drawn 10x10 pictures plus endless generated puzzles. No network,\nno permissions.\n\nInstall with `adb install -r LightNonogram-0.4.0.apk`, or track\nthis repository in [Obtainium](https://github.com/ImranR98/Obtainium) with the APK\nfilter `LightNonogram-.*\\.apk` to get updates automatically. See\n[INSTALL.md](https://github.com/gi-os/LightNonogram/blob/main/INSTALL.md).\n\nSigned with the SDK development key (not a stable sideload key), not by Light. Android only accepts an update\nsigned by the same key that installed the app, so an APK signed with a different\nkey needs the old one uninstalled first.\n\n\n**Full Changelog**: https://github.com/gi-os/LightNonogram/compare/v0.3.2...v0.4.0"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightNonogram/main/docs/screenshots/01-home.png",
+     "name": "01-home.png",
+     "size": 62419
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightNonogram/main/docs/screenshots/02-puzzle.png",
+     "name": "02-puzzle.png",
+     "size": 38333
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightNonogram/main/docs/screenshots/03-collection.png",
+     "name": "03-collection.png",
+     "size": 40635
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 111,
+   "firstSeen": "2026-08-06",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28",
+   "preview": {
+    "version": "0.1.0",
+    "versionCode": 1,
+    "apk": "https://github.com/gi-os/BrightNonogram/releases/download/v0.1.0/LightNonogram-0.1.0.apk",
+    "size": 25888932,
+    "sha256": "d86b15270cfa577fc70f63921d27a1c626ac2700da4f0b3a82e4cbc45182e499",
+    "published": "2026-07-28T16:21:59Z",
+    "notes": "> **This build does not work.** It crashes on launch: the tool module was missing the KSP plugin, so the SDK registry that locates the initial screen was never generated. Fixed in v0.1.1 \u2014 install that instead.\n\n---\n\nPicross for the Light Phone III, versionCode 1.\n69 hand-drawn 10x10 pictures plus endless generated puzzles. No network,\nno permissions.\n\nInstall with `adb install -r LightNonogram-0.1.0.apk`, or track\nthis repository in [Obtainium](https://github.com/ImranR98/Obtainium) with the APK\nfilter `LightNonogram-.*\\.apk` to get updates automatically. See\n[INSTALL.md](https://github.com/gi-os/LightNonogram/blob/main/INSTALL.md).\n\nSigned with the SDK development key (not a stable sideload key), not by Light. Android only accepts an update\nsigned by the same key that installed the app, so an APK signed with a different\nkey needs the old one uninstalled first.\n\n\n**Full Changelog**: https://github.com/gi-os/LightNonogram/commits/v0.1.0"
+   }
+  },
+  {
+   "pkg": "com.gios.lightnotebook",
+   "name": "BrightNotebook",
+   "repo": "gi-os/BrightNotebook",
+   "category": "productivity",
+   "summary": "Notes and a calendar, with your day gathered in one place.",
+   "upstream": "",
+   "latest": {
+    "version": "1.50.76",
+    "versionCode": 76,
+    "apk": "https://github.com/gi-os/BrightNotebook/releases/download/v1.50.76/LightNotebook-v1.50.76.apk",
+    "size": 4538695,
+    "sha256": "f20e446c076467a4ccf525d49af67c8e9fc6f5adf022083c7b1792595ef1232e",
+    "published": "2026-08-25T19:00:17Z",
+    "notes": "## BrightNotebook v1.50 \u2014 where the time went, app by app\n\n**A screen-time section at the end of every day.** The day's own line of numbers already carried the\nthree biggest \u2014 \"38M CHAT\" says more about an afternoon than \"2h 14m on the phone\" does \u2014 and three\nwas all that fit there. This is the rest of the answer, in the place there is room for it: every app\nworth a minute, biggest first, with its longest single sitting beside it.\n\n**The longest run is the interesting number, when it is worth showing.** Thirty-four minutes of a\ncamera app across a day is a walk with a camera; thirty-four minutes in one sitting is something\nelse, and a total cannot tell those apart. It appears only when one sitting was at least half the\ntotal, because below that it says \"you picked it up a few times\" \u2014 which is what its absence already\nsays.\n\nSame query as before, so nothing new is asked of the phone: one walk over the usage events already\nanswered screen time, pickups and where the time went. It needs the usage appop, which the settings\nscreen carries the adb line for.\n\n## BrightNotebook v1.49 \u2014 the day cannot crash on a duplicate row again\n\n**\"It closed itself\" was two conversations with the same name.** The crash:\n\n```\njava.lang.IllegalArgumentException: Key \"talked-Giovanni Lupo721\" was already used.\n```\n\nTwo threads named the same, starting in the same journal minute. The bridge dedupes conversations by\n*millisecond*, the list keys them by *minute*, and a `LazyColumn` handed the same key twice throws\nrather than drawing anything \u2014 so the day did not look wrong, it took the app down.\n\n**Fixed where it can actually be fixed: in one place.** The day is assembled from a dozen\nindependent sources and none of them can see the others, so \"keys are unique\" is not a property any\none of them can guarantee. The key is now defined once, and the builder drops anything whose key it\nhas already emitted. The list asks for the same function.\n\nThis is the second time this file has had this bug \u2014 arrivals were the first, where a GPS flap\ninside a named zone produced two fixes a second apart, which is one journal minute. That one was\npatched at the source. This one is patched at the shape, which covers the next source too: a\nphotograph and a stay and a call landing on the same minute all go through the same door now.\n\nTwo tests, one for the reported case and one that asserts every key on a built day is distinct.\n\n## BrightNotebook v1.48 \u2014 Light's own notes on the day, and all-day scrolls again\n\n**All-day events are back inside the list.** Pinning them above the scroll cost a row of screen on\nevery day that has none and could not be read past on a day with four. They are still a labelled\nALL DAY section of full rows, still the first thing on the day \u2014 just part of it. And a day with a\nbirthday and nothing else no longer says \"nothing on this day yet\" over the top of the birthday.\n\n**Notes and voice notes taken in Light's own tools now appear on the day.** LightOS writes them into\n`Documents/` \u2014 `Notes`, `AudioNotes`, `MessageAudio`, and a `Temp` twin of each while something is\nstill being written \u2014 and there is no provider, no database and no intent to ask for them. So a day\nwith three voice notes on it looked, from here, like a day nothing happened on.\n\nSettings \u2192 **Light's own notes** \u2192 point at the Documents folder once. A row each on the day it was\nmade, with the file's own name; tapping one hands it to whatever plays or opens it.\n\n**A folder grant, not a storage permission.** `Documents/` is not a media directory, so\n`READ_MEDIA_*` does not reach it and `MediaStore` has nothing to say about most of what is in there.\nThe alternative is `MANAGE_EXTERNAL_STORAGE` \u2014 every file on the phone, granted from a Settings\nscreen this phone does not have. The document tree is both the narrow option and the only one that\nworks: one folder, a grant that survives a reboot, nothing else readable.\n\n**Nothing is copied and nothing is read.** The row says a note happened, at"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "adb": [
+    "adb shell appops set com.gios.lightnotebook SYSTEM_ALERT_WINDOW allow"
+   ],
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightNotebook/main/docs/screenshots/01-calendar.png",
+     "name": "01-calendar.png",
+     "size": 78982
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightNotebook/main/docs/screenshots/02-notes.png",
+     "name": "02-notes.png",
+     "size": 83306
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightNotebook/main/docs/screenshots/03-day.png",
+     "name": "03-day.png",
+     "size": 809265
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 173,
+   "firstSeen": "2026-08-06",
+   "signer": "ceca3d378bf9709bc0d0b3eea84cc8bf7994777a628e5df8079a619cf7a7bda8"
+  },
+  {
+   "pkg": "com.gios.lightpass",
+   "name": "BrightPasses",
+   "repo": "gi-os/BrightPasses",
+   "category": "utilities",
+   "summary": "Photograph a ticket, keep the stub.",
+   "upstream": "",
+   "latest": {
+    "version": "1.13.0",
+    "versionCode": 15,
+    "apk": "https://github.com/gi-os/BrightPasses/releases/download/v1.13.0/MovieTickets-v1.13.0.apk",
+    "size": 62488850,
+    "sha256": "15d284f4140b3060e5d007b0c0b46612a389e55b4b1617678c8f3887029baff1",
+    "published": "2026-08-09T04:05:03Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightPasses/compare/v1.12.0...v1.13.0"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "adb": [
+    "adb shell pm grant com.gios.lightpass android.permission.WRITE_SECURE_SETTINGS"
+   ],
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightPasses/main/docs/screenshots/ticket-detail.png",
+     "name": "ticket-detail.png",
+     "size": 887267
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightPasses/main/docs/screenshots/ticket-poster.png",
+     "name": "ticket-poster.png",
+     "size": 308307
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightPasses/main/docs/screenshots/tickets.png",
+     "name": "tickets.png",
+     "size": 208010
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 100,
+   "firstSeen": "2026-08-06",
+   "signer": "f32ea67db48b7d40573ce88f03b3da33e0f3e814e1f08e9f5f4007ff7bea6e9f"
+  },
+  {
+   "pkg": "com.gios.lightqr",
+   "name": "LightQR",
+   "repo": "gi-os/LightQR",
+   "category": "utilities",
+   "summary": "QR scanner and generator. Folded into Roll, which now has a QR mode.",
+   "upstream": "",
+   "latest": {
+    "version": "1.0.5",
+    "versionCode": 5,
+    "apk": "https://github.com/gi-os/LightQR/releases/download/v1.0.5/LightQR-v1.0.5.apk",
+    "size": 20165626,
+    "sha256": "d36399e5db82b990b3b7d8f48609d2b4d0b8cca71b916cfbaf77b1fd7b526884",
+    "published": "2026-07-28T16:09:32Z",
+    "notes": "Automated build of the Light Phone III QR Scanner tool.\n\n**Install / update via Obtainium** \u2014 point it at this repo:\n`https://github.com/gi-os/LightQR`\n\nOr download the APK below and sideload with ADB:\n`adb install -r LightQR-v1.0.5.apk`\n"
+   },
+   "deprecated": true,
+   "supersededBy": "Roll",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/LightQR/main/docs/screenshots/link.png",
+     "name": "link.png",
+     "size": 20885
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/LightQR/main/docs/screenshots/scanner.png",
+     "name": "scanner.png",
+     "size": 17692
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 104,
+   "firstSeen": "2026-08-06",
+   "signer": "8e8dee395ca68f83870fa5fc9e62d723ff7e960f2c94f93427e6c62513236420"
+  },
+  {
+   "pkg": "com.gios.lightremote",
+   "name": "BrightRemote",
+   "repo": "gi-os/BrightRemote",
+   "category": "utilities",
+   "summary": "Apple TV remote, speaking the Companion protocol natively.",
+   "upstream": "",
+   "latest": {
+    "version": "1.20.33",
+    "versionCode": 33,
+    "apk": "https://github.com/gi-os/BrightRemote/releases/download/v1.20.33/LightRemote-v1.20.33.apk",
+    "size": 2329810,
+    "sha256": "7351c7244eeed5d99e7918cff0f06fcde881bb093c96662a50d933df4875a717",
+    "published": "2026-08-25T00:24:44Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightRemote/compare/v1.20.32...v1.20.33"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightRemote/main/docs/screenshots/01-dpad.png",
+     "name": "01-dpad.png",
+     "size": 23756
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightRemote/main/docs/screenshots/02-full.png",
+     "name": "02-full.png",
+     "size": 36611
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 124,
+   "firstSeen": "2026-08-06",
+   "signer": "88fa9df840f139a9079aaf8ab8a54f64022a9da276bacac99227a464c0b1eeda"
+  },
+  {
+   "pkg": "com.gios.lightsports",
+   "name": "BrightSports",
+   "repo": "gi-os/BrightSports",
+   "category": "utilities",
+   "summary": "Live scores and standings across thirteen leagues.",
+   "upstream": "",
+   "latest": {
+    "version": "1.20.33",
+    "versionCode": 33,
+    "apk": "https://github.com/gi-os/BrightSports/releases/download/v1.20.33/LightSports-v1.20.33.apk",
+    "size": 19513357,
+    "sha256": "17dbbba8bdc00d5756e1a34d08e8679b0427251ad9dea3551f84a1003a7c0e7a",
+    "published": "2026-08-25T17:37:58Z",
+    "notes": "\n**You have to uninstall BrightSports and install it again.** Not an update \u2014 a full\nuninstall first. Android identifies an app by its package name *and* the certificate it was\nsigned with, so a build signed with a different key is a different app as far as the phone\nis concerned. Installing this one over the old one fails with a bare `Failure: Invalid` and\nno explanation. Uninstall, then install; it is a one-time cost and no release after this one\nasks for it again.\n\nUninstalling clears the app's data, which here means your followed teams, alert settings and\nthe score snapshot the background poller keeps. Note down what you follow before you start.\n\n**Why.** The release key was committed to this repository with its password written three\nlines under it in `app/build.gradle.kts`. Anyone who cloned it could build an APK that\nAndroid would accept as an update to the one on your phone \u2014 which is the entire protection\nAndroid offers, handed out with the source. The old key is retired. The new one is a CI\nsecret: the workflow decodes it at build time, `keystore/*.jks` is gitignored so a checkout\ncannot commit it back, and the certificate the release actually carries is checked against\n`signing-fingerprint.txt` before anything is published.\n\nA build without the secret \u2014 a branch check, a local clone \u2014 still compiles and still\nproduces an APK. It just is not signed with the release key and will not install over one.\nThat is the right way for it to fail.\n\n**Also in this build.** Every GitHub Action the workflows use is pinned to a commit SHA\nrather than a moving tag, so a retagged or compromised action cannot quietly change what\nbuilds your APK. `check.yml` declares read-only permissions. And the release body is these\nnotes now rather than an auto-generated commit list \u2014 `RELEASE_NOTES.md` was being written\nevery version and read by nothing, which is why a release this disruptive could otherwise\nhave shipped with no warning on it at all.\n\nScores, leagues, alerts and the notification janitor are untouched.\n\n\n\n**Full Changelog**: https://github.com/gi-os/BrightSports/compare/v1.19.32...v1.20.33"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "adb": [
+    "adb shell appops set com.gios.lightsports SYSTEM_ALERT_WINDOW allow"
+   ],
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightSports/main/docs/screenshots/01-scores.png",
+     "name": "01-scores.png",
+     "size": 81790
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightSports/main/docs/screenshots/02-standings.png",
+     "name": "02-standings.png",
+     "size": 86409
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightSports/main/docs/screenshots/03-game.png",
+     "name": "03-game.png",
+     "size": 55168
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 161,
+   "firstSeen": "2026-08-06",
+   "signer": ""
+  },
+  {
+   "pkg": "com.gios.lightsync",
+   "name": "BrightSync",
+   "repo": "gi-os/BrightSync",
+   "category": "utilities",
+   "summary": "IN DEV - Sync data and photos with local NAS every night, supports roll + bright tools",
+   "upstream": "",
+   "latest": {
+    "version": "1.3.13",
+    "versionCode": 13,
+    "apk": "https://github.com/gi-os/BrightSync/releases/download/v1.3.13/LightSync-v1.3.13.apk",
+    "size": 3352437,
+    "sha256": "a11d1f843239acf77af9bbf1e1f07d9ebb8d3c6c30ae48c54d58d7d7507c11dc",
+    "published": "2026-08-24T20:16:25Z",
+    "notes": "**Full Changelog**: https://github.com/gi-os/BrightSync/compare/v1.3.12...v1.3.13"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 50,
+   "firstSeen": "2026-08-12",
+   "signer": "bd7da1be119bc3b801523994c3da43556689db4547feaeaadb484b9ace83890e"
+  },
+  {
+   "pkg": "com.gios.lighttip",
+   "name": "BrightTip",
+   "repo": "gi-os/BrightTip",
+   "category": "productivity",
+   "summary": "Tip calculator, and a receipt splitter that reads the line items off a photo.",
+   "upstream": "",
+   "latest": {
+    "version": "1.4.20",
+    "versionCode": 20,
+    "apk": "https://github.com/gi-os/BrightTip/releases/download/v1.4.20/LightTip-v1.4.20.apk",
+    "size": 4283575,
+    "sha256": "8c70dddc374e4182d4635821b1277cb3f9114bc8efa00ec7e2cb2b4d1ce12820",
+    "published": "2026-08-16T15:14:47Z",
+    "notes": "## What's Changed\n* v1.4: four modes behind one picker \u2014 calculator, currency, tip, receipt by @gi-os in https://github.com/gi-os/BrightTip/pull/1\n\n## New Contributors\n* @gi-os made their first contribution in https://github.com/gi-os/BrightTip/pull/1\n\n**Full Changelog**: https://github.com/gi-os/BrightTip/compare/v1.3.19...v1.4.20"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightTip/main/docs/screenshots/split-items.png",
+     "name": "split-items.png",
+     "size": 59310
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightTip/main/docs/screenshots/tip.png",
+     "name": "tip.png",
+     "size": 54607
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightTip/main/docs/screenshots/totals.png",
+     "name": "totals.png",
+     "size": 55824
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 117,
+   "firstSeen": "2026-08-06",
+   "signer": "eece33e8486e95a327518bb7798df9ae99c683a2a80c4439fe0b7bf30ae1a5d7"
+  },
+  {
+   "pkg": "com.im360noscope.reminderstool",
+   "name": "Reminders",
+   "repo": "zacksimpson/reminders-tool",
+   "category": "productivity",
+   "summary": "A simple productivity task management tool designed for the Light Phone III.",
+   "upstream": "",
+   "latest": {
+    "version": "1.4.0",
+    "versionCode": 1,
+    "apk": "https://github.com/zacksimpson/reminders-tool/releases/download/v1.4.0/reminders-tool_1.4.0.apk",
+    "size": 37777076,
+    "sha256": "df389cf5151d83906ff6442217bba89222568f9e761725c86dae9dc1231fa18c",
+    "published": "2026-07-31T16:27:53Z",
+    "notes": "## New: desktop sync support with [Reminders for Web](https://github.com/zacksimpson/reminders-web)!\r\nThis has been a big undertaking but I'm so excited about this!!! \r\n- Create an account on the website (or build your own version using the repo + readme), then sign in on the phone under **Settings -> Account**.\r\n- You are never required to create an account to continue using the LPIII tool as you always have. \r\n\r\n## Improved\r\n- Reorganized / simplified some settings\r\n\r\n## Fixed\r\n- Spacing of some rows in settings\r\n\r\n## A note on updates moving forward\r\n- Now that the Light SDK is out, I am winding down my work for this React Native version of the app. I plan to eventually merge the Kotlin-written version on the `native-rewrite` branch into `main` once the Light SDK is mature enough to achieve feature parity. \r\n- When that happens, it's likely you will need to uninstall the current version and reinstall the 2.0 version. \r\n- **_Be sure to back up your reminders before doing that_** -- either by creating a manual export under Backup & Restore, OR by creating an account and syncing your reminders with the web dashboard. \r\n\r\nThanks again for using Reminders!"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 214,
+   "firstSeen": "2026-08-12",
+   "signer": "071fa458feff894c01cc08094cc32ce69560141c35ddd99fb47cc157659ee69f",
+   "preview": {
+    "version": "2.0.0-beta.2",
+    "versionCode": 3,
+    "apk": "https://github.com/zacksimpson/reminders-tool/releases/download/v2.0.0-beta.2/reminders-v2.0.0.apk",
+    "size": 65304902,
+    "sha256": "a1915f4f2b01368bcddf805dcd2ee2ca7025882c600b28d33bfd052398b8ddf0",
+    "published": "2026-07-29T13:18:29Z",
+    "notes": "> [!WARNING]\r\n> This v2.0 version is a native rewrite using the Light SDK. It also uses a new package ID. This means installing from scratch works great, and updating is... _(trails off mumbling)_ \r\n > To ensure you don't lose any existing app data, here's what I would recommend doing BEFORE updating:\r\n> 1. Current Reminders app: Go to settings > Backup & Restore > manually export a backup file\r\n> 2. Website: import that backup file\r\n> 3. Now your tasks are safely synced with your account before you even update the app.\r\n\r\n# This is a big overhaul of Reminders! \r\n\r\n## New in v2.0.0\r\n- Rewritten from the ground up using the Light SDK\r\n- Phone sync support with [Reminders for Web](https://github.com/zacksimpson/reminders-web). This has been a big undertaking but I'm so excited about this!!! \r\n- You are never required to create an account to continue using the LPIII tool as you always have. \r\n\r\n## Improved\r\n- Better alignment with LightOS (obvs)\r\n\r\n## Known Issues\r\n- **_Notifications are not currently supported in this build._** (Waiting for the SDK to expose notification support.)\r\n- Same with backup support / manual import + export. \r\n- Some visual quirks \r\n\r\n## Please let me know what you think so far! \r\nVery much still a work in progress. I plan to eventually merge this into `main` once the Light SDK is mature enough to achieve feature parity across the original React version and this version. Thanks again for using Reminders!"
+   }
+  },
+  {
+   "pkg": "com.light.lighpdf",
+   "name": "LightPDF Viewer",
+   "repo": "ruditimmermans/LightPDF",
+   "category": "reading",
+   "summary": "An LightOS PDF viewer tool that helps you read your PDF files on your Light Phone 3.",
+   "upstream": "",
+   "latest": {
+    "version": "1.1.2",
+    "versionCode": 4,
+    "apk": "https://github.com/ruditimmermans/LightPDF/releases/download/v1.1.2/LightPDF-v1.1.2-release.apk",
+    "size": 45667644,
+    "sha256": "da11466108617d6309673e3b89c5510d90028f5b0ee5c08181500a19257d6484",
+    "published": "2026-08-16T04:13:40Z",
+    "notes": "### LightPDF v1.1.2\r\n\r\n- Small UI fixes.\r\n- Better handle render of PDF file.\r\n\r\n**Full Changelog**: https://github.com/ruditimmermans/LightPDF/compare/v1.1.1...v1.1.2"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/ruditimmermans/LightPDF/main/screenshots/combined.png",
+     "name": "combined.png",
+     "size": 253153
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 24,
+   "firstSeen": "2026-08-16",
+   "signer": "7efd747de5be4bad82575a7486830353f4954c76db667fdf45eca988495d4423"
+  },
+  {
+   "pkg": "com.light.lightemail",
+   "name": "LightEmail",
+   "repo": "ruditimmermans/LightEmail",
+   "category": "reading",
+   "summary": "A simple Email app for the Light Phone 3.",
+   "upstream": "",
+   "latest": {
+    "version": "4.5",
+    "versionCode": 36,
+    "apk": "https://github.com/ruditimmermans/LightEmail/releases/download/v4.5/LightEmail-v4.5-release.apk",
+    "size": 48417397,
+    "sha256": "27c2d14cfe428d3712ee7017a5cdc61dfa0cdefe8e236a7da8527c8d57b5262a",
+    "published": "2026-08-25T11:55:49Z",
+    "notes": "### LightEmail v4.5\r\n\r\n- For plain text emails, the entire screen (including headers and attachments) now scrolls as a single unit, providing a much larger and more intuitive scrolling area.\r\n\r\n- Attachments are now tucked away in a collapsible section by default. This prevents them from cluttering the view while still being easily accessible with a single tap.\r\n\r\n- I refined the layout of the sender and date information to take up less vertical space, ensuring the email content starts higher up on the screen.\r\n\r\n- The attachment list itself has been redesigned to be more compact and cleaner.\r\n\r\n- The app now correctly identifies images that are intended to be part of the email body (like logos in signatures) and embeds them directly.\r\n\r\n- I added support for various ways email clients link these images (using cid: tags), ensuring they connect correctly to the image data.\r\n\r\n- I refined the styling of the email viewer to be less aggressive. This ensures that the email's original colors and backgrounds are preserved, which is often crucial for signature visibility.\r\n\r\n- Improved the WebView rendering enabling algorithmic darkening and applying a CSS filter (invert(1) hue-rotate(180deg)) to the email body when the app is in dark mode. This forces hardcoded light backgrounds to dark while preserving image colors.\r\n\r\n- Enhanced the CID replacement logic to handle URL-encoded IDs (e.g., %40 for @), ensuring inline images are correctly embedded even if encoded by the sender's client.\r\n\r\n**Full Changelog**: https://github.com/ruditimmermans/LightEmail/compare/v4.4...v4.5"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/ruditimmermans/LightEmail/main/screenshots/combined.png",
+     "name": "combined.png",
+     "size": 58702
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 105,
+   "firstSeen": "2026-08-21",
+   "signer": "7efd747de5be4bad82575a7486830353f4954c76db667fdf45eca988495d4423"
+  },
+  {
+   "pkg": "com.light.lightnotifi",
+   "name": "LightNotifi",
+   "repo": "ruditimmermans/LightNotifi",
+   "category": "utilities",
+   "summary": "An LightOS Notification tool that helps you keep track of your app notifications.",
+   "upstream": "",
+   "latest": {
+    "version": "5.0-Uma.3",
+    "versionCode": 42,
+    "apk": "https://github.com/ruditimmermans/LightNotifi/releases/download/v5.0-Uma.3/LightNotifi-v5.0.Uma.3-release.apk",
+    "size": 43920873,
+    "sha256": "4582137a7b49ed731d88881b0559f2cc29ec4c1b7fa1d131206acf2264b1cb7d",
+    "published": "2026-08-12T05:36:34Z",
+    "notes": "### LightNotifi-v5.0 Uma.3\r\n\r\n- I have implemented the \"Sync dismissed notifications\" feature. This ensures that when a notification is marked as read or dismissed on another device (like your PC), it will automatically disappear from LightNotifi, even if you have \"Stay until dismissed\" enabled.\r\n\r\n**Full Changelog**: https://github.com/ruditimmermans/LightNotifi/compare/v4.9-Uma.2...v5.0-Uma.3"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/ruditimmermans/LightNotifi/main/screenshots/combined.png",
+     "name": "combined.png",
+     "size": 110065
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 131,
+   "firstSeen": "2026-08-08",
+   "signer": "7efd747de5be4bad82575a7486830353f4954c76db667fdf45eca988495d4423"
+  },
+  {
+   "pkg": "com.light.medication",
+   "name": "LightMedication",
+   "repo": "ruditimmermans/LightMedication",
+   "category": "productivity",
+   "summary": "Simple Medication tool for the LP3",
+   "upstream": "",
+   "latest": {
+    "version": "2.2",
+    "versionCode": 12,
+    "apk": "https://github.com/ruditimmermans/LightMedication/releases/download/v2.2/MediLight-v2.2-release.apk",
+    "size": 23946607,
+    "sha256": "989d2ea37de586a8f4766961b376566cbf39b7559a87ed6d38930cbdb0f31ac2",
+    "published": "2026-08-07T18:35:09Z",
+    "notes": "### MediLight v2.2\r\n\r\n- I have completed the removal of the Ko-fi donation link and button from the project.\r\n\r\n**Full Changelog**: https://github.com/ruditimmermans/LightMedication/compare/v2.1...v2.2"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/ruditimmermans/LightMedication/main/screenshots/combined.png",
+     "name": "combined.png",
+     "size": 75674
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 32,
+   "firstSeen": "2026-08-08",
+   "signer": "7efd747de5be4bad82575a7486830353f4954c76db667fdf45eca988495d4423"
+  },
+  {
+   "pkg": "com.lightfastread",
+   "name": "BrightLibrary",
+   "repo": "gi-os/BrightLibrary",
+   "category": "reading",
+   "summary": "EPUB, comics and Calibre, with a cover shelf and a page view.",
+   "upstream": "fluffyspace/FastRead",
+   "latest": {
+    "version": "build-62",
+    "versionCode": 62,
+    "apk": "https://github.com/gi-os/BrightLibrary/releases/download/build-62/LightFastread-1.15.2-light.1-b62.apk",
+    "size": 26848361,
+    "sha256": "f5996393a3ffe42f8db43f2622b6c516a62a5700f560a65edd546d18998eb9a4",
+    "published": "2026-08-25T00:26:10Z",
+    "notes": "Automatic build of `8c791990f6921e155373d8c8a28caf015c227353`.\n\n```\nadb install -r LightFastread-1.15.2-light.1-b62.apk\n```\n\n`versionCode` is the workflow run number (`62`) and\nevery build is signed with the same key, so this updates in place \u2014 via\n`adb`, or via Obtainium.\n\nSigning certificate SHA-256 is pinned in\n[`signing-fingerprint.txt`](https://github.com/gi-os/LightFastread/blob/main/signing-fingerprint.txt);\nCI fails if it ever changes.\n"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "adb": [
+    "adb shell pm grant com.lightfastread android.permission.WRITE_SECURE_SETTINGS"
+   ],
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightLibrary/main/docs/screenshots/01-shelf.png",
+     "name": "01-shelf.png",
+     "size": 1168192
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightLibrary/main/docs/screenshots/02-calibre.png",
+     "name": "02-calibre.png",
+     "size": 95753
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightLibrary/main/docs/screenshots/03-reader.png",
+     "name": "03-reader.png",
+     "size": 102579
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightLibrary/main/docs/screenshots/04-manga.png",
+     "name": "04-manga.png",
+     "size": 854651
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightLibrary/main/docs/screenshots/05-comic-page.png",
+     "name": "05-comic-page.png",
+     "size": 1297360
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightLibrary/main/docs/screenshots/06-focus-word.png",
+     "name": "06-focus-word.png",
+     "size": 51624
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 187,
+   "firstSeen": "2026-08-06",
+   "signer": "32ec6e7a87ee30c5c50ae7a245fc2e34f6b6f8d9f7b3394e8a14dc65ae9fecbc"
+  },
+  {
+   "pkg": "com.lightphone.audiobooks",
+   "name": "Audiobooks",
+   "repo": "fenleon/audiobooks",
+   "category": "media",
+   "summary": "A local audiobook player for the Light Phone III",
+   "upstream": "",
+   "latest": {
+    "version": "0.7.1",
+    "versionCode": 22,
+    "apk": "https://github.com/fenleon/audiobooks/releases/download/v0.7.1/app-release.apk",
+    "size": 8798581,
+    "sha256": "0e2c26b1f58ed71d0db6f586a08353727943328c70946a31f08fcd960be8bdff",
+    "published": "2026-08-20T22:07:34Z",
+    "notes": "## Platform relay inside the tool\n\nAudiobooks now relays the hardware keys it doesn't consume to LightOS (the platform SDK server), so the platform's own handlers work inside the tool:\n\n- **Scroll wheel \u2192 brightness** (rotary 317/318 \u2192 LightOS)\n- **Camera button \u2192 camera/flashlight**\n- **Taps vibrate** per the real haptics setting (haptics read from LightOS via `GetUserPreferences`)\n\n## Volume rocker stays in-app\n\nThe volume rocker still controls the **media stream** with the in-app volume panel replica. LightOS's native volume panel is ringer-only for third-party tools, so relaying volume keys would leave playback volume uncontrollable (LP3-verified 2026-08-20). Design doc: `PLATFORM-RELAY.md`.\n\n- R8 release APK \u2248 8.8 MB\n- Version 0.7.1 (versionCode 22) \u2014 installs over 0.7.0 (same signature)\n\nsha256: `0e2c26b1f58ed71d0db6f586a08353727943328c70946a31f08fcd960be8bdff`"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/audiobooks/main/screenshots/chapters.png",
+     "name": "chapters.png",
+     "size": 123036
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/audiobooks/main/screenshots/embedded-chapters.png",
+     "name": "embedded-chapters.png",
+     "size": 29990
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/audiobooks/main/screenshots/library.png",
+     "name": "library.png",
+     "size": 65648
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/audiobooks/main/screenshots/player.png",
+     "name": "player.png",
+     "size": 55429
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/audiobooks/main/screenshots/settings.png",
+     "name": "settings.png",
+     "size": 36691
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/audiobooks/main/screenshots/speed.png",
+     "name": "speed.png",
+     "size": 35150
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 87,
+   "firstSeen": "2026-08-22",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
+  },
+  {
+   "pkg": "com.lightphone.chats",
+   "name": "Chats",
+   "repo": "fenleon/chats",
+   "category": "utilities",
+   "summary": "A Chats tool, serving WhatsApp, Instagram, and your other chats on your Light Phone III.",
+   "upstream": "",
+   "latest": {
+    "version": "0.6.5",
+    "versionCode": 56,
+    "apk": "https://github.com/fenleon/chats/releases/download/v0.6.5/app-release.apk",
+    "size": 16351304,
+    "sha256": "122983262071036affb9309087b42ac1dfc8c5d2140d22195fa3ccbfd248471d",
+    "published": "2026-08-23T22:12:35Z",
+    "notes": "**Chats 0.6.5** \u2014 R8 APK (16.35 MB)\n\n- **Send statuses on every page** \u2014 a bridge delivery failure keeps its `not delivered` marker even after the message scrolls past the newest page (was: rendered as plain sent)\n- **Session self-heal re-armed** \u2014 rotation retries 60 s after the last (was once per process run), so a redacted megolm key gets a second chance; send failures log the real exception instead of a silent no-op resend\n- **Per-room MUTE** from the contact panel \u2014 notifications stop, the unread badge and room list stay\n- **Resend capped** \u2014 2 attempts per chain / 4 h age, then a static `failed to deliver`\n- **Photo flash fixed** \u2014 leaving the fullscreen viewer no longer re-decodes from a blank frame\n- **Thread history persists** across re-opens (messages + scroll position); cold open fast-serves 6 messages, older pages load 6 at a time\n- MUTE/UNMUTE at the bottom-bar text size\n\nSHA-256: `122983262071036affb9309087b42ac1dfc8c5d2140d22195fa3ccbfd248471d`"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/chats/main/screenshots/composer-x-permanent.png",
+     "name": "composer-x-permanent.png",
+     "size": 48839
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/chats/main/screenshots/group.png",
+     "name": "group.png",
+     "size": 47233
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/chats/main/screenshots/list-unread-star-buffer.png",
+     "name": "list-unread-star-buffer.png",
+     "size": 42935
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/chats/main/screenshots/list.png",
+     "name": "list.png",
+     "size": 66832
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/chats/main/screenshots/networks.png",
+     "name": "networks.png",
+     "size": 32690
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/chats/main/screenshots/search.png",
+     "name": "search.png",
+     "size": 52196
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/chats/main/screenshots/settings.png",
+     "name": "settings.png",
+     "size": 80956
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/chats/main/screenshots/thread-day-tags.png",
+     "name": "thread-day-tags.png",
+     "size": 79095
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/chats/main/screenshots/thread.png",
+     "name": "thread.png",
+     "size": 51985
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/chats/main/screenshots/voice-recording.png",
+     "name": "voice-recording.png",
+     "size": 28195
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 144,
+   "firstSeen": "2026-08-22",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
+  },
+  {
+   "pkg": "com.lightphone.passes",
+   "name": "Passes",
+   "repo": "fenleon/passes",
+   "category": "utilities",
+   "summary": "Store and show QR codes, boarding passes, library cards, memberships, on the Light Phone III.",
+   "upstream": "",
+   "latest": {
+    "version": "0.4.0",
+    "versionCode": 75,
+    "apk": "https://github.com/fenleon/passes/releases/download/v0.4.0/app-release.apk",
+    "size": 30708998,
+    "sha256": "22af001636326a69b9d729631f88bee0395b79d75d213f8aee73da1dd09ce5b4",
+    "published": "2026-08-18T23:51:37Z",
+    "notes": "Single-module LightOS tool \u2014 no companion APK. Stacked codes, calm entry keyboard, fullscreen 1:1 barcode.\n\n**What's new since 0.3.1:**\n- **Single-module**: storage + barcode rendering run in-process; the companion `:server` APK is gone (one toolbox row, one APK to install).\n- **Stacked codes**: the `+` in the bottom-right adds another code to any pass, on every code of the stack; swipe or arrow between them.\n- **Delete with a confirm**: the bottom-left `X` asks first (\"Delete Pass x of n\") and removes only the code you're viewing \u2014 a stacked pass keeps its other codes.\n- **Fullscreen 1:1 square**: tap a code to show it large at the top bar's buffer; back on the first code returns to the list.\n- **Calm code entry**: the Enter Code / Name Pass keyboard has no mic or emoji keys, starts capitalized, `SAVE` bottom-centre, larger input text.\n- **Details**: a filled date range is labeled **Dates**.\n- Home gets a thin top bar; `ADD NEW` stays centered.\n\n**Verify:**\n- Package: `com.lightphone.passes` \u00b7 versionCode 75 \u00b7 signed with the Light SDK dev key\n- SHA-256: `22af001636326a69b9d729631f88bee0395b79d75d213f8aee73da1dd09ce5b4`\n- APK: 30.7 MB (R8-minified; the size is the ML Kit camera scanner's native engine \u2014 the scanner is the one feature that keeps it above the ~7 MB of the other tools)\n"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/passes/main/screenshots/barcode-single.png",
+     "name": "barcode-single.png",
+     "size": 28764
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/passes/main/screenshots/barcode-stacked.png",
+     "name": "barcode-stacked.png",
+     "size": 28197
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/passes/main/screenshots/details.png",
+     "name": "details.png",
+     "size": 59461
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/passes/main/screenshots/edit-date-picker.png",
+     "name": "edit-date-picker.png",
+     "size": 58375
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/passes/main/screenshots/edit-field.png",
+     "name": "edit-field.png",
+     "size": 69496
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/passes/main/screenshots/edit-pass.png",
+     "name": "edit-pass.png",
+     "size": 103116
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/passes/main/screenshots/edit-time-picker.png",
+     "name": "edit-time-picker.png",
+     "size": 87150
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/passes/main/screenshots/fullscreen-barcode.png",
+     "name": "fullscreen-barcode.png",
+     "size": 42723
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/passes/main/screenshots/home.png",
+     "name": "home.png",
+     "size": 43589
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/passes/main/screenshots/scanner.png",
+     "name": "scanner.png",
+     "size": 496833
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/passes/main/screenshots/toolbox.png",
+     "name": "toolbox.png",
+     "size": 43286
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 11,
+   "firstSeen": "2026-08-22",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
+  },
+  {
+   "pkg": "com.lightphone.spotify",
+   "name": "BrightMusic",
+   "repo": "gi-os/BrightMusic",
+   "category": "media",
+   "summary": "Spotify, NTSradio + Radio, Podcasts + more! Forked from Jonathancaudill/phono",
+   "upstream": "jonathancaudill/phono",
+   "latest": {
+    "version": "build-136",
+    "versionCode": 136,
+    "apk": "https://github.com/gi-os/BrightMusic/releases/download/build-136/LightPhono-v0.58.136.apk",
+    "size": 25745474,
+    "sha256": "cd9bcbb16c79a28e3d4864f23447053ffaa40ead27bdb7d047560d647a7fccb9",
+    "published": "2026-08-25T18:28:58Z",
+    "notes": "Automated build from `fbeecb3be894e5f017b432525e0dcc0f87afad99`.\n\n`versionCode` is the workflow run number (136), so this\nupgrades an installed build in place.\n\n**First install needs one adb grant** for colour album art:\n\n```\nadb shell pm grant com.lightphone.spotify android.permission.WRITE_SECURE_SETTINGS\n```\n\nWithout it covers stay greyscale \u2014 nothing else changes. Text entry also needs a\nsystem IME on the device (`adb shell ime list -s`); see the README.\n"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "adb": [
+    "adb shell appops set com.lightphone.spotify GET_USAGE_STATS allow",
+    "adb shell appops set com.lightphone.spotify SYSTEM_ALERT_WINDOW allow",
+    "adb shell pm grant com.lightphone.spotify android.permission.WRITE_SECURE_SETTINGS"
+   ],
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 223,
+   "firstSeen": "2026-08-07",
+   "signer": "ee7dc895039a92fe58dc0836730ab70f516ddb7eab7813faec98b3aef14680ec"
+  },
+  {
+   "pkg": "com.lightrss.reader",
+   "name": "BrightNews",
+   "repo": "gi-os/BrightNews",
+   "category": "reading",
+   "summary": "RSS, Atom and Gmail newsletters in one reader.",
+   "upstream": "zachattack323/LightRSS",
+   "latest": {
+    "version": "2.6.1",
+    "versionCode": 26,
+    "apk": "https://github.com/gi-os/BrightNews/releases/download/v2.6.1/LightRSS-2.6.1.apk",
+    "size": 29595530,
+    "sha256": "e35a371acd9b8813436eff4e3fab5f3350ab825f8fa3cef1e8fedca78c34dedd",
+    "published": "2026-08-25T17:52:49Z",
+    "notes": "Sideload build of News 2.6.1 (versionCode 26) for the Light Phone III.\n\nThe APK keeps the LightRSS- prefix so existing Obtainium filters and update tracking\nkeep working, and the signing key is unchanged.\n\nInstall with `adb install -r LightRSS-2.6.1.apk`, or track this repository in\n[Obtainium](https://github.com/ImranR98/Obtainium) to get updates automatically. See\n[INSTALL.md](https://github.com/gi-os/BrightNews/blob/main/INSTALL.md).\n\nThis APK is signed with a personal sideload key, not by Light. Updates must come from this\nsame repository; an APK signed with a different key cannot install over it.\n\n\n**Full Changelog**: https://github.com/gi-os/BrightNews/compare/v2.6.0...v2.6.1"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "adb": [
+    "adb shell pm grant com.lightrss.reader android.permission.WRITE_SECURE_SETTINGS"
+   ],
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightNews/images-and-qr/docs/screenshots/01-feeds.png",
+     "name": "01-feeds.png",
+     "size": 344524
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightNews/images-and-qr/docs/screenshots/02-newsletters.png",
+     "name": "02-newsletters.png",
+     "size": 111703
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightNews/images-and-qr/docs/screenshots/03-newsletter.png",
+     "name": "03-newsletter.png",
+     "size": 143880
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 146,
+   "firstSeen": "2026-08-06",
+   "signer": "c6902aa1870b4ffa2fd0cd627643dc8ddee7cc0fdbd1752febb3d911092d8ec5"
+  },
+  {
+   "pkg": "com.thelightphone.lightnycsubway",
+   "name": "BrightTransit",
+   "repo": "gi-os/BrightTransit",
+   "category": "utilities",
+   "summary": "Live MTA subway arrivals.",
+   "upstream": "lightphone/light-sdk",
+   "latest": {
+    "version": "1.2.0-build.27",
+    "versionCode": 3,
+    "apk": "https://github.com/gi-os/BrightTransit/releases/download/v1.2.0-build.27/LightNYCSubway-v1.2.0-build27.apk",
+    "size": 80776721,
+    "sha256": "2e85744836c04c379259ec187e51e3eafff1807d449123133e74d224192a8713",
+    "published": "2026-08-25T16:41:57Z",
+    "notes": "Automated build of the **nyc-subway** Light Phone III tool.\nCommit 7a20a5752b0d22dda8a383164a06c03ff398dba0.\nDownload the `.apk` below and sideload via `adb install`.\n"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightTransit/main/docs/screenshots/starred.png",
+     "name": "starred.png",
+     "size": 87743
+    },
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightTransit/main/docs/screenshots/stations.png",
+     "name": "stations.png",
+     "size": 66903
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 103,
+   "firstSeen": "2026-08-06",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
+  },
+  {
+   "pkg": "com.thelightphone.radio",
+   "name": "Radio",
+   "repo": "fenleon/radio-tool",
+   "category": "media",
+   "summary": "An online Radio Player for the Light Phone III",
+   "upstream": "",
+   "latest": {
+    "version": "1.4.4",
+    "versionCode": 14,
+    "apk": "https://github.com/fenleon/radio-tool/releases/download/v1.4.4/radio-release.apk",
+    "size": 6320866,
+    "sha256": "e723d0fa8ff8d134ade6d7037c84be5420cd2fe7598c6fe720ca3ea2285bd168",
+    "published": "2026-08-23T23:58:38Z",
+    "notes": "ICY now-playing track titles, stream-name URL naming, UI polish (Stations rename, all-white text, BT underline fix), duplicate-name-after-rename fix"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/radio-tool/main/screenshots/Add%20Station%20manually.png",
+     "name": "Add Station manually.png",
+     "size": 57103
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/radio-tool/main/screenshots/Home%20Screen%20Clock%20with%20pause.png",
+     "name": "Home Screen Clock with pause.png",
+     "size": 25888
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/radio-tool/main/screenshots/Home%20Screen%20Clock%20with%20stop%2Bplay.png",
+     "name": "Home Screen Clock with stop+play.png",
+     "size": 26882
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/radio-tool/main/screenshots/Library%20Favourites.png",
+     "name": "Library Favourites.png",
+     "size": 36940
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/radio-tool/main/screenshots/Library%20Recent.png",
+     "name": "Library Recent.png",
+     "size": 76229
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/radio-tool/main/screenshots/Radio%20Tool%20Playing%20Live%20Stream.png",
+     "name": "Radio Tool Playing Live Stream.png",
+     "size": 37111
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/radio-tool/main/screenshots/Rename%20a%20Station.png",
+     "name": "Rename a Station.png",
+     "size": 51131
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/radio-tool/main/screenshots/Search%20Station.png",
+     "name": "Search Station.png",
+     "size": 98620
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/radio-tool/main/screenshots/find-stations.png",
+     "name": "find-stations.png",
+     "size": 56373
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/radio-tool/main/screenshots/home.png",
+     "name": "home.png",
+     "size": 36851
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/radio-tool/main/screenshots/library.png",
+     "name": "library.png",
+     "size": 34870
+    },
+    {
+     "url": "https://raw.githubusercontent.com/fenleon/radio-tool/main/screenshots/search-results.png",
+     "name": "search-results.png",
+     "size": 125778
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 13,
+   "firstSeen": "2026-08-22",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
+  },
+  {
+   "pkg": "com.thelightphone.sanntid",
+   "name": "Sanntid",
+   "repo": "barry7007/LightNorwayTransit",
+   "category": "utilities",
+   "summary": "Live departure times for public transport in Norway",
+   "upstream": "",
+   "latest": {
+    "version": "1.0.0",
+    "versionCode": 1,
+    "apk": "https://github.com/barry7007/LightNorwayTransit/releases/download/v1.0.0/Sanntid-v1.0.0.apk",
+    "size": 70059035,
+    "sha256": "aab702f2deb2641f8ecab6f2cc4654d541155df2044331ff4d455f9933850108",
+    "published": "2026-07-31T11:40:20Z",
+    "notes": "**Full Changelog**: https://github.com/barry7007/LightNorwayTransit/commits/v1.0.0"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/barry7007/LightNorwayTransit/main/docs/screenshots/change-stop.png",
+     "name": "change-stop.png",
+     "size": 79031
+    },
+    {
+     "url": "https://raw.githubusercontent.com/barry7007/LightNorwayTransit/main/docs/screenshots/departures.png",
+     "name": "departures.png",
+     "size": 98448
+    },
+    {
+     "url": "https://raw.githubusercontent.com/barry7007/LightNorwayTransit/main/docs/screenshots/near-me.png",
+     "name": "near-me.png",
+     "size": 74191
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 37,
+   "firstSeen": "2026-08-07",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
+  },
+  {
+   "pkg": "com.thelightphone.solitaire",
+   "name": "BrightSolitaire",
+   "repo": "gi-os/BrightSolitaire",
+   "category": "games",
+   "summary": "Klondike, draw one, unlimited redeals.",
+   "upstream": "",
+   "latest": {
+    "version": "1.2.5",
+    "versionCode": 8,
+    "apk": "https://github.com/gi-os/BrightSolitaire/releases/download/v1.2.5/LightSolitaire-1.2.5.apk",
+    "size": 25770196,
+    "sha256": "a57623289ad8a0b256ac4a5ab73fbffb5b6b96b870c625f0a514cfe28c8f282c",
+    "published": "2026-08-08T03:46:46Z",
+    "notes": "Klondike solitaire for the Light Phone III, versionCode 8.\n\nInstall with `adb install -r LightSolitaire-1.2.5.apk`, or track this\nrepository in [Obtainium](https://github.com/ImranR98/Obtainium) with the APK filter\n`LightSolitaire-.*\\.apk` to get updates automatically. See\n[INSTALL.md](https://github.com/gi-os/LightSolitaire/blob/main/INSTALL.md).\n\nSigned with a personal sideload key, not by Light. Updates have to come from this same\nrepository; an APK signed with a different key cannot install over it.\n\n\n**Full Changelog**: https://github.com/gi-os/BrightSolitaire/compare/v1.2.4...v1.2.5"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/gi-os/BrightSolitaire/main/docs/screenshots/board.png",
+     "name": "board.png",
+     "size": 42506
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 120,
+   "firstSeen": "2026-08-06",
+   "signer": "386edb7091947707a812587af8c37b0873bb2cde88963e9520574cc45bc0128c"
+  },
+  {
+   "pkg": "com.thelightphone.tracker",
+   "name": "Tracker",
+   "repo": "tyshi00/Tracker",
+   "category": "utilities",
+   "summary": "A lightweight health Tracker for LightOS",
+   "upstream": "",
+   "latest": {
+    "version": "2.5.2",
+    "versionCode": 41,
+    "apk": "https://github.com/tyshi00/Tracker/releases/download/v2.5.2/tracker.apk",
+    "size": 75269319,
+    "sha256": "50dad7988ca4a89ca59d07d25623ef44b133fbbaf841fb3ad802f7ceb52a2ace",
+    "published": "2026-08-09T16:56:14Z",
+    "notes": "Small fix:\r\n-Removed chevrons in various settings menu items to align more closely with native LightOS look."
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 73,
+   "firstSeen": "2026-08-08",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28",
+   "preview": {
+    "version": "latest",
+    "versionCode": 40,
+    "apk": "https://github.com/tyshi00/Tracker/releases/download/latest/tracker.apk",
+    "size": 75285703,
+    "sha256": "fb8f91761c5b1b7f75e020c3c3d1233269a7282080b030b85cb039d7ce8515a0",
+    "published": "2026-07-04T15:01:46Z",
+    "notes": ""
+   }
+  },
+  {
+   "pkg": "com.tyshi00.astraltrak",
+   "name": "Astraltrak",
+   "repo": "tyshi00/Astraltrak",
+   "category": "utilities",
+   "summary": "A celestial almanac of sorts for the Light Phone III.",
+   "upstream": "",
+   "latest": {
+    "version": "0.1.0",
+    "versionCode": 1,
+    "apk": "https://github.com/tyshi00/Astraltrak/releases/download/v0.1.0/astraltrak-v0.1.0.apk",
+    "size": 26826554,
+    "sha256": "2a1e94dd39255cef90a034a04f47f150922c1fc56ba63994559a9ef7778f88f2",
+    "published": "2026-08-23T22:57:39Z",
+    "notes": "## Astraltrak v0.1.0\n\nSee [README](https://github.com/tyshi00/Astraltrak#readme) for full feature list.\n"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Astraltrak/main/docs/screenshots/01_moon_sun.png",
+     "name": "01_moon_sun.png",
+     "size": 104768
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Astraltrak/main/docs/screenshots/02_golden_hour_seasons.png",
+     "name": "02_golden_hour_seasons.png",
+     "size": 105113
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Astraltrak/main/docs/screenshots/03%20eclipses.png",
+     "name": "03 eclipses.png",
+     "size": 135770
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Astraltrak/main/docs/screenshots/03_eclipses.png",
+     "name": "03_eclipses.png",
+     "size": 135770
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 6,
+   "firstSeen": "2026-08-25",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
+  },
+  {
+   "pkg": "com.tyshi00.aventura",
+   "name": "Aventura",
+   "repo": "tyshi00/Aventura",
+   "category": "games",
+   "summary": "A port of Soto, a quest app for LightOS",
+   "upstream": "",
+   "latest": {
+    "version": "1.1.2",
+    "versionCode": 4,
+    "apk": "https://github.com/tyshi00/Aventura/releases/download/v1.1.2/aventura-release.apk",
+    "size": 65011838,
+    "sha256": "5ffe815422e39b06508534d2a2ba1f28df038704e7f69b5943dde6ce9bbd282e",
+    "published": "2026-07-29T17:00:18Z",
+    "notes": "**Full Changelog**: https://github.com/tyshi00/Aventura/compare/v1.1.1...v1.1.2"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 36,
+   "firstSeen": "2026-08-08",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
+  },
+  {
+   "pkg": "com.tyshi00.games",
+   "name": "Light-Games-Passatempo",
+   "repo": "tyshi00/Light-Games-Passatempo",
+   "category": "utilities",
+   "summary": "A small collection of games for LightOS.",
+   "upstream": "",
+   "latest": {
+    "version": "V0.10.2",
+    "versionCode": 16,
+    "apk": "https://github.com/tyshi00/Light-Games-Passatempo/releases/download/V0.10.2/games.apk",
+    "size": 70804292,
+    "sha256": "c4a0887f45147301670c9e7d362b025775efcfb0320563fd71da64d431a8ea13",
+    "published": "2026-08-04T21:46:22Z",
+    "notes": "New:\r\n-Added 2 new games, Solitaire (Klondike) and BlackJack. Klondike was ported/forked from a standalone version that another creator made. Please refer to readme for more information. "
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Light-Games-Passatempo/main/screenshots/brick-breaker.png",
+     "name": "brick-breaker.png",
+     "size": 9739
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Light-Games-Passatempo/main/screenshots/connect-four.png",
+     "name": "connect-four.png",
+     "size": 27691
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Light-Games-Passatempo/main/screenshots/dice.png",
+     "name": "dice.png",
+     "size": 20955
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Light-Games-Passatempo/main/screenshots/home.png",
+     "name": "home.png",
+     "size": 81032
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Light-Games-Passatempo/main/screenshots/pong.png",
+     "name": "pong.png",
+     "size": 8757
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Light-Games-Passatempo/main/screenshots/snake.png",
+     "name": "snake.png",
+     "size": 20902
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Light-Games-Passatempo/main/screenshots/sudoku.png",
+     "name": "sudoku.png",
+     "size": 116494
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Light-Games-Passatempo/main/screenshots/tic-tac-toe.png",
+     "name": "tic-tac-toe.png",
+     "size": 17304
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Light-Games-Passatempo/main/screenshots/word-search.png",
+     "name": "word-search.png",
+     "size": 66404
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 133,
+   "firstSeen": "2026-08-08",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28",
+   "preview": {
+    "version": "latest",
+    "versionCode": 16,
+    "apk": "https://github.com/tyshi00/Light-Games-Passatempo/releases/download/latest/games.apk",
+    "size": 70804292,
+    "sha256": "c4a0887f45147301670c9e7d362b025775efcfb0320563fd71da64d431a8ea13",
+    "published": "2026-07-07T22:09:06Z",
+    "notes": ""
+   }
+  },
+  {
+   "pkg": "com.tyshi00.ledger",
+   "name": "Ledger",
+   "repo": "tyshi00/Ledger",
+   "category": "productivity",
+   "summary": "A budget and expense tracker for the Light Phone III.",
+   "upstream": "",
+   "latest": {
+    "version": "1.1.1",
+    "versionCode": 4,
+    "apk": "https://github.com/tyshi00/Ledger/releases/download/v1.1.1/ledger-v1.1.1-release.apk",
+    "size": 26345353,
+    "sha256": "6f5a0f9f05c6f37ad14baabd1a5739165e03adfc04ec72deed899ecee662c963",
+    "published": "2026-08-23T23:40:48Z",
+    "notes": "**Full Changelog**: https://github.com/tyshi00/Ledger/compare/v1.1.0...v1.1.1"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Ledger/main/screenshots/categories.png",
+     "name": "categories.png",
+     "size": 107381
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Ledger/main/screenshots/entry.png",
+     "name": "entry.png",
+     "size": 55360
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Ledger/main/screenshots/history.png",
+     "name": "history.png",
+     "size": 51594
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Ledger/main/screenshots/homescreen.png",
+     "name": "homescreen.png",
+     "size": 99606
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/Ledger/main/screenshots/settings.png",
+     "name": "settings.png",
+     "size": 75717
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 14,
+   "firstSeen": "2026-08-25",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
+  },
+  {
+   "pkg": "com.tyshi00.translator",
+   "name": "Light-Translator",
+   "repo": "tyshi00/Light-Translator",
+   "category": "utilities",
+   "summary": "An offline translator for LightOS",
+   "upstream": "",
+   "latest": {
+    "version": "1.1.0",
+    "versionCode": 3,
+    "apk": "https://github.com/tyshi00/Light-Translator/releases/download/v1.1.0/light-translator-1.1.0.apk",
+    "size": 88486487,
+    "sha256": "8d6e3e78c8aa3ea53f295c74afd233e493ac50566cbb2089e12d55fa2bf5ab96",
+    "published": "2026-08-09T04:26:15Z",
+    "notes": "New:\r\n\r\n- Added a wake lock feature to avoid interruptions during language model download.\r\n- Added a Reset button in Settings. The Translation Model lets you wipe the model files and start a fresh download if anything gets stuck or corrupted.\r\n- Added a text editor screen for better text input experience.\r\n- The enter key on the keyboard in the text editor screen inserts a new line instead of submitting, so you can type multi-line phrases naturally. Use the back chevron or dismiss the keyboard (by swiping down, for example) and tap Done to return to the home screen. In the home screen, tap on Translate to trigger translation.\r\n- Auto-scroll keeps your text visible above the keyboard as you type. \r\n- There is a Clear button in the editor so you can start fresh without selecting all and deleting manually.\r\n- Clearing text in the editor also clears the translation on the home screen."
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 38,
+   "firstSeen": "2026-08-08",
+   "signer": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c"
+  },
+  {
+   "pkg": "com.tyshi00.trinkets",
+   "name": "Trinkets",
+   "repo": "tyshi00/Trinkets",
+   "category": "utilities",
+   "summary": "A small collection of things to read and a countdown timer for LightOS.",
+   "upstream": "",
+   "latest": {
+    "version": "1.2.0",
+    "versionCode": 8,
+    "apk": "https://github.com/tyshi00/Trinkets/releases/download/v1.2.0/tool-release.apk",
+    "size": 65612363,
+    "sha256": "49c868421947cbb87e0eda0eadcb6c2d56b5e83129658fc2a711ce7e15c8b28d",
+    "published": "2026-08-24T14:33:47Z",
+    "notes": "**Full Changelog**: https://github.com/tyshi00/Trinkets/compare/v1.1.1...v1.2.0"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 56,
+   "firstSeen": "2026-08-08",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
+  },
+  {
+   "pkg": "com.tyshi00.worldclocks",
+   "name": "World-Clocks",
+   "repo": "tyshi00/World-Clocks",
+   "category": "utilities",
+   "summary": "A time zone tracker/global clock of sorts for LightOS.",
+   "upstream": "",
+   "latest": {
+    "version": "V1.1.4",
+    "versionCode": 6,
+    "apk": "https://github.com/tyshi00/World-Clocks/releases/download/V1.1.4/worldclocks-release-candidate.apk",
+    "size": 74897958,
+    "sha256": "a9bea3709fa8edb5b1089a62d807b11f7be6a3e5649be70bcbe1ecc219557c58",
+    "published": "2026-08-23T22:36:05Z",
+    "notes": "Small fix:\r\n-Fix LightOS keyboard crash after SDK response format change"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/World-Clocks/main/screenshots/add-location.png",
+     "name": "add-location.png",
+     "size": 84269
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/World-Clocks/main/screenshots/choose-a-location.png",
+     "name": "choose-a-location.png",
+     "size": 37691
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/World-Clocks/main/screenshots/compare.png",
+     "name": "compare.png",
+     "size": 26629
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/World-Clocks/main/screenshots/home-split.png",
+     "name": "home-split.png",
+     "size": 49862
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/World-Clocks/main/screenshots/home.png",
+     "name": "home.png",
+     "size": 27283
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/World-Clocks/main/screenshots/saved-locations.png",
+     "name": "saved-locations.png",
+     "size": 20236
+    },
+    {
+     "url": "https://raw.githubusercontent.com/tyshi00/World-Clocks/main/screenshots/settings.png",
+     "name": "settings.png",
+     "size": 27809
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 21,
+   "firstSeen": "2026-08-08",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
+  },
+  {
+   "pkg": "com.vandam.ritual",
+   "name": "Ritual",
+   "repo": "KEZO555/Ritual",
+   "category": "utilities",
+   "summary": "An AeroPress recipe guide for the Light Phone III.",
+   "upstream": "",
+   "latest": {
+    "version": "1.12.0",
+    "versionCode": 34,
+    "apk": "https://github.com/KEZO555/Ritual/releases/download/v1.12.0/ritual_1.12.0.apk",
+    "size": 28762862,
+    "sha256": "359b8f651ec6d5012df705e3c4bcb8ce83cd4a6f7ca14537b7ed7b676ae26517",
+    "published": "2026-07-21T14:29:57Z",
+    "notes": "## What's Changed\n- Optional brew methods: dropdown defaults to AeroPress + V60 (1.12.0)\n"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "adb": [
+    "adb shell pm grant com.vandam.ritual android.permission.WRITE_SECURE_SETTINGS"
+   ],
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 1660,
+   "firstSeen": "2026-08-08",
+   "signer": "72d287c65b8bd0604f2439195f1c6b55594de8efe0e1e455eb4f3d2d5cbe7043"
+  },
+  {
+   "pkg": "com.zack.emojis",
+   "name": "Emojis",
+   "repo": "zacksimpson/emoji-tool",
+   "category": "utilities",
+   "summary": "A Emoji picker for LPIII that copies to the clipboard. Searchable by name and keyword.",
+   "upstream": "",
+   "latest": {
+    "version": "1.2.1",
+    "versionCode": 6,
+    "apk": "https://github.com/zacksimpson/emoji-tool/releases/download/v1.2.1/emojis_1.2.1.apk",
+    "size": 81171500,
+    "sha256": "bceea86db09c5e1e78ae786f7765f5591293076d274950e1594c92d42416c58a",
+    "published": "2026-06-06T16:12:20Z",
+    "notes": "## What's New\r\n- Recents tab can now be sorted by **Top Used** \u2013 saves emoji you tap and surfaces your most-used or most recently used at the top\r\n- Sort order setting \u2013 choose between Top Used and Most Recent in Settings \u2192 Sort Frequents\r\n- COPY and CLEAR are now persistent across Home and Top Used, with a live preview of your selected emoji\r\n- Swipe-back gesture now implemented\r\n\r\n## Improved\r\n**Lots of Visual Improvements to match LightOS aesthetic:**\r\n- COPY/CLEAR buttons (resized / reformatted)\r\n- Search bar now (thicker underline, text flush to the left edge, wider horizontal padding)\r\n- Confirm screen layout (message top-aligned, action button resized)\r\n\r\n## Fixed\r\n- Tapping an emoji from search results required two taps when the keyboard was open\r\n- Crash when opening Sort Frequents (missing GestureHandlerRootView)\r\n- Fixed splash screen\r\n\r\n## Thanks for checking out Emojis! I'd love to hear what you think!"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 58,
+   "firstSeen": "2026-08-12",
+   "signer": "2b53d9f2999f68fa884c0f07df28ff1a4c1c08bdd4e6a327a9ea826d007fb3f9",
+   "preview": {
+    "version": "1.2.0-beta.3",
+    "versionCode": 3,
+    "apk": "https://github.com/zacksimpson/emoji-tool/releases/download/v1.2.0-beta.3/application-123c5c67-3beb-4ce6-bc5f-734da3c73a2e.apk",
+    "size": 81334528,
+    "sha256": "6cc5410ce1a4ea8dd02c10df6cc0fd1e5639e68271346fb28bb1e56b07863059",
+    "published": "2026-05-11T17:44:11Z",
+    "notes": "- fixed app icon\r\n- bug fixes"
+   }
+  },
+  {
+   "pkg": "com.zacksimpson.composer",
+   "name": "Composer",
+   "repo": "zacksimpson/composer-tool",
+   "category": "productivity",
+   "summary": "A lightweight, Markdown-supported notes tool for the Light Phone III.",
+   "upstream": "",
+   "latest": {
+    "version": "1.0.2",
+    "versionCode": 1,
+    "apk": "https://github.com/zacksimpson/composer-tool/releases/download/v1.0.2/composer-tool_1.0.2.apk",
+    "size": 37969373,
+    "sha256": "53020312a84bca87e4a6f0fd7cef150de7e4eae22811ce70946096c593b12d39",
+    "published": "2026-08-07T17:10:51Z",
+    "notes": "## New\r\n- **Import Backup**: restore your notes and folders from a previously exported backup file. (Tbh I should've built this when I built the export feature, whoops!!) This is very handy if you're reinstalling Composer or switching devices.\r\n\r\n## Improved\r\n- The \"Export All Notes\" screen is now \"Backup & Restore,\" with import living right next to export.\r\n- Removed the \"Copy All as Text\" option to simplify settings.\r\n\r\n## Fixed\r\n- The backup import file picker no longer misses valid backup files that weren't tagged with the exact right file type.\r\n- Folders imported from a backup no longer collide in sort order with your existing folders.\r\n\r\n### Thanks for checking out Composer! I'd love to hear what you think!"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 72,
+   "firstSeen": "2026-08-12",
+   "signer": "c36238493aa1055c58ca19a350e68c22e53793226887d0bee290611bf1fd12c3",
+   "preview": {
+    "version": "1.0.0-beta.7",
+    "versionCode": 1,
+    "apk": "https://github.com/zacksimpson/composer-tool/releases/download/v1.0.0-beta.7/composer-tool_1.0.0-beta.5.apk",
+    "size": 89503997,
+    "sha256": "97017ffbcdc8be762218a2ef708f7d4476bbdcf34118a6391a7a9f14b6361fa1",
+    "published": "2026-06-18T14:52:03Z",
+    "notes": "## What's Changed\n- feat: pre-release polish \u2014 code review fixes, error boundary, note export\n"
+   }
+  },
+  {
+   "pkg": "com.zacksimpson.nourish",
+   "name": "Nourish",
+   "repo": "zacksimpson/nourish-tool",
+   "category": "productivity",
+   "summary": "A simple nutrition tracker and habit log for the Light Phone III.",
+   "upstream": "",
+   "latest": {
+    "version": "1.0.0",
+    "versionCode": 1,
+    "apk": "https://github.com/zacksimpson/nourish-tool/releases/download/v1.0.0/nourish-tool_1.0.0.apk",
+    "size": 88667023,
+    "sha256": "8a024e9f842b156f0666cd4694df6a19223d5d05773d669f0f24f76b618c6517",
+    "published": "2026-06-10T12:28:14Z",
+    "notes": "# v1.0.0 of Nourish is here!\r\nThis has been one of my favorite projects yet, and I can't wait to see it improve with community feedback. I would sincerely love to know what you think about Nourish and how it can become more useful for you!\r\n\r\n## New\r\n- Daily notification reminder: Settings \u2192 Notifications lets you enable a daily log reminder at a customizable time. (I prefer to set mine in the evening just before bed!)\r\n- Calendar dot indicators: History view now shows a dot on days that have a logged entry\r\n- Post-save read view: Tapping the checkmark on the log screen now shows a \"logged\" confirmation, then takes you to the read view of that day's entry\r\n- Post-edit confirmation: Saving edits to a past entry shows an \"updated\" confirmation before returning to the read view\r\n\r\n## Improved\r\n- Nutrition Lookup is now powered by OpenFoodFacts: free, no API key required, and better consumer product coverage ranked by popularity. (Give it a try and tell me what you think of the results!)\r\n- Serving size on food detail shows a clear summary (e.g. \"1 serving \u00b7 28g each\") with a dedicated counter screen for adjusting servings\r\n- Lots of misc visual improvements to more closely align with LightOS\r\n\r\n## Fixed\r\n- Food search no longer fails on popular queries that previously returned intermittent 503 errors\r\n- Toasts for \"logged\" and \"updated\" only fire when content has actually changed"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 49,
+   "firstSeen": "2026-08-12",
+   "signer": "7edd42bf394600db972ca853de101dbf83064f10781d6011bf81a6e4e8e86df9",
+   "preview": {
+    "version": "2.0.0-beta.1",
+    "versionCode": 2,
+    "apk": "https://github.com/zacksimpson/nourish-tool/releases/download/v2.0.0-beta.1/nourish-v2.0.0-beta.1.apk",
+    "size": 70041671,
+    "sha256": "7625f2337e3c88b3ad2fcecf1522644e38ebebd3bd55c5290147124a6c8b6314",
+    "published": "2026-08-09T00:40:30Z",
+    "notes": "# v2.0.0 (Beta 1)\r\n\r\nThis is the first build of a rewrite of Nourish, now built directly on Light's own SDK instead of Expo/React Native. I'd love feedback before calling it the new default!\r\n\r\n## What's here\r\n- Daily check-in: meal log, signal ratings, context tags, and a free-text note to give context to the day\r\n- History view with a calendar of past entries, and full edit on any past day\r\n- Nutrition Focus settings to choose which signals you track\r\n- Nutrition Lookup powered by OpenFoodFacts, with a serving-size calculator on food detail\r\n\r\n## Known limitations\r\n- Daily reminder notifications aren't wired up yet. Waiting on Light's SDK because it doesn't have a local-notification API to hook it to yet. \r\n- Some visual polish is still catching up to the original "
+   }
+  },
+  {
+   "pkg": "com.zacksimpson.spectrum",
+   "name": "Spectrum",
+   "repo": "zacksimpson/spectrum-tool",
+   "category": "utilities",
+   "summary": "A real-time audio frequency spectrum analyzer and decibel meter for the Light Phone III.",
+   "upstream": "",
+   "latest": {
+    "version": "1.0.1",
+    "versionCode": 2,
+    "apk": "https://github.com/zacksimpson/spectrum-tool/releases/download/v1.0.1/app-release.apk",
+    "size": 899559,
+    "sha256": "2d3020d2c6015170000105e3b3b1324cded51c361c1c7aaedc5d1c9943529997",
+    "published": "2026-08-10T21:24:21Z",
+    "notes": "## What's New:\r\n- Nudged a thingy over to the right by 7sp \r\n- It was driving me absolutely insane"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 17,
+   "firstSeen": "2026-08-12",
+   "signer": "85a2aec814d80be52d72e07f03a3277ad289b478e56e532980dbedfc417486ae"
+  },
+  {
+   "pkg": "com.zacksimpson.verses",
+   "name": "Verses",
+   "repo": "zacksimpson/verses-tool",
+   "category": "reading",
+   "summary": "A simple daily Bible verse tool for the Light Phone III with memorization, notes, and bookmarks.",
+   "upstream": "",
+   "latest": {
+    "version": "1.0.1",
+    "versionCode": 6,
+    "apk": "https://github.com/zacksimpson/verses-tool/releases/download/v1.0.1/verses_1.0.1.apk",
+    "size": 26707727,
+    "sha256": "793598b5e8c8d89d21ecf421521140c0360701e41fcdc66948d6f033cd455868",
+    "published": "2026-08-08T04:11:13Z",
+    "notes": "## New\r\n- **Bookmarks!** Long-press any verse to add a bookmark to save for later. You can view them via \"View Bookmarks\" row in Settings.\r\n- (More updates and improvements to Bookmarks to come!)\r\n\r\n## Improved\r\n- Settings reorganized for clarity\r\n- Note date display format\r\n- SDK-related fixes / improvements, such as scrollbar flash\r\n- The daily lookup limit is now explained right in the error message instead of somewhere else\r\n- A quick one-time explainer for Fallback Translation shows the first time you search\r\n\r\n## Fixed\r\n- Misc typography issues\r\n- Potential race condition with different translations\r\n\r\n### Thanks for checking out Verses! I'd love to hear what you think!"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [],
+   "shotsChecked": "2026-08-25",
+   "downloads": 34,
+   "firstSeen": "2026-08-12",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28"
+  },
+  {
+   "pkg": "im.mollylight.app",
+   "name": "Molly Light",
+   "repo": "jabberbox/molly-light",
+   "category": "utilities",
+   "summary": "Molly (Signal) designed to fit the LightOS UI",
+   "upstream": "",
+   "latest": {
+    "version": "1.6",
+    "versionCode": 181907,
+    "apk": "https://github.com/jabberbox/molly-light/releases/download/v1.6/app-prod-website-release.apk",
+    "size": 198635136,
+    "sha256": "c639fbf197e35e1a0d85fa568aca71b5633ba2158c0735a30341d62218562009",
+    "published": "2026-07-28T01:51:17Z",
+    "notes": "## Bug fix\n\n- **PIN keypad cut off at larger display sizes** \u2014 if you had Android's Display Size set above the default, the keypad only showed rows 1\u20132 (keys 1\u20136). Rows now use proportional weight-based layout so all 12 keys are always visible."
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/molly-light/main/docs/screenshots/app-icon.png",
+     "name": "app-icon.png",
+     "size": 12738
+    },
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/molly-light/main/docs/screenshots/attach-sheet.png",
+     "name": "attach-sheet.png",
+     "size": 35300
+    },
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/molly-light/main/docs/screenshots/chatlist.png",
+     "name": "chatlist.png",
+     "size": 28091
+    },
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/molly-light/main/docs/screenshots/compose.png",
+     "name": "compose.png",
+     "size": 39714
+    },
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/molly-light/main/docs/screenshots/conversation.png",
+     "name": "conversation.png",
+     "size": 61233
+    },
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/molly-light/main/docs/screenshots/welcome.png",
+     "name": "welcome.png",
+     "size": 59435
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 8860,
+   "firstSeen": "2026-08-08",
+   "signer": "a10ce031ca47c84a78998757f9afec57174c0d17061e7efd286a10596bdb9cc7"
+  },
+  {
+   "pkg": "io.github.jabberbox.pokey",
+   "name": "Pokey",
+   "repo": "jabberbox/pokey",
+   "category": "utilities",
+   "summary": "A tracker for your GLP1 shot and weight",
+   "upstream": "",
+   "latest": {
+    "version": "1.2",
+    "versionCode": 3,
+    "apk": "https://github.com/jabberbox/pokey/releases/download/v1.2/pokey-v1.2.apk",
+    "size": 65076566,
+    "sha256": "ac8d6bc5361e6272c1b2586e0ab43deb01cc5f51bfe0d4d851cb81b2bbdf09de",
+    "published": "2026-07-06T20:50:40Z",
+    "notes": "- Home screen countdown now covers the full cycle: days out, hours in the final day, \"Shot Due\" right at the moment it's due, then hours and days overdue after that, all replacing the old static \"Reminder: Shot day!\" banner.\r\n- Made it a bit harder to accidentally hit \"Delete entry\" while adjusting values on an edit screen."
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/pokey/main/screenshots/history.png",
+     "name": "history.png",
+     "size": 48981
+    },
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/pokey/main/screenshots/home.png",
+     "name": "home.png",
+     "size": 73462
+    },
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/pokey/main/screenshots/log-menu.png",
+     "name": "log-menu.png",
+     "size": 28055
+    },
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/pokey/main/screenshots/log-shot.png",
+     "name": "log-shot.png",
+     "size": 49749
+    },
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/pokey/main/screenshots/log-weight.png",
+     "name": "log-weight.png",
+     "size": 48753
+    },
+    {
+     "url": "https://raw.githubusercontent.com/jabberbox/pokey/main/screenshots/profile.png",
+     "name": "profile.png",
+     "size": 75975
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 19,
+   "firstSeen": "2026-08-08",
+   "signer": "b9c33e29b0ccad2bff11acab55f65a3c517ef4bc92cd9c77785366fa353d5f28",
+   "preview": {
+    "version": "1.0",
+    "versionCode": 1,
+    "apk": "https://github.com/jabberbox/pokey/releases/download/v1.0/pokey-v1.0.apk",
+    "size": 65060170,
+    "sha256": "1caa6f1387c530ac73e083b5d0591080a82872a415daf1009a572e39153c5c7c",
+    "published": "2026-07-03T01:37:38Z",
+    "notes": ""
+   }
+  },
+  {
+   "pkg": "org.woheller69.whobird.chirp",
+   "name": "Chirp",
+   "repo": "barry7007/LightBirdIdentifier",
+   "category": "utilities",
+   "summary": "Identify bird sounds. Restyled from whoBird.",
+   "upstream": "woheller69/whoBIRD",
+   "latest": {
+    "version": "1.0.1",
+    "versionCode": 2,
+    "apk": "https://github.com/barry7007/LightBirdIdentifier/releases/download/v1.0.1/Chirp-v1.0.1.apk",
+    "size": 47372412,
+    "sha256": "69c864b1deceb348da0c80d50553ded537617a568666c403816fbbf94fd00aff",
+    "published": "2026-08-04T08:56:19Z",
+    "notes": "**Full Changelog**: https://github.com/barry7007/LightBirdIdentifier/compare/v1.0.0...v1.0.1"
+   },
+   "deprecated": false,
+   "supersededBy": "",
+   "screenshots": [
+    {
+     "url": "https://raw.githubusercontent.com/barry7007/LightBirdIdentifier/main/docs/screenshots/collection.png",
+     "name": "collection.png",
+     "size": 973541
+    },
+    {
+     "url": "https://raw.githubusercontent.com/barry7007/LightBirdIdentifier/main/docs/screenshots/identified.png",
+     "name": "identified.png",
+     "size": 569781
+    },
+    {
+     "url": "https://raw.githubusercontent.com/barry7007/LightBirdIdentifier/main/docs/screenshots/settings.png",
+     "name": "settings.png",
+     "size": 73420
+    }
+   ],
+   "shotsChecked": "2026-08-25",
+   "downloads": 52,
+   "firstSeen": "2026-08-07",
+   "signer": "9276d2b4ec2e238059119a23459164bd15201e9183180029fb30de2632f6fd21"
+  }
+ ]
+}
