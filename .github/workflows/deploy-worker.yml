@@ -15,6 +15,13 @@ on:
     paths: ['worker/**']
   workflow_dispatch:
 
+# The last workflow in this repo without one, so it was running on whatever the
+# repository default token scope is. It checks out and runs wrangler; the
+# credential that matters is CLOUDFLARE_API_TOKEN, and the GitHub token needs
+# to read this repo and nothing else.
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
