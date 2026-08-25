@@ -34,6 +34,11 @@
 <style>
   /* ---- LightOS's three colours. Nothing else. ------------------------------ */
   :root {
+    /* Native controls follow this. Without it a browser paints its own widgets
+       from the light palette -- which is what made the category dropdown open as
+       a white panel with a blue highlight bar on a page that has neither colour. */
+    color-scheme: dark;
+
     --background: #000000;
     --content: #ffffff;
     --content-secondary: #bbbbbb;
@@ -205,6 +210,26 @@
     color: var(--content);
   }
 
+  /* ---- Category picklist: the same list treatment as the repo picker below,
+     and for the same reason plus one. A <select> hands its open state to the
+     browser, which draws it from the system palette: on a page with three
+     colours and no accent, that arrived as a white panel with a blue bar
+     through it. Six categories fit on the page, so there is nothing a dropdown
+     was buying. ----------------------------------------------------------- */
+  .picks { margin-top: calc(var(--unit) * 0.5); }
+  .pick {
+    padding: calc(var(--unit) * 0.55) 0;
+    font-size: var(--text-copy);
+    color: var(--content-secondary);
+    cursor: pointer;
+  }
+  .pick:active { background: var(--content); color: var(--background); }
+  /* Chosen by a marker and by weight, never by a fill -- the same rule the repo
+     rows follow, because the palette has no accent to spend. */
+  .pick[aria-selected="true"] { color: var(--content); font-weight: 600; }
+  .pick[aria-selected="true"]::before { content: "> "; }
+  .pick[aria-selected="false"]::before { content: "  "; white-space: pre; }
+
   /* ---- Repo picker: a filterable list, not a <select>. A dropdown on a
      narrow panel hides everything but one line and can't be searched, which is
      unusable once someone has more than a handful of repos. ---------------- */
@@ -288,15 +313,9 @@
       <div class="count" id="repo-count"></div>
       <div class="picker" id="repo-list" role="listbox" aria-label="Your repositories"></div>
 
-      <label for="category-select">Category</label>
-      <select id="category-select">
-        <option value="reading">Reading</option>
-        <option value="utilities">Utilities</option>
-        <option value="games">Games</option>
-        <option value="media">Media</option>
-        <option value="productivity">Productivity</option>
-        <option value="hardware">Hardware / integrations</option>
-      </select>
+      <label id="category-label">Category</label>
+      <div class="picks" id="category-select" role="listbox"
+        aria-labelledby="category-label"></div>
 
       <!-- These two are what the catalogue actually shows. Left blank they
            fall back to the repo's own name and description, which is what
@@ -349,15 +368,9 @@
         <input id="edit-summary" type="text" maxlength="140" autocomplete="off" />
         <div class="count" id="edit-count">0 / 140</div>
 
-        <label for="edit-category">Category</label>
-        <select id="edit-category">
-          <option value="reading">Reading</option>
-          <option value="utilities">Utilities</option>
-          <option value="games">Games</option>
-          <option value="media">Media</option>
-          <option value="productivity">Productivity</option>
-          <option value="hardware">Hardware / integrations</option>
-        </select>
+        <label id="edit-category-label">Category</label>
+        <div class="picks" id="edit-category" role="listbox"
+          aria-labelledby="edit-category-label"></div>
 
         <button id="save-btn" style="margin-top: calc(var(--unit) * 2.5);">
           <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5">
@@ -450,6 +463,56 @@
 
   let allRepos = [];
   let reposError = null;
+  /** The categories, in one place: the picklists are built from this list. */
+  const CATEGORIES = [
+    ["reading", "Reading"],
+    ["utilities", "Utilities"],
+    ["games", "Games"],
+    ["media", "Media"],
+    ["productivity", "Productivity"],
+    ["hardware", "Hardware / integrations"],
+  ];
+
+  const DEFAULT_CATEGORY = "utilities";
+
+  /** Fill a picklist and choose one row. Idempotent, so it can be re-opened. */
+  function buildPicks(id, chosen) {
+    const host = el(id);
+    host.innerHTML = "";
+    for (const [value, label] of CATEGORIES) {
+      const row = document.createElement("div");
+      row.className = "pick";
+      row.setAttribute("role", "option");
+      row.dataset.value = value;
+      row.textContent = label;
+      row.addEventListener("click", () => { buzz(); setPicks(id, value); });
+      host.appendChild(row);
+    }
+    setPicks(id, chosen);
+  }
+
+  /** A value the catalogue knows, or the default. Never what arrived unchecked. */
+  function knownCategory(value) {
+    const wanted = String(value || "").toLowerCase();
+    return CATEGORIES.some(([v]) => v === wanted) ? wanted : DEFAULT_CATEGORY;
+  }
+
+  function setPicks(id, value) {
+    const host = el(id);
+    const chosen = knownCategory(value);
+    host.dataset.value = chosen;
+    for (const row of host.children) {
+      row.setAttribute("aria-selected", String(row.dataset.value === chosen));
+    }
+  }
+
+  function picksValue(id) {
+    return knownCategory(el(id).dataset.value);
+  }
+
+  buildPicks("category-select", DEFAULT_CATEGORY);
+  buildPicks("edit-category", DEFAULT_CATEGORY);
+
   let selectedRepo = null;
 
   function renderRepos(filter) {
@@ -527,7 +590,7 @@
         body: JSON.stringify({
           session,
           repo: selectedRepo,
-          category: el("category-select").value,
+          category: picksValue("category-select"),
           name: el("name-input").value,
           summary: el("summary-input").value,
           adb: el("adb-input").value,
@@ -622,7 +685,7 @@
         editing = app;
         el("edit-name").value = app.name || "";
         el("edit-summary").value = app.summary || "";
-        el("edit-category").value = app.category || "utilities";
+        setPicks("edit-category", app.category);
         el("edit-count").textContent = `${(app.summary || "").length} / 140`;
         el("manage-form").style.display = "block";
         // Re-armed on every selection. Both are disabled while a request is in
@@ -684,7 +747,7 @@
     fileChange("/edit", {
       name: el("edit-name").value,
       summary: el("edit-summary").value,
-      category: el("edit-category").value,
+      category: picksValue("edit-category"),
     }, el("save-btn"));
   });
 
