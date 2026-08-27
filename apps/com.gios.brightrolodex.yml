@@ -1,0 +1,10 @@
+pkg: com.gios.brightrolodex
+name: Rolodex
+repo: gi-os/BrightRolodex
+category: productivity
+summary: >-
+  A rolodex for people you know, not just people you can dial. One card per person, flipped
+  with the wheel, and a phone number is optional — so the super and whoever lives in 4B get a
+  card too. Draw their face from parts and a pencil, zooming in for the detail, and it becomes
+  their contact photo everywhere on the phone. Search finds people by anything you wrote down:
+  "beagle" finds the neighbour with the beagle.
