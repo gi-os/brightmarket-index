@@ -1,0 +1,8 @@
+pkg: com.gios.brightcollect
+name: Collect
+repo: gi-os/BrightCollect
+category: media
+summary: 'Photograph a thing and keep the thing: the object is cut out of its background
+  and kept as a sticker, with a magic wand and a brush to fix the cutout. Sends to BrightChat.'
+adb:
+  - adb shell pm grant com.gios.brightcollect android.permission.WRITE_SECURE_SETTINGS
