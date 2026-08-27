@@ -4,5 +4,5 @@ repo: gi-os/BrightRecorder
 category: media
 summary: >-
   A tape recorder for moments. Clips are filed by where you were and when, and the brightness
-  wheel winds through them as one tape, either way, audible as it goes. Keep several tapes at
-  once.
+  wheel winds through all of them as one continuous tape, forwards or backwards, audible as it
+  goes. Keep several tapes at once, each with its own name and pattern.

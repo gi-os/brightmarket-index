@@ -4,5 +4,5 @@ repo: gi-os/BrightFantasy
 category: utilities
 summary: >-
   ESPN fantasy football: your matchup, your lineup, the standings, the draft board and the
-  waiver wire. Start and sit by tapping two players; an illegal swap is refused with the
-  reason.
+  waiver wire. Start and sit by tapping two players, and an illegal swap is refused with the
+  reason before anything is sent.

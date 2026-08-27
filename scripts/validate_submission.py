@@ -50,7 +50,12 @@ NAME_RE = re.compile(r"[\w .\-]{1,60}", re.UNICODE)
 
 # The summary is only ever data, but it is data written into YAML that the
 # published index carries, so it gets a length bound rather than a shape.
-SUMMARY_MAX = 200
+#
+# Was 200, which was the number the browse row could show when the row showed
+# two lines of it. The row shows four now, so the bound went up to match what
+# the client will actually draw -- rather than the summaries being cut to fit a
+# limit no screen had asked for.
+SUMMARY_MAX = 320
 
 # Refuse to pull an arbitrarily large file into memory over an unauthenticated
 # URL. The releases API already told us how big the asset is, so the check is
@@ -230,8 +235,8 @@ def parse_issue(body: str) -> dict:
     summary = field(body, "Summary")
     if len(summary) > SUMMARY_MAX:
         raise Reject(
-            f"That summary is {len(summary)} characters. Keep it under {SUMMARY_MAX} — it has "
-            "to fit on a phone screen."
+            f"That summary is {len(summary)} characters. Keep it under {SUMMARY_MAX} — that is "
+            "four lines in a browse row, which is all the phone will draw."
         )
 
     return {

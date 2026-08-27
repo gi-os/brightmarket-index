@@ -4,8 +4,8 @@ repo: gi-os/BrightHotspot
 category: utilities
 summary: >-
   Instant Hotspot for the device Apple left out. Open your iPad and the phone, still in your
-  pocket, raises its hotspot; the iPad joins a network it already knows. Shizuku makes the
-  call.
+  pocket, raises its own hotspot; the iPad joins a network it already knows. Shizuku makes the
+  one call an app is not allowed to.
 adb:
   # Not a grant on this app -- the one thing it needs a shell for is somebody else's service.
   # Raising the hotspot is signature|privileged since Android 11, so it goes through Shizuku, and

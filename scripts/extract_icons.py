@@ -257,13 +257,22 @@ def from_apk(path):
 
 
 def normalise(blob):
-    """One square opaque 192px PNG, whatever came in.
+    """One square opaque greyscale 192px PNG, whatever came in.
 
     Opaque on purpose. BrightMarket draws on black, and a lot of these icons are
     light artwork on nothing at all -- an alpha channel would render them
     invisible against the very background they were cut out of. Which ground to
     flatten onto is decided by the artwork: light marks get black behind them,
     dark marks get white, so nothing can come out as a blank square.
+
+    Greyscale on purpose too, and converted here rather than filtered by each
+    client. This phone is a black-and-white phone; a colour icon is not a
+    brighter version of a grey one, it is the wrong thing in the row. Three apps
+    ship the stock green Android robot and one ships an orange bird, and on a
+    panel LightOS keeps in greyscale anyway those would only ever have been
+    colour on the web catalogue and on the handful of screens BrightControl
+    grants colour to. Doing it at the source means there is one answer, both
+    clients get it, and nothing has to remember to strip saturation.
     """
     img = Image.open(io.BytesIO(blob)).convert("RGBA")
 
@@ -287,7 +296,9 @@ def normalise(blob):
         img = flat
 
     buf = io.BytesIO()
-    img.convert("RGB").save(buf, format="PNG", optimize=True)
+    # ITU-R 601-2 luma, which is what PIL's L conversion is -- a green robot and
+    # a red one stop being different pictures, which is the point.
+    img.convert("L").save(buf, format="PNG", optimize=True)
     return buf.getvalue()
 
 

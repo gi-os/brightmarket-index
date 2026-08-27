@@ -3,6 +3,7 @@ name: BrightControl
 repo: gi-os/BrightControl
 category: hardware
 summary: >-
-  The phone's hardware working everywhere, and the settings LightOS never shipped: keys bound
-  per app, edge swipes, per-app color, a lock face, volume, Wi-Fi logins. No computer in the
-  room.
+  The phone's hardware working everywhere, and the settings LightOS never shipped a screen
+  for: the wheel, the camera, home and volume keys bound per app, edge swipes, per-app color,
+  a lock face, a volume readout, and a captive-portal login. It grants itself what all of that
+  needs, with no computer in the room.
