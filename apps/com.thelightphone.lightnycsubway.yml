@@ -3,4 +3,6 @@ name: BrightTransit
 repo: gi-os/BrightTransit
 upstream: lightphone/light-sdk
 category: utilities
-summary: Live MTA subway arrivals.
+summary: >-
+  Live New York subway arrivals, read straight from the MTA feeds with no key and no server in
+  the middle. Real route bullets, two columns per station, 445 stations to search.

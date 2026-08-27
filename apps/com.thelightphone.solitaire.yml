@@ -2,4 +2,6 @@ pkg: com.thelightphone.solitaire
 name: BrightSolitaire
 repo: gi-os/BrightSolitaire
 category: games
-summary: Klondike, draw one, unlimited redeals.
+summary: >-
+  Klondike, draw one, unlimited redeals. The suit is carried by shape rather than color, so a
+  one-bit panel needs no legend.

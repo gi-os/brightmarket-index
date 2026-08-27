@@ -2,4 +2,6 @@ pkg: com.gios.lightauth
 name: BrightAuthenticator
 repo: gi-os/BrightAuthenticator
 category: utilities
-summary: IN DEVELOPMENT - TOTP codes on the Light Phone III, in a PIN-wrapped vault.
+summary: >-
+  TOTP two-factor codes in a vault wrapped by a PIN, backed up nightly through BrightSync and
+  sealed with that same PIN before it leaves.

@@ -268,6 +268,25 @@ def load_catalogue(root: str) -> list[dict]:
 
 PUBLISHED_INDEX = "https://brightmarket.gzl.dev/index-v1.json"
 
+SITE = "https://brightmarket.gzl.dev"
+
+
+def icon_url(root: str, pkg: str) -> str:
+    """The published icon for a package, or "" if it has none.
+
+    Icons are committed under icons/ by scripts/extract_icons.py and served by
+    Pages alongside this file, so the only question here is whether the file
+    exists. Deliberately not generated during a build: this workflow has
+    contents: read and deploys rather than commits, so anything it wrote would
+    live for exactly one run.
+
+    An absolute URL rather than a path, because the client is an Android app
+    holding one string, not a browser with a base URL.
+    """
+    return f"{SITE}/icons/{pkg}.png" if os.path.exists(
+        os.path.join(root, "icons", f"{pkg}.png")
+    ) else ""
+
 
 def load_previous(path: str) -> tuple[dict, dict]:
     """The last published index, keyed by pkg and also by repo.
@@ -613,6 +632,22 @@ def main() -> int:
             )
         warn(f"publishing a {len(previous)} -> {len(out)} shrink because ALLOW_SHRINK=1")
 
+    # The icon, stamped over every entry at the end rather than inside the loop.
+    #
+    # Several paths above append a *carried* entry -- an app whose releases could
+    # not be read, or whose signer no longer matches -- and those carry last
+    # run's fields. Setting the icon there too would mean a newly added icon did
+    # not appear until the app happened to release, which for the apps that get
+    # carried is exactly the case that never happens.
+    for entry in out:
+        url = icon_url(root, entry["pkg"])
+        if url:
+            entry["icon"] = url
+        else:
+            # Eighteen of these declare no icon anywhere. Absent, not empty:
+            # clients test for the key and draw a lettered tile instead.
+            entry.pop("icon", None)
+
     doc = {
         "format": 1,
         "generated": datetime.datetime.now(datetime.timezone.utc).isoformat(),
@@ -659,7 +694,11 @@ def main() -> int:
     with gzip.open(index_path + ".gz", "wt") as f:
         json.dump(doc, f)
 
-    print(f"indexed {len(out)}/{len(apps)} apps, {len(warnings)} warning(s)")
+    with_icons = sum(1 for a in out if a.get("icon"))
+    print(
+        f"indexed {len(out)}/{len(apps)} apps, {with_icons} with an icon, "
+        f"{len(warnings)} warning(s)"
+    )
     for a in out:
         shots = len(a.get("screenshots", []))
         print(

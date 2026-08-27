@@ -2,4 +2,7 @@ pkg: com.gios.lightremote
 name: BrightRemote
 repo: gi-os/BrightRemote
 category: utilities
-summary: Apple TV remote, speaking the Companion protocol natively.
+summary: >-
+  An Apple TV remote speaking the Companion protocol natively, hand-ported to Kotlin. Nearly
+  the whole panel is the touchpad, with buttons, power, the app list and text typed from the
+  phone.

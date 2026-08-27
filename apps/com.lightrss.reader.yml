@@ -3,6 +3,8 @@ name: BrightNews
 repo: gi-os/BrightNews
 upstream: zachattack323/LightRSS
 category: reading
-summary: RSS, Atom and Gmail newsletters in one reader.
+summary: >-
+  RSS and Atom feeds in one section, Gmail newsletters in the other, both read in the same
+  reader. Feeds, read state, saved items and search all stay on the phone.
 adb:
   - adb shell pm grant com.lightrss.reader android.permission.WRITE_SECURE_SETTINGS

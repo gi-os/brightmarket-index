@@ -2,5 +2,6 @@ pkg: com.gios.lightsync
 name: BrightSync
 repo: gi-os/BrightSync
 category: utilities
-summary: IN DEV - Sync data and photos with local NAS every night, supports roll +
-  bright tools
+summary: >-
+  Nightly backups of the Bright apps onto your own NAS, encrypted on the phone before they
+  leave. An app opts in by publishing a provider, so adding one never means releasing sixteen.

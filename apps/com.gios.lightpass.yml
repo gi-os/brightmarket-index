@@ -2,6 +2,9 @@ pkg: com.gios.lightpass
 name: BrightPasses
 repo: gi-os/BrightPasses
 category: utilities
-summary: Photograph a ticket, keep the stub.
+summary: >-
+  Movie ticket stubs. Photograph one and the title, theater, date, time, seat and price are
+  read off the paper; the collection sorts by showtime and archives itself once the film has
+  ended.
 adb:
   - adb shell pm grant com.gios.lightpass android.permission.WRITE_SECURE_SETTINGS

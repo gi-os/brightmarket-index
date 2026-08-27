@@ -90,6 +90,10 @@
   .hero-icon { position:relative; width:172px; height:172px; border-radius:16px; overflow:hidden;
     border:2px solid var(--fg); animation:bob 5s ease-in-out infinite; display:flex;
     align-items:center; justify-content:center; background:#000; font-family:var(--round); font-size:72px; }
+  /* An app's own mark, where it has one. The box, the border and the sheen are
+     unchanged -- only what sits inside it. Apps with no icon anywhere (most SDK
+     tools declare none) keep the letter, which is what this always drew. */
+  .hero-icon img, .tile-icon img { width:100%; height:100%; object-fit:contain; display:block; }
   .hero-icon .sh { position:absolute; inset:0; animation:sheen 5s ease-in-out infinite;
     background:linear-gradient(115deg,rgba(255,255,255,0) 42%,rgba(255,255,255,.22) 50%,rgba(255,255,255,0) 58%); }
   .cat-pill { padding:3px 10px; border-radius:999px; background:var(--fg); color:#000;
@@ -149,7 +153,7 @@
     display:flex; flex-direction:column; min-height:124px; transition:.15s; background:#000; }
   .tile:hover { border-color:var(--fg); transform:translateY(-3px); }
   .tile[aria-selected="true"] { border-color:var(--fg); }
-  .tile-icon { width:38px; height:38px; border-radius:10px; flex-shrink:0; display:flex; align-items:center;
+  .tile-icon { width:38px; height:38px; border-radius:10px; overflow:hidden; flex-shrink:0; display:flex; align-items:center;
     justify-content:center; font-family:var(--round); font-size:18px; background:var(--fg); color:#000; }
   .tile-name { font-family:var(--round); font-size:15px; }
   .tile-meta { font-family:var(--mono); font-size:9px; letter-spacing:.1em; color:#7a7a80; margin-top:3px; }
@@ -314,6 +318,13 @@
     });
   }
 
+  /** The app's icon, or its first letter. Same rule as the phone client. */
+  function mark(a) {
+    return a.icon
+      ? `<img src="${esc(a.icon)}" alt="" loading="lazy" />`
+      : esc(a.name[0]);
+  }
+
   function renderHero(app) {
     if (!app) { $("hero").innerHTML = ""; return; }
     const self_ = app.pkg === "com.gios.brightmarket";
@@ -324,7 +335,7 @@
     const shots = app.screenshots || [];
     $("hero").innerHTML = `
       <div style="flex-shrink:0; display:flex; flex-direction:column; gap:12px; align-items:center; width:172px;">
-        <div class="hero-icon">${esc(app.name[0])}<div class="sh"></div></div>
+        <div class="hero-icon">${mark(app)}<div class="sh"></div></div>
         <div style="font-family:var(--mono); font-size:9px; letter-spacing:.14em; color:#6a6a70;
              text-align:center; line-height:1.7;">OPEN SOURCE<br />NO ACCOUNT</div>
       </div>
@@ -620,7 +631,7 @@
     $("grid").innerHTML = list.map((a, i) => `
       <div class="tile" data-i="${i}" aria-selected="${i === sel}">
         <div style="display:flex; gap:11px; align-items:flex-start;">
-          <div class="tile-icon">${esc(a.name[0])}</div>
+          <div class="tile-icon">${mark(a)}</div>
           <div style="min-width:0; flex:1;">
             <div class="tile-name">${esc(a.name)}</div>
             <div class="tile-meta">${esc(ver(a.latest.version))} · ${mb(a.latest.size)}</div>

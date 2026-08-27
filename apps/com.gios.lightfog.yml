@@ -2,6 +2,8 @@ pkg: com.gios.lightfog
 name: FogLight
 repo: gi-os/FogLight
 category: utilities
-summary: 'Fog of World companion: record where you go, watch the fog clear.'
+summary: >-
+  A Fog of World companion: records where you go, clears the fog over an OpenStreetMap base
+  map, and imports your real history out of the app's own sync files.
 adb:
   - adb shell pm grant com.gios.lightfog android.permission.ACCESS_BACKGROUND_LOCATION

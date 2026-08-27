@@ -3,6 +3,8 @@ name: BrightLibrary
 repo: gi-os/BrightLibrary
 upstream: fluffyspace/FastRead
 category: reading
-summary: EPUB, comics and Calibre, with a cover shelf and a page view.
+summary: >-
+  EPUB, comics and Calibre, with a cover shelf, a page view and the volume keys turning pages.
+  Manga is converted at import and reads right to left.
 adb:
   - adb shell pm grant com.lightfastread android.permission.WRITE_SECURE_SETTINGS

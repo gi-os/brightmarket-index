@@ -1,0 +1,67 @@
+name: Refresh icons
+
+# Keeps icons/ current. Separate from the index build on purpose: that workflow
+# runs every fifteen minutes, has contents: read and deploys rather than
+# commits, so an icon it generated would exist for exactly one run. This one
+# commits, and runs rarely -- an app changes its mark maybe once a year.
+#
+# Repo icons (docs/icon.png and friends) are re-read every run and cost one
+# request each. An APK is only downloaded for an app that has no icon yet,
+# because every download is +1 on that release's public counter and the Popular
+# sort is built out of those numbers. See scripts/extract_icons.py.
+on:
+  schedule:
+    # Sunday, early. Nothing here is urgent and it keeps the weekday runs clean.
+    - cron: '19 5 * * 0'
+  push:
+    branches: [main]
+    # A new app appearing in the catalogue is the one case worth reacting to
+    # immediately: it would otherwise be listed with a lettered tile for up to a
+    # week while its icon sat one request away.
+    paths:
+      - 'apps/**'
+      - 'scripts/extract_icons.py'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Re-fetch every icon, APK downloads included.'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-icons
+  cancel-in-progress: false
+
+jobs:
+  icons:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+      - run: pip install pyyaml androguard pillow
+
+      - name: Extract icons
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 scripts/extract_icons.py ${{ inputs.force && '--force' || '' }}
+
+      - name: Commit anything that changed
+        run: |
+          git config user.name "brightmarket-bot"
+          git config user.email "actions@github.com"
+          git add icons
+          # The script rewrites nothing that is byte-identical, so an ordinary
+          # run finds nothing to commit and this step is a no-op rather than a
+          # failure. Pushing the index build's paths filter includes icons/**,
+          # so a commit here redeploys the site on its own.
+          if git diff --cached --quiet; then
+            echo "no icon changes"
+          else
+            git commit -m "icons: refresh"
+            git push
+          fi

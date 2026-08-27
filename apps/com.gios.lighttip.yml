@@ -2,4 +2,7 @@ pkg: com.gios.lighttip
 name: BrightTip
 repo: gi-os/BrightTip
 category: productivity
-summary: Tip calculator, and a receipt splitter that reads the line items off a photo.
+summary: >-
+  Calculator, currency converter, tip calculator and a receipt splitter that reads the line
+  items off a photo. Every figure is held in cents, so the per-person totals add back up to
+  the bill exactly.

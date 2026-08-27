@@ -2,6 +2,8 @@ pkg: com.gios.lightqr
 name: LightQR
 repo: gi-os/LightQR
 category: utilities
-summary: QR scanner and generator. Folded into Roll, which now has a QR mode.
+summary: >-
+  QR scanner and generator. Deprecated: it is Roll's QR mode now, one turn of the wheel from a
+  viewfinder that is already open.
 deprecated: true
 supersededBy: Roll

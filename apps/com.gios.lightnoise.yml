@@ -2,4 +2,6 @@ pkg: com.gios.lightnoise
 name: BrightNoise
 repo: gi-os/BrightNoise
 category: media
-summary: Twelve synthesised sounds, a two-layer mixer and a sleep timer.
+summary: >-
+  Twelve sounds synthesised in real time, a two-layer mixer and a sleep timer. The APK carries
+  no audio at all, so nothing loops and there is no seam to notice at 3 a.m.

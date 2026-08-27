@@ -2,8 +2,10 @@ pkg: com.gios.brighthotspot
 name: BrightHotspot
 repo: gi-os/BrightHotspot
 category: utilities
-summary: 'Instant-Hotspot clone for the Light Phone III: wakes the phone hotspot when
-  a paired iPad is near.'
+summary: >-
+  Instant Hotspot for the device Apple left out. Open your iPad and the phone, still in your
+  pocket, raises its hotspot; the iPad joins a network it already knows. Shizuku makes the
+  call.
 adb:
   # Not a grant on this app -- the one thing it needs a shell for is somebody else's service.
   # Raising the hotspot is signature|privileged since Android 11, so it goes through Shizuku, and

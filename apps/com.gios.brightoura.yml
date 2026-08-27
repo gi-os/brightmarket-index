@@ -2,4 +2,7 @@ pkg: com.gios.brightoura
 name: BrightOura
 repo: gi-os/BrightOura
 category: hardware
-summary: Reads your Oura ring straight off the ring over Bluetooth — no account, no cloud, nothing leaves the phone.
+summary: >-
+  Reads an Oura ring over Bluetooth: heart rate and variability, skin temperature, blood
+  oxygen, motion, steps, and the ring's own sleep staging. No account, no cloud, nothing
+  leaves the phone.

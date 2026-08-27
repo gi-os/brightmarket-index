@@ -3,5 +3,7 @@ name: LightKeyboard
 repo: gi-os/LightKeyboard
 upstream: adam-weber/light-keyboard
 category: hardware
-summary: A fork of the Light Phone keyboard, adding swipe typing and autocorrect from
-  a bundled dictionary. Works offline.
+summary: >-
+  The Light Phone keyboard, in every app instead of only Light's own. Swipe typing and
+  autocorrect run against a dictionary bundled in the APK, so nothing here touches the
+  network.

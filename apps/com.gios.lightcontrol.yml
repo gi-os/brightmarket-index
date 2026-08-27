@@ -2,4 +2,7 @@ pkg: com.gios.lightcontrol
 name: BrightControl
 repo: gi-os/BrightControl
 category: hardware
-summary: The wheel and camera button, working phone-wide.
+summary: >-
+  The phone's hardware working everywhere, and the settings LightOS never shipped: keys bound
+  per app, edge swipes, per-app color, a lock face, volume, Wi-Fi logins. No computer in the
+  room.

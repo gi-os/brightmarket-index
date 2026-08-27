@@ -2,4 +2,7 @@ pkg: com.gios.brightfantasy
 name: BrightFantasy
 repo: gi-os/BrightFantasy
 category: utilities
-summary: Your ESPN fantasy football matchup, lineup, standings and waiver wire.
+summary: >-
+  ESPN fantasy football: your matchup, your lineup, the standings, the draft board and the
+  waiver wire. Start and sit by tapping two players; an illegal swap is refused with the
+  reason.

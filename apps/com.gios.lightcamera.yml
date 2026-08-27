@@ -2,7 +2,8 @@ pkg: com.gios.lightcamera
 name: Roll
 repo: gi-os/Roll
 category: media
-summary: 'Camera and album: a film-roll viewfinder, real-time filters, face detection
-  and a QR mode.'
+summary: >-
+  A replacement camera and album: a film-roll viewfinder, filters on the wheel, video,
+  hardware face detection on the half-press, and a QR mode one turn away.
 adb:
   - adb shell pm grant com.gios.lightcamera android.permission.WRITE_SECURE_SETTINGS

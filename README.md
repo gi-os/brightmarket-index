@@ -10,6 +10,15 @@ no server: this repo *is* the backend.
   cannot collide, so merge order stops mattering.
 - **`index-v1.json`** — rebuilt by CI from `apps/` + the GitHub Releases
   API, and served from GitHub Pages. This is the single file the app fetches.
+- **`icons/`** — one 192px PNG per app, named after its applicationId, plus
+  `sources.json` recording where each came from. Written by
+  `scripts/extract_icons.py`: an app's own repo first (`docs/icon.png` and the
+  F-Droid fastlane path), then the APK's launcher icon resolved through its
+  resource table. Committed rather than generated at build time, because the
+  index workflow has `contents: read` and deploys instead of committing — an icon
+  it wrote would live for exactly one run. Eighteen apps declare no icon
+  anywhere, most of them SDK tools; those have no file here and no `icon` key in
+  the index, and both clients draw the app's first letter instead.
 - **`submit.html`** — the submission portal (GitHub OAuth, read-only).
 
 ## How an app gets in

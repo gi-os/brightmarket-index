@@ -4,6 +4,5 @@ repo: gi-os/brightthumb
 upstream: dessalines/thumb-key
 category: hardware
 summary: >-
-  Thumb-Key port for the Light Phone III — a one-thumb keyboard with swipe
-  typing, fully offline and private. Adapted to the LightOS black-and-white
-  panel.
+  A one-thumb keyboard with swipe typing, forked from Thumb-Key for the black-and-white panel,
+  plus voice typing that runs on the phone. No network, no telemetry.

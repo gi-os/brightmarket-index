@@ -3,7 +3,10 @@ name: BrightMusic
 repo: gi-os/BrightMusic
 upstream: jonathancaudill/phono
 category: media
-summary: Spotify, NTSradio + Radio, Podcasts + more! Forked from Jonathancaudill/phono
+summary: >-
+  Spotify on the phone, plus internet radio, podcasts, and a fingerprinter that names the
+  track a station is playing. Downloads for offline, and casting to Spotify Connect or AirPlay
+  speakers.
 adb:
   - adb shell appops set com.lightphone.spotify GET_USAGE_STATS allow
   - adb shell appops set com.lightphone.spotify SYSTEM_ALERT_WINDOW allow

@@ -2,4 +2,6 @@ pkg: com.gios.brightsudoku
 name: BrightSudoku
 repo: gi-os/BrightSudoku
 category: games
-summary: Sudoku where every puzzle is proven to have one answer and need no guessing.
+summary: >-
+  Sudoku made on the phone, where every puzzle is proven to have exactly one answer and proven
+  to need no guessing before it is dealt.

@@ -2,6 +2,8 @@ pkg: com.gios.lightnotebook
 name: BrightNotebook
 repo: gi-os/BrightNotebook
 category: productivity
-summary: Notes and a calendar, with your day gathered in one place.
+summary: >-
+  Notes and a calendar with your day on one page: entries, reminders, your work calendar, the
+  photos, the calls, the holidays. Photograph a page and Claude reads it into a note.
 adb:
   - adb shell appops set com.gios.lightnotebook SYSTEM_ALERT_WINDOW allow
