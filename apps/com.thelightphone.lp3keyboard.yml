@@ -1,0 +1,6 @@
+pkg: com.thelightphone.lp3keyboard
+name: SuperLight-Keyboard
+repo: rn-os/SuperLight-Keyboard
+category: hardware
+summary: A minimalist Light Phone 3–style Android keyboard with offline voice-to-text,
+  smart autocorrect, and modern typing conveniences.
