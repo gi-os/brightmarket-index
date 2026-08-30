@@ -1,0 +1,5 @@
+pkg: dev.ryanness.lightsketch
+name: Sketch
+repo: rn-os/light-sketch
+category: utilities
+summary: A free-form drawing and note-sketching tool for the Light Phone III
