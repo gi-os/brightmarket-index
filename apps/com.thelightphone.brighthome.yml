@@ -1,0 +1,11 @@
+pkg: com.thelightphone.brighthome
+name: BrightHome
+repo: gi-os/BrightHome
+upstream: lightphone/light-sdk
+category: utilities
+icon: docs/icon.png
+summary: >-
+  Home Assistant on the Light Phone. Favorites is the home page: the handful of things you
+  actually touch, one tap from the launcher. Rooms come from the area registry, scenes and
+  scripts fire from their own tab, and state stays live over the websocket. Setup is one
+  scanned code, because a long-lived token is 180 characters.
