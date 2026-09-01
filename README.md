@@ -37,6 +37,32 @@ no server: this repo *is* the backend.
   `scripts/validate_submission.py` applies directly (no manual merge — ownership
   was already proved by OAuth).
 
+## Linking to one app
+
+Every app has its own URL:
+
+```
+https://brightmarket.gzl.dev/app/com.gios.lightcamera/   (applicationId — always works)
+https://brightmarket.gzl.dev/app/roll/                   (name slug — when it is unambiguous)
+```
+
+Both open the catalogue with that app already in the hero. `browse.html` takes the
+key as `?app=<applicationId|slug>` and the address bar tracks whatever is
+selected, so copying the URL out of the bar shares what is on screen; the hero's
+**COPY LINK** button copies the short form. An unknown key is dropped into the
+filter box rather than ignored, so a renamed or delisted app shows its near
+matches instead of quietly opening on something else.
+
+The `/app/<key>/` pages are files, written by `scripts/build_index.py` on every
+run alongside `/apk`, for one reason: a link preview is read out of the document,
+and `browse.html` is a single document for the whole catalogue, so it can only
+ever describe the catalogue. Each page carries its app's own title, summary and
+icon and then redirects. Like `/apk` they are generated, never committed — the
+workflow deploys the tree it just built.
+
+The phone's equivalent is unchanged: `brightmarket://app/<applicationId>`, which
+is what the hero QR encodes.
+
 ## How an app gets in
 
 Either open a [submission issue](../../issues/new?template=submit-app.yml), or use

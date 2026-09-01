@@ -10,6 +10,11 @@
   app, read about it, and then there is exactly one code on screen to point a
   phone at.
 
+  Every app has its own URL: /app/<applicationId>/ (a generated page, for the
+  preview tags a paste needs) and ?app=<applicationId|name-slug> once here. The
+  address bar tracks the selection, so it is always the link to what you are
+  looking at.
+
   Reads the same index-v1.json the phone reads, so there is one source of truth.
   Everything else is inline: no build step, no framework, one file to deploy.
 -->
@@ -275,7 +280,48 @@
   const $ = (id) => document.getElementById(id);
 
   let apps = [], sel = 0, query = "", cat = "All", sortBy = "Popular";
+  // Which app the hero is on, by applicationId. `sel` is a position in the
+  // FILTERED list, so it survives nothing -- not a category change, not a
+  // re-sort -- and a link has to name an app rather than a slot. This is the
+  // real selection now; `sel` is derived from it in render().
+  let selPkg = "";
   const SORTS = ["Popular", "Updated", "Name"];
+
+  /* ---- Deep links ----------------------------------------------------------
+     One app, one URL. /app/<applicationId>/ is a generated page (build_index.py)
+     that carries the app's own preview tags and lands here, and ?app=<key> is
+     what the address bar holds once you are here -- so copying the URL shares
+     what is on screen and a reload comes back to it.
+
+     The name slug (?app=roll) is accepted as well as the applicationId, because
+     these get typed by hand and read out loud, and "com.gios.roll" is neither.
+  */
+  const slugOf = (a) =>
+    String(a.name).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  const shareUrl = (app) => new URL("./app/" + app.pkg + "/", location.href).href;
+
+  /** The app key the current URL asks for, or "". */
+  function askedFor() {
+    const p = new URLSearchParams(location.search).get("app") || "";
+    // Hash forms too: #app/<pkg> and #<pkg> cost nothing to accept, and a
+    // brightmarket:// link pasted whole is a thing people do with the QR's
+    // payload. They all mean the same request.
+    let h = "";
+    try { h = decodeURIComponent(location.hash.replace(/^#\/?/, "")); } catch (err) { h = ""; }
+    return (p || h).trim()
+      .replace(/^brightmarket:\/\/app\//i, "")
+      .replace(/^app\//i, "")
+      .replace(/\/+$/, "")
+      .toLowerCase();
+  }
+
+  /** Index in `apps` of an applicationId or name slug, or -1. */
+  function findApp(key) {
+    if (!key) return -1;
+    let i = apps.findIndex((a) => a.pkg.toLowerCase() === key);
+    if (i < 0) i = apps.findIndex((a) => slugOf(a) === key);
+    return i;
+  }
 
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -378,6 +424,7 @@
         </div>
         <a class="btn" href="${esc(app.latest.apk)}" target="_blank" rel="noopener">GET APK ↓</a>
         <div class="btn btn-ghost" id="readme-btn" style="cursor:pointer;">${self_ ? "HOW TO SET UP" : "README"}</div>
+        <div class="btn btn-ghost" id="share-btn" style="cursor:pointer;">COPY LINK</div>
         <a class="btn btn-ghost" href="https://github.com/${esc(app.repo)}" target="_blank" rel="noopener">SOURCE</a>
       </div>`;
     // The deep link assumes BrightMarket is already installed, which for
@@ -391,6 +438,15 @@
       qrInto($("hero-qr"), "brightmarket://app/" + app.pkg, 4);
       $("readme-btn").addEventListener("click", () => openReadme(app));
     }
+    // The link to this app, not to the catalogue. Copying the address bar works
+    // too -- syncUrl keeps it current -- but nobody thinks to try that, and the
+    // pretty form is the one worth passing on.
+    $("share-btn").addEventListener("click", async (e) => {
+      const node = e.currentTarget;
+      const ok = await copyText(shareUrl(app));
+      node.textContent = ok ? "LINK COPIED" : "COPY FAILED";
+      setTimeout(() => { node.textContent = "COPY LINK"; }, 1600);
+    });
     $("hero").querySelectorAll(".shots img").forEach((n, i) => {
       n.addEventListener("click", () => openShot(app, i));
       // Images arrive after layout and change the hero's height; without this
@@ -621,10 +677,60 @@
     // CSS, so the stack fits by construction.
   }
 
+  /**
+   * Point the address bar at the selected app.
+   *
+   * replaceState, not pushState: the arrow keys walk the catalogue one app at a
+   * time, and pushing would bury whatever page the visitor arrived from under a
+   * hundred entries of Back. The URL is a description of what is on screen
+   * here, not a place you navigated to.
+   */
+  function syncUrl(app) {
+    if (!app || !history.replaceState) return;
+    document.title = app.name + " \u00b7 BrightMarket";
+    const u = new URL(location.href);
+    u.searchParams.set("app", app.pkg);
+    // The hash was only ever an input form; leaving it would give two keys in
+    // one URL and no rule for which wins on reload.
+    u.hash = "";
+    if (u.href !== location.href) history.replaceState(null, "", u.href);
+  }
+
+  /** Clipboard, with the fallback that a non-secure origin still needs. */
+  async function copyText(text) {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    } catch (err) { /* fall through to the textarea */ }
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.cssText = "position:fixed; top:0; left:0; opacity:0;";
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch (err) { ok = false; }
+    ta.remove();
+    return ok;
+  }
+
   function render() {
     const list = visible();
+    // The selection follows the APP, not the slot it happens to occupy.
+    // Filtering and re-sorting move every position, so holding an index meant
+    // the hero silently swapped to whatever app had slid underneath it -- and a
+    // deep link would not survive its own first click on a sort chip.
+    if (selPkg) {
+      const i = list.findIndex((a) => a.pkg === selPkg);
+      if (i >= 0) sel = i;
+    }
     if (sel > list.length - 1) sel = Math.max(0, list.length - 1);
-    renderHero(list[sel]);
+    const app = list[sel];
+    selPkg = app ? app.pkg : "";
+    syncUrl(app);
+    renderHero(app);
 
     requestAnimationFrame(syncStickyOffsets);
 
@@ -633,7 +739,7 @@
     $("empty").style.display = list.length ? "none" : "block";
 
     $("grid").innerHTML = list.map((a, i) => `
-      <div class="tile" data-i="${i}" aria-selected="${i === sel}">
+      <div class="tile" data-i="${i}" data-pkg="${esc(a.pkg)}" aria-selected="${i === sel}">
         <div style="display:flex; gap:11px; align-items:flex-start;">
           <div class="tile-icon">${mark(a)}</div>
           <div style="min-width:0; flex:1;">
@@ -658,6 +764,7 @@
     $("grid").querySelectorAll(".tile").forEach((n) =>
       n.addEventListener("click", () => {
         sel = +n.dataset.i;
+        selPkg = n.dataset.pkg;
         render();
         // No scrollIntoView here. It existed when the hero scrolled away with
         // the page; now that the hero is anchored the panel is always visible,
@@ -680,15 +787,28 @@
   }
 
   function move(d) {
-    const n = visible().length;
-    if (!n) return;
-    sel = (sel + d + n) % n;
+    const list = visible();
+    if (!list.length) return;
+    sel = (sel + d + list.length) % list.length;
+    // Without this the pkg pin would drag the hero straight back.
+    selPkg = list[sel].pkg;
     render();
   }
 
   $("setup-btn").addEventListener("click", openSetup);
-  $("q").addEventListener("input", (e) => { query = e.target.value; sel = 0; render(); });
+  // Typing drops the pin on purpose: you filter in order to find something
+  // else, and the hero showing the top result is the useful behaviour. Category
+  // and sort chips do NOT drop it -- re-sorting is a change of view, not of
+  // subject, so the app you were reading about stays.
+  $("q").addEventListener("input", (e) => { query = e.target.value; sel = 0; selPkg = ""; render(); });
   window.addEventListener("resize", syncStickyOffsets);
+  // Back, forward, and a link to ?app=/#app= on the page you are already on.
+  const followUrl = () => {
+    const i = findApp(askedFor());
+    if (i >= 0) { selPkg = apps[i].pkg; render(); }
+  };
+  window.addEventListener("popstate", followUrl);
+  window.addEventListener("hashchange", followUrl);
   window.addEventListener("keydown", (e) => {
     if (e.target && /input|textarea/i.test(e.target.tagName)) return;
     if (e.key === "ArrowRight") { move(1); e.preventDefault(); }
@@ -701,6 +821,17 @@
       const res = await fetch(INDEX, { cache: "no-store" });
       const data = await res.json();
       apps = data.apps || [];
+      // A link that names an app opens on that app -- the point of the whole
+      // feature. An unresolvable key goes into the filter box rather than being
+      // ignored: a renamed or delisted app then shows its near matches, or
+      // NOTHING MATCHES, instead of quietly opening on something the visitor
+      // did not ask for.
+      const want = askedFor();
+      if (want) {
+        const i = findApp(want);
+        if (i >= 0) selPkg = apps[i].pkg;
+        else { query = want; $("q").value = want; }
+      }
       $("wire").innerHTML = [0, 1].map(() =>
         `<span>${apps.map((a) => `${esc(a.name.toUpperCase())} ${esc(ver(a.latest.version))}`).join("</span><span>")}</span>`
       ).join("");
