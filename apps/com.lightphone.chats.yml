@@ -2,5 +2,5 @@ pkg: com.lightphone.chats
 name: Chats
 repo: fenleon/chats
 category: communication
-summary: A Chats tool, serving WhatsApp, Instagram, and your other chats on your Light
-  Phone III.
+summary: A Chats tool, serving WhatsApp, Signal, Telegram, and your other chats on
+  your Light Phone III.
