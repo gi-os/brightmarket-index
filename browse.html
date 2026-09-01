@@ -395,7 +395,9 @@
           <div style="font-family:var(--round); font-size:30px; line-height:1;">${esc(app.name)}</div>
           <div class="cat-pill">${esc((app.category || "").toUpperCase())}</div>
           ${app.deprecated ? `<div class="cat-pill" style="background:#000; color:var(--fg); box-shadow:inset 0 0 0 1px var(--fg);">DEPRECATED${app.supersededBy ? " · USE " + esc(app.supersededBy.toUpperCase()) : ""}</div>` : ""}
-          <div style="font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:var(--dimmer);">${esc(app.pkg)}</div>
+          <div id="share-btn" title="Copy link to this app"
+               style="font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:var(--dimmer);
+                      cursor:pointer; border-bottom:1px dashed var(--edge);">${esc(app.pkg)}</div>
         </div>
         <div style="display:flex; align-items:center; gap:8px; margin-top:-8px;">
           <div style="font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:#6a6a70;">BY</div>
@@ -424,7 +426,6 @@
         </div>
         <a class="btn" href="${esc(app.latest.apk)}" target="_blank" rel="noopener">GET APK ↓</a>
         <div class="btn btn-ghost" id="readme-btn" style="cursor:pointer;">${self_ ? "HOW TO SET UP" : "README"}</div>
-        <div class="btn btn-ghost" id="share-btn" style="cursor:pointer;">COPY LINK</div>
         <a class="btn btn-ghost" href="https://github.com/${esc(app.repo)}" target="_blank" rel="noopener">SOURCE</a>
       </div>`;
     // The deep link assumes BrightMarket is already installed, which for
@@ -438,14 +439,16 @@
       qrInto($("hero-qr"), "brightmarket://app/" + app.pkg, 4);
       $("readme-btn").addEventListener("click", () => openReadme(app));
     }
-    // The link to this app, not to the catalogue. Copying the address bar works
-    // too -- syncUrl keeps it current -- but nobody thinks to try that, and the
-    // pretty form is the one worth passing on.
+    // Copying the address bar works too -- syncUrl keeps it current -- but
+    // nobody thinks to try that, and the /app/<pkg>/ form is the one worth
+    // passing on. It hangs off the applicationId rather than a button in the
+    // action stack: the hero is height-capped so that it can stay pinned, and a
+    // fourth button spent a whole row of that budget on it.
     $("share-btn").addEventListener("click", async (e) => {
       const node = e.currentTarget;
       const ok = await copyText(shareUrl(app));
       node.textContent = ok ? "LINK COPIED" : "COPY FAILED";
-      setTimeout(() => { node.textContent = "COPY LINK"; }, 1600);
+      setTimeout(() => { node.textContent = app.pkg; }, 1600);
     });
     $("hero").querySelectorAll(".shots img").forEach((n, i) => {
       n.addEventListener("click", () => openShot(app, i));

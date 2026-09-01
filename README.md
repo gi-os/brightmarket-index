@@ -48,8 +48,8 @@ https://brightmarket.gzl.dev/app/roll/                   (name slug — when it 
 
 Both open the catalogue with that app already in the hero. `browse.html` takes the
 key as `?app=<applicationId|slug>` and the address bar tracks whatever is
-selected, so copying the URL out of the bar shares what is on screen; the hero's
-**COPY LINK** button copies the short form. An unknown key is dropped into the
+selected, so copying the URL out of the bar shares what is on screen; clicking
+the applicationId under the app's name copies the short form. An unknown key is dropped into the
 filter box rather than ignored, so a renamed or delisted app shows its near
 matches instead of quietly opening on something else.
 
