@@ -38,7 +38,19 @@ HEADERS = {
 if os.environ.get("GH_TOKEN"):
     HEADERS["Authorization"] = f"Bearer {os.environ['GH_TOKEN']}"
 
-VALID_CATEGORIES = {"reading", "utilities", "games", "media", "productivity", "hardware"}
+VALID_CATEGORIES = {
+    "reading",
+    "utilities",
+    "games",
+    "media",
+    "productivity",
+    "hardware",
+    "lifestyle",
+    "entertainment",
+    "communication",
+    "travel",
+    "health",
+}
 
 # The display name is free text from the issue body, and it does not stay text:
 # it is written into a YAML file, into a PR title, and into a `git commit -m`
@@ -217,7 +229,11 @@ def parse_issue(body: str) -> dict:
     if category and category not in VALID_CATEGORIES:
         raise Reject(f"`{category}` isn't a category. Pick one of: {', '.join(sorted(VALID_CATEGORIES))}.")
     if not category:
-        cat_m = re.search(r"(reading|utilities|games|media|productivity|hardware)", body, re.I)
+        cat_m = re.search(
+            r"(reading|utilities|games|media|productivity|hardware|lifestyle|entertainment|communication|travel|health)",
+            body,
+            re.I,
+        )
         category = cat_m.group(1).lower() if cat_m else ""
     if action == "submit" and not category:
         raise Reject(f"No category found. Pick one of: {', '.join(sorted(VALID_CATEGORIES))}.")
@@ -239,6 +255,31 @@ def parse_issue(body: str) -> dict:
             "four lines in a browse row, which is all the phone will draw."
         )
 
+    # Optional. When present it names where the launcher mark lives, either as a
+    # direct https:// image URL or as a path inside the app's own repo (the same
+    # `docs/icon.png` convention extract_icons.py already checks). Nothing
+    # dangerous can come through: extract_icons.py fetches it as a fixed-size
+    # image blob and normalises it to a 192px PNG before anything renders it.
+    icon = field(body, "Icon")
+    if not icon:
+        # Hand-written form: the answer sits under a `### Icon` heading rather
+        # than a `**Icon:**` line, so read the first non-empty line under it.
+        # \b keeps "### Iconic" and friends from matching.
+        form_m = re.search(
+            r"^#{1,4}\s*Icon\b[^\n]*\n+(.+?)\s*\n", body, re.M | re.I
+        )
+        if form_m and not form_m.group(1).startswith("##"):
+            icon = form_m.group(1).strip()
+    if icon and not re.fullmatch(
+        r"(?:https?://[^\s]+|(?:docs/)?[A-Za-z0-9_./-]+\.(?:png|webp|jpg|jpeg))",
+        icon,
+        re.I,
+    ):
+        raise Reject(
+            "`Icon` has to be a direct image URL (https://…) or a path inside the app's repo "
+            "ending in .png/.webp/.jpg — e.g. `docs/icon.png`."
+        )
+
     return {
         "action": action,
         "repo": repo_m.group(1).removesuffix(".git"),
@@ -246,6 +287,7 @@ def parse_issue(body: str) -> dict:
         "name": name,
         "summary": summary,
         "adb": field(body, "ADB"),
+        "icon": icon,
     }
 
 
@@ -433,11 +475,15 @@ def main() -> int:
             if not match:
                 raise Reject(f"`{repo}` isn't in BrightMarket yet — submit it first.")
             changed = []
-            for key in ("name", "summary", "category"):
+            for key in ("name", "summary", "category", "icon"):
                 value = req.get(key)
                 if value and value != match.get(key):
                     changed.append(f"{key}: `{match.get(key)}` → `{value}`")
                     match[key] = value
+            # Clearing an icon back to the automatic lookup is a real edit too.
+            if "icon" in req and not req["icon"] and match.get("icon"):
+                changed.append(f"icon: `{match['icon']}` → (repo/APK lookup)")
+                match.pop("icon", None)
             if req.get("adb"):
                 adb = parse_adb(req["adb"], match["pkg"])
                 if adb != match.get("adb", []):
@@ -468,6 +514,7 @@ def main() -> int:
                 "repo": repo,
                 "category": req["category"],
                 "summary": req["summary"] or info["summary"],
+                **( {"icon": req["icon"]} if req["icon"] else {}),
             }
             # Checked against the applicationId read out of the APK, so a submitter can only
             # ask for grants on the app they actually shipped.

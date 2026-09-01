@@ -1,7 +1,7 @@
 pkg: com.vandam.ritual
 name: Ritual
 repo: KEZO555/Ritual
-category: utilities
+category: lifestyle
 summary: An AeroPress recipe guide for the Light Phone III.
 adb:
   - adb shell pm grant com.vandam.ritual android.permission.WRITE_SECURE_SETTINGS

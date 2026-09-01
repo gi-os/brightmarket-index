@@ -20,6 +20,12 @@ body:
     id: category
     attributes:
       label: Category
-      options: [reading, utilities, games, media, productivity, hardware]
+      options: [reading, utilities, games, media, productivity, hardware, lifestyle, entertainment, communication, travel, health]
     validations:
       required: true
+  - type: input
+    id: icon
+    attributes:
+      label: Icon (optional)
+      description: Where your app's mark lives, if it isn't showing on its own. A direct https:// image URL, or a path inside your repo like `docs/icon.png`. Defaults to the repo/APK lookup.
+      placeholder: "docs/icon.png"

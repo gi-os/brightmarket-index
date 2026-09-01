@@ -7,6 +7,10 @@ way to find the row you meant.
 
 Where an icon comes from, in order:
 
+0. The app's own `icon:` declaration in apps/<pkg>.yml -- either a direct
+   https:// image URL or a path inside the repo (the same `docs/icon.png`
+   convention). This is the concrete, explainable path: a developer commits
+   the mark and it shows up on the next refresh, no guessing by filename.
 1. A file in the app's own repo -- docs/icon.png is the convention across the
    Bright* set, and F-Droid's fastlane path is the convention outside it. Free
    to check, always current, and the developer controls it by committing.
@@ -117,6 +121,31 @@ def default_branch(repo):
         # Not fatal: main is right for all but a couple of repos, and a wrong
         # guess only means this app falls through to its APK.
         return "main"
+
+
+def from_explicit(repo, icon):
+    """The app's own `icon:` declaration, when it has one.
+
+    Two shapes, both already validated on the way in:
+    * `https://…`  -- a direct image URL, fetched as-is.
+    * `docs/icon.png` -- a path inside the app's repo, fetched from the
+      default branch. Cheaper and more current than a URL someone has to
+      keep re-uploading, and it is the same convention REPO_ICONS checks.
+    """
+    if not icon:
+        return None
+    branch = default_branch(repo)
+    url = icon if icon.startswith(("http://", "https://")) else (
+        "https://raw.githubusercontent.com/" + repo + "/" + branch + "/" + icon
+    )
+    blob = fetch(url, 60)
+    if blob and len(blob) > 256:
+        try:
+            Image.open(io.BytesIO(blob)).verify()
+        except Exception:
+            return None
+        return blob, icon
+    return None
 
 
 def from_repo(repo):
@@ -361,7 +390,11 @@ def main():
 
         where = None
         blob = None
-        got = from_repo(repo)
+        # The app's own `icon:` declaration wins; the repo/APK lookups below
+        # are the fallback for the apps that never declared one.
+        got = from_explicit(repo, app.get("icon"))
+        if not got:
+            got = from_repo(repo)
         if got:
             blob, where = got
         elif have and not args.force:
