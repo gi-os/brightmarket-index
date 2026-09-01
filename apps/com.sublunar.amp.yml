@@ -1,0 +1,6 @@
+pkg: com.sublunar.amp
+name: Amp
+repo: sublunarian/light-amp
+category: media
+summary: A music player for the Light Phone III — Subsonic, Plex, Jellyfin and local
+  media libraries.
