@@ -328,6 +328,14 @@
       <input id="summary-input" type="text" maxlength="320" placeholder="What it does, in a sentence" autocomplete="off" />
       <div class="count" id="summary-count">0 / 140</div>
 
+      <!-- The concrete, explainable icon path. If this app's mark won't show
+           up on its own (the repo has no docs/icon.png and the APK's manifest
+           icon can't be resolved), this names it exactly: either a direct
+           https:// image URL or a path inside the repo. Extract_icons checks
+           it first, on the next refresh. -->
+      <label for="icon-input">Icon <span class="opt">optional — https:// URL or repo path like docs/icon.png</span></label>
+      <input id="icon-input" type="text" maxlength="300" placeholder="https://… or docs/icon.png" autocomplete="off" spellcheck="false" />
+
       <!-- Apps that need a grant LightOS has no settings screen for. BrightControl
            runs these on the phone so nobody has to find a computer, which is why
            they are worth collecting here rather than leaving in a README. -->
@@ -471,6 +479,11 @@
     ["media", "Media"],
     ["productivity", "Productivity"],
     ["hardware", "Hardware / integrations"],
+    ["lifestyle", "Lifestyle"],
+    ["entertainment", "Entertainment"],
+    ["communication", "Communication"],
+    ["travel", "Travel"],
+    ["health", "Health / fitness"],
   ];
 
   const DEFAULT_CATEGORY = "utilities";
@@ -593,6 +606,7 @@
           category: picksValue("category-select"),
           name: el("name-input").value,
           summary: el("summary-input").value,
+          icon: el("icon-input").value,
           adb: el("adb-input").value,
         }),
       });
@@ -637,17 +651,30 @@
   async function loadMyApps() {
     el("manage-list").innerHTML = '<div class="hint">Loading…</div>';
     try {
-      const res = await fetch(`${WORKER_URL}/manage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ session }),
-      });
+      // /manage re-asserts the ownership-guaranteed repo list from the signed
+      // session; the catalogue join happens here against the same published
+      // index the phone itself reads, so "your apps" is defined by the repo
+      // owner field, not by anything the browser asserts on its own.
+      const [res, indexRes] = await Promise.all([
+        fetch(`${WORKER_URL}/manage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ session }),
+        }),
+        fetch("./index-v1.json", { cache: "no-store" }),
+      ]);
       const data = await res.json();
       if (!res.ok) {
         el("manage-list").innerHTML = `<div class="message">${data.error || "couldn't load"}</div>`;
         return;
       }
-      myApps = data.apps || [];
+      const catalogue = indexRes.ok ? (await indexRes.json()).apps || [] : [];
+      // Case-insensitive join: GitHub repo names are canonical but the
+      // catalogue's `repo` is hand-written, and the validator matches on
+      // lowercase, so the portal should not silently miss "Your apps" entries
+      // for a casing difference alone.
+      const mine = new Set((data.repos || []).map((r) => r.toLowerCase()));
+      myApps = catalogue.filter((a) => mine.has((a.repo || "").toLowerCase()));
       el("manage-login").textContent = data.login;
       renderMyApps();
     } catch {
@@ -715,11 +742,22 @@
     if (confirmText && !window.confirm(confirmText)) return;
     button.disabled = true;
     el("manage-result").innerHTML = "";
+    // The validator's edit branch rejects a request where nothing differs from
+    // the listing ("Nothing in that request differs from what's already
+    // listed"). Only the fields the submitter actually changed should be sent,
+    // so an untouched Name/Description/Category stays out of the body and can't
+    // trip that rejection.
+    const changed = {};
+    for (const key of ["name", "summary", "category"]) {
+      if (key in payload && payload[key] !== editing[key === "category" ? "category" : key]) {
+        changed[key] = payload[key];
+      }
+    }
     try {
       const res = await fetch(`${WORKER_URL}${path}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ session, repo: editing.repo, ...payload }),
+        body: JSON.stringify({ session, repo: editing.repo, ...changed }),
       });
       const data = await res.json();
       if (!res.ok) {

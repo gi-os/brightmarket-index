@@ -1,7 +1,7 @@
 pkg: com.gios.brightway
 name: BrightWay
 repo: gi-os/BrightWay
-category: utilities
+category: travel
 summary: >-
   Walking and subway directions, text-first: one big instruction, the wheel scrolls the trip.
   Search opens on a map you can zoom with the wheel, and the compass keeps working with no key

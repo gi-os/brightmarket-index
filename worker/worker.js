@@ -42,7 +42,7 @@ const SESSION_TTL_SECONDS = 10 * 60; // the signed session is only good for 10 m
 // go green until the running worker answers with the string that is in the source -- which is
 // the check that would have caught the ADB, Name and Summary fields shipping to a bundle that
 // was never redeployed.
-const VERSION = "5-custom-domain-origin";
+const VERSION = "6-manage-edit-remove";
 
 export default {
   async fetch(request, env) {
@@ -62,6 +62,15 @@ export default {
       }
       if (url.pathname === "/submit" && request.method === "POST") {
         return await handleSubmit(request, env, cors);
+      }
+      if (url.pathname === "/manage" && request.method === "POST") {
+        return await handleManage(request, env, cors);
+      }
+      if (url.pathname === "/edit" && request.method === "POST") {
+        return await handleManageAction("edit", request, env, cors);
+      }
+      if (url.pathname === "/remove" && request.method === "POST") {
+        return await handleManageAction("remove", request, env, cors);
       }
       return json({ error: "not found" }, 404, cors);
     } catch (err) {
@@ -178,7 +187,7 @@ async function handleExchange(request, env, cors) {
 // then files the issue with SUBMIT_PAT, a credential the browser never sees.
 // ---------------------------------------------------------------------------
 async function handleSubmit(request, env, cors) {
-  const { session, repo, category, name, summary, adb } = await request.json();
+  const { session, repo, category, name, summary, icon, adb } = await request.json();
   if (!session || !repo || !category) {
     return json({ error: "missing session, repo, or category" }, 400, cors);
   }
@@ -209,6 +218,11 @@ async function handleSubmit(request, env, cors) {
     // the repo's own name and description.
     ...(oneLine(name, 40) ? [`**Name:** ${oneLine(name, 40)}`] : []),
     ...(oneLine(summary, 140) ? [`**Summary:** ${oneLine(summary, 140)}`] : []),
+    // The concrete icon path: either a direct image URL or a path inside the
+    // repo. Left blank the icon is looked up from the repo and the APK as
+    // before, so this is strictly an upgrade for apps whose mark wouldn't
+    // resolve on its own.
+    ...(oneLine(icon, 300) ? [`**Icon:** ${oneLine(icon, 300)}`] : []),
     // Checked properly on the validator side, against the applicationId read out of the
     // APK. Carried verbatim here so the issue shows exactly what was asked for.
     ...(oneLine(adb, 600) ? [`**ADB:** ${oneLine(adb, 600)}`] : []),
@@ -232,6 +246,90 @@ async function handleSubmit(request, env, cors) {
   if (!issueRes.ok) {
     const detail = await issueRes.text();
     return json({ error: "failed to file the submission", detail }, 502, cors);
+  }
+
+  const issue = await issueRes.json();
+  return json({ ok: true, issueUrl: issue.html_url }, 200, cors);
+}
+
+// ---------------------------------------------------------------------------
+// Step 3: "Your apps". Returns the verified repo list carried in the session
+// -- the same ownership-guaranteed list /submit trusts -- and lets the portal
+// join it against the published catalogue client-side. No extra PAT scope is
+// needed: this endpoint never reads the index repo, it only re-asserts what
+// OAuth already proved.
+// ---------------------------------------------------------------------------
+async function handleManage(request, env, cors) {
+  const { session } = await request.json();
+  if (!session) return json({ error: "missing session" }, 400, cors);
+
+  let claims;
+  try {
+    claims = await verifySession(env, session);
+  } catch {
+    return json({ error: "session expired or invalid -- please sign in again" }, 401, cors);
+  }
+
+  return json({ login: claims.login, repos: claims.repos }, 200, cors);
+}
+
+// ---------------------------------------------------------------------------
+// Step 4: edit / remove. Same shape as /submit -- a verified session, then an
+// issue filed with SUBMIT_PAT carrying an explicit `**Action:**` field so the
+// validator routes it to its edit/remove branch instead of a fresh submission.
+// The action field is read by parse_issue(); without it the validator would
+// treat the request as a new listing for a repo that's already indexed and
+// reject it.
+// ---------------------------------------------------------------------------
+async function handleManageAction(action, request, env, cors) {
+  const { session, repo, name, summary, category } = await request.json();
+  if (!session || !repo) {
+    return json({ error: "missing session or repo" }, 400, cors);
+  }
+
+  let claims;
+  try {
+    claims = await verifySession(env, session);
+  } catch {
+    return json({ error: "session expired or invalid -- please sign in again" }, 401, cors);
+  }
+
+  if (!claims.repos.some((r) => r.toLowerCase() === repo.toLowerCase())) {
+    return json({ error: "that repo isn't in your verified, owned repo list" }, 403, cors);
+  }
+
+  const oneLine = (v, max) => String(v ?? "").replace(/[\r\n]+/g, " ").trim().slice(0, max);
+
+  const body = [
+    `**Action:** ${action}`,
+    `**Repo:** https://github.com/${repo}`,
+    // Only the fields the submitter actually changed are sent, so the validator's
+    // edit branch reports exactly what moved instead of "nothing differs".
+    ...(oneLine(name, 40) ? [`**Name:** ${oneLine(name, 40)}`] : []),
+    ...(oneLine(summary, 140) ? [`**Summary:** ${oneLine(summary, 140)}`] : []),
+    // Category is already a validated pick from a bounded set, so truncating
+    // it here could only corrupt it (e.g. "Hardware / integrations" cut to 20).
+    ...(category ? [`**Category:** ${category.trim()}`] : []),
+    `**Submitted by:** @${claims.login} (verified via GitHub OAuth, ownership confirmed server-side)`,
+  ].join("\n");
+
+  const issueRes = await fetch(`https://api.github.com/repos/${env.SUBMIT_REPO}/issues`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${env.SUBMIT_PAT}`,
+      Accept: "application/vnd.github+json",
+      "User-Agent": "brightmarket-portal",
+    },
+    body: JSON.stringify({
+      title: `${action === "remove" ? "Remove" : "Edit"}: ${repo}`,
+      body,
+      labels: ["submission"],
+    }),
+  });
+
+  if (!issueRes.ok) {
+    const detail = await issueRes.text();
+    return json({ error: `failed to file the ${action} request`, detail }, 502, cors);
   }
 
   const issue = await issueRes.json();

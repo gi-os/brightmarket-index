@@ -2,7 +2,7 @@ pkg: com.gios.lightchat
 name: BrightChat
 repo: gi-os/BrightChat
 upstream: craigeley/chat
-category: utilities
+category: communication
 summary: >-
   iMessage through a self-hosted BlueBubbles server over Tailscale. Favorites, known and
   unknown threads, photos and video in full color, and a heads-up box when a text arrives.
