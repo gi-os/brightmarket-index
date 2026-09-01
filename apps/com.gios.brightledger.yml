@@ -1,0 +1,9 @@
+pkg: com.gios.brightledger
+name: BrightLedger
+repo: gi-os/BrightLedger
+category: productivity
+summary: >-
+  Bank balances and transactions over SimpleFIN, with no server in the middle: you claim a
+  read-only credential on the Bridge, scan it in, and the phone talks straight to your bank's
+  data from then on. Spent today, spent this month, and what your subscriptions actually add
+  up to.
