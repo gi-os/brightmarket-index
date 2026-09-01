@@ -1,0 +1,9 @@
+pkg: com.gios.brightsteps
+name: Steps
+repo: gi-os/BrightSteps
+category: health
+summary: >-
+  A step counter that stays on the phone. It reads the Light Phone's own hardware step sensor —
+  no account, no Google, nothing leaves the device — and shows today against a goal you set, with
+  the last seven days beside it. Counts in the background at almost no battery cost, and hands the
+  day's total to BrightNotebook.
