@@ -208,7 +208,7 @@
   const link = (a) => `./browse.html?app=${encodeURIComponent(a.pkg)}`;
   const short = (d) => { const [y, m, dd] = d.split("-"); return `${["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"][+m - 1]} ${+dd}`; };
 
-  let apps = [], days = [], snap = {}, top = [], mode = "RANK", range = "30D", sel = null;
+  let apps = [], days = [], snap = {}, top20 = [], mode = "RANK", range = "30D", sel = null;
   const MODES = ["RANK", "DAILY", "TOTAL"], RANGES = ["7D", "30D", "90D", "ALL"];
 
   // Series helpers. `days` is sorted ascending; `snap[day][pkg]` is lifetime downloads.
@@ -290,7 +290,7 @@
   }
 
   function renderBoard() {
-    $("board").innerHTML = top.map((a, i) => `
+    $("board").innerHTML = top20.map((a, i) => `
       <div class="row" data-pkg="${esc(a.pkg)}" aria-selected="${sel === a.pkg}">
         <div class="rk">${String(i + 1).padStart(2, "0")}</div>
         <div class="ic">${mark(a)}</div>
@@ -302,7 +302,7 @@
       n.addEventListener("mouseenter", () => highlight(n.dataset.pkg));
       n.addEventListener("mouseleave", () => highlight(sel));
       n.addEventListener("click", () => { sel = sel === n.dataset.pkg ? null : n.dataset.pkg; renderBoard(); renderChart(); });
-      n.addEventListener("dblclick", () => location.href = link(top.find((a) => a.pkg === n.dataset.pkg)));
+      n.addEventListener("dblclick", () => location.href = link(top20.find((a) => a.pkg === n.dataset.pkg)));
     });
   }
 
@@ -319,7 +319,7 @@
     const W = 900, H = 440, L = 46, R = 16, T = 18, B = 34;
     const iw = W - L - R, ih = H - T - B;
     const ranks = mode === "RANK" ? rankSeries() : null;
-    const series = top.map((a) => {
+    const series = top20.map((a) => {
       let v = mode === "RANK" ? (ranks[a.pkg] || []) : mode === "DAILY" ? deltas(a.pkg) : totals(a.pkg);
       return { a, v: v.slice(off) };
     });
@@ -416,7 +416,7 @@
         const d = (idx.generated || new Date().toISOString()).slice(0, 10);
         snap = { [d]: Object.fromEntries(apps.map((a) => [a.pkg, a.downloads || 0])) }; days = [d];
       }
-      top = [...apps].sort((a, b) => (b.downloads || 0) - (a.downloads || 0)).slice(0, 20);
+      top20 = [...apps].sort((a, b) => (b.downloads || 0) - (a.downloads || 0)).slice(0, 20);
       const gen = idx.generated ? new Date(idx.generated) : new Date();
       $("stamp").textContent = "AS OF " + gen.toISOString().slice(0, 16).replace("T", " ") + " UTC";
       $("span").textContent = `${apps.length} APPS · ${days.length} DAY${days.length === 1 ? "" : "S"} OF HISTORY`;
