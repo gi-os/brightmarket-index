@@ -34,6 +34,8 @@ import tempfile
 
 import yaml
 
+from apk_assets import pick_apk
+
 try:
     from pyaxmlparser import APK
 except ImportError:  # keeps the script runnable without the optional dep
@@ -190,7 +192,7 @@ def find_screenshots(repo: str, default_branch: str) -> list[dict]:
 
 
 def build_preview(pkg: str, prereleases: list, carried: dict | None) -> dict | None:
-    """The newest prerelease with exactly one .apk, hashed and read.
+    """The newest prerelease with one unambiguous .apk, hashed and read.
 
     Returns None when there is no usable prerelease, and also when the newest
     prerelease is older than nothing at all -- the caller drops the key entirely
@@ -201,16 +203,12 @@ def build_preview(pkg: str, prereleases: list, carried: dict | None) -> dict | N
     this would download every app's nightly on every run, which at a fifteen
     minute schedule is a lot of bandwidth to confirm nothing changed.
     """
-    candidates = [
-        (r, [a for a in r["assets"] if a["name"].endswith(".apk")])
-        for r in prereleases
-    ]
-    candidates = [(r, assets) for r, assets in candidates if len(assets) == 1]
+    candidates = [(r, pick_apk(r)[0]) for r in prereleases]
+    candidates = [(r, asset) for r, asset in candidates if asset]
     if not candidates:
         return None
 
-    release, assets = candidates[0]
-    asset = assets[0]
+    release, asset = candidates[0]
 
     if carried and carried.get("version") == release["tag_name"].lstrip("v"):
         return carried
@@ -538,10 +536,12 @@ def main() -> int:
         # sees it.
         published = [r for r in releases if not r["draft"] and not r["prerelease"]]
         prereleases = [r for r in releases if not r["draft"] and r["prerelease"]]
-        apk_releases = [
-            (r, [a for a in r["assets"] if a["name"].endswith(".apk")]) for r in published
-        ]
-        apk_releases = [(r, assets) for r, assets in apk_releases if assets]
+        # (release, chosen asset). pick_apk resolves a release that carries a debug
+        # build alongside the release one instead of discarding it -- the same call
+        # the validator makes, from the same module, so a submission that was
+        # admitted cannot then be skipped here forever.
+        apk_releases = [(r, pick_apk(r)[0]) for r in published]
+        apk_releases = [(r, asset) for r, asset in apk_releases if asset]
 
         if not apk_releases:
             # An app already in the index does not quietly stop having releases. When the API
@@ -569,22 +569,13 @@ def main() -> int:
                 warn(f"{pkg}: {repo} has no published release with an .apk asset -- skipped")
             continue
 
-        downloads = sum(a["download_count"] for _, assets in apk_releases for a in assets)
+        # Counted over the chosen asset of each release, not over every .apk on it.
+        # A repo publishing a debug build every time used to have both downloads
+        # summed into its total, which flattered it in the Popular sort against a
+        # repo shipping one file.
+        downloads = sum(asset["download_count"] for _, asset in apk_releases)
 
-        latest_release, latest_assets = apk_releases[0]
-        if len(latest_assets) > 1:
-            # Two APKs on one release is exactly how an updater ends up installing
-            # a debug build with the wrong signature over the release one.
-            #
-            # The bad release is refused, but the app keeps its last good listing rather than
-            # disappearing from the store: the mistake is in one release, not in the app, and
-            # removing it would also take its firstSeen and its signer pin with it.
-            warn(f"{pkg}: latest release has {len(latest_assets)} .apk assets -- skipped")
-            keep = carried or previous.get(pkg)
-            if keep:
-                out.append(keep)
-            continue
-        asset = latest_assets[0]
+        latest_release, asset = apk_releases[0]
 
         # Deliberately NOT `previous.get(pkg)` yet: pkg here is still whatever
         # the catalogue claims, and it can be wrong. Looked up after the APK has had

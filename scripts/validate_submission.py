@@ -7,9 +7,10 @@ reason, which the workflow posts back as an issue comment.
 
 The checks exist for specific reasons, not as generic hygiene:
 
-* exactly one .apk per release -- two assets is precisely how an updater ends up
-  installing a debug build (different signing cert) over the release one, which
-  surfaces to the user as an opaque "Failure: Invalid".
+* one unambiguous .apk per release -- a debug build installed over a release one
+  carries a different signing cert, which surfaces to the user as an opaque
+  "Failure: Invalid". A release naming both (`app-debug.apk`, `app-release.apk`)
+  is not ambiguous and is no longer refused; see scripts/apk_assets.py.
 * tag shape -- versionCode is derived from the tag's trailing segment, and the
   client compares it against PackageManager to decide "update available". A repo
   that doesn't follow the convention would be indexed with a wrong version
@@ -29,6 +30,8 @@ import urllib.request
 import urllib.error
 
 import yaml
+
+from apk_assets import pick_apk
 
 API = "https://api.github.com"
 HEADERS = {
@@ -280,6 +283,25 @@ def parse_issue(body: str) -> dict:
             "ending in .png/.webp/.jpg — e.g. `docs/icon.png`."
         )
 
+    # Optional, and only meaningful for a fork. build_index.py has carried an
+    # `upstream` key into the index since forks started arriving, and browse.html
+    # draws a "fork of" link from it -- but nothing here ever read the field, so
+    # the only way to set it was to hand-edit apps/<id>.yml after the fact. The
+    # collision message now tells fork authors to send it, so it has to land.
+    #
+    # owner/repo, or a GitHub URL to one. Shape-checked rather than fetched: an
+    # upstream that has gone private or been renamed is still the honest answer to
+    # "what does this fork?", and a dead link in a credit is not worth a rejection.
+    upstream = field(body, "Upstream")
+    if upstream:
+        up_m = re.search(r"(?:github\.com/)?([\w.-]+/[\w.-]+?)(?:\.git)?/?$", upstream)
+        if not up_m:
+            raise Reject(
+                f"`{upstream}` isn't a repo. `Upstream` names what this app forks, as "
+                "`owner/name` or a GitHub URL."
+            )
+        upstream = up_m.group(1)
+
     return {
         "action": action,
         "repo": repo_m.group(1).removesuffix(".git"),
@@ -288,6 +310,7 @@ def parse_issue(body: str) -> dict:
         "summary": summary,
         "adb": field(body, "ADB"),
         "icon": icon,
+        "upstream": upstream,
     }
 
 
@@ -311,16 +334,16 @@ def validate(repo: str) -> dict:
         )
 
     latest = releases[0]
-    apks = [a for a in latest["assets"] if a["name"].endswith(".apk")]
-    if not apks:
-        raise Reject(f"The latest release (`{latest['tag_name']}`) has no `.apk` attached.")
-    if len(apks) > 1:
-        names = ", ".join(f"`{a['name']}`" for a in apks)
-        raise Reject(
-            f"The latest release has {len(apks)} `.apk` assets ({names}). Attach exactly one — "
-            "a debug APK alongside the release one is how an updater installs the wrong "
-            "signature and users get `Failure: Invalid`."
-        )
+    # Was: refuse any release with more than one .apk. That turned away releases
+    # which had already said which file was which -- KEZO555/Tide shipped
+    # `tide-debug.apk` next to `tide-release.apk` and was rejected for it, with a
+    # perfectly good release APK sitting right there. pick_apk drops the variants
+    # that are never the thing to install and refuses only genuine ambiguity, and
+    # build_index.py makes the identical choice from the identical module.
+    apk, why = pick_apk(latest)
+    if apk is None:
+        raise Reject(why)
+    apks = [apk]
 
     # Read the applicationId straight out of the APK the user is actually shipping,
     # rather than trusting anything they typed. AndroidManifest.xml inside an APK is
@@ -475,7 +498,7 @@ def main() -> int:
             if not match:
                 raise Reject(f"`{repo}` isn't in BrightMarket yet — submit it first.")
             changed = []
-            for key in ("name", "summary", "category", "icon"):
+            for key in ("name", "summary", "category", "icon", "upstream"):
                 value = req.get(key)
                 if value and value != match.get(key):
                     changed.append(f"{key}: `{match.get(key)}` → `{value}`")
@@ -502,9 +525,40 @@ def main() -> int:
                 if a["repo"].lower() == repo.lower():
                     raise Reject(f"`{repo}` is already in BrightMarket.")
                 if a["pkg"] == info["pkg"]:
+                    # Still refused, and it has to be. The applicationId is not
+                    # only an index key -- it is the filename under apps/, the key
+                    # the published index is stored under, the icon's name, the
+                    # /app/<id>/ share page, and the identity the signer pin hangs
+                    # off. Two entries claiming one id would overwrite each other
+                    # at four of those and flap the pin between two certificates
+                    # at the fifth. And on the phone Android identifies an app by
+                    # (applicationId, certificate), so a second app under a taken
+                    # id cannot install over the first: it fails with
+                    # INSTALL_FAILED_UPDATE_INCOMPATIBLE, which is the same
+                    # `Failure: Invalid` the APK check upstream exists to prevent.
+                    #
+                    # What changed is only the message. This used to end at "two
+                    # apps can't share an applicationId", which is true and tells
+                    # a fork author nothing about the way forward -- KEZO555/Type
+                    # (submission #111) is a LightKeyboard fork and there is a
+                    # perfectly good listing available to it, one rename away.
+                    same_owner = a["repo"].split("/")[0].lower() == repo.split("/")[0].lower()
+                    if same_owner:
+                        raise Reject(
+                            f"Package `{info['pkg']}` is already indexed as **{a['name']}** "
+                            f"(`{a['repo']}`), which is also yours. If this is the same app "
+                            f"under a new repo, file a `remove` for `{a['repo']}` first; if it "
+                            "is a second app, it needs its own applicationId."
+                        )
                     raise Reject(
                         f"Package `{info['pkg']}` is already indexed as **{a['name']}** "
-                        f"(`{a['repo']}`). Two apps can't share an applicationId."
+                        f"(`{a['repo']}`). Two apps can't share an applicationId — Android "
+                        "identifies an app by that id plus its signing certificate, so a phone "
+                        f"with **{a['name']}** installed could not install this one at all.\n\n"
+                        f"If `{repo}` is a fork, change its `applicationId` in "
+                        "`app/build.gradle` to something of your own (`com.yourname.type`, say), "
+                        "cut a release, and resubmit — add `Upstream: "
+                        f"{a['repo']}` and the listing will credit what it forks."
                     )
             entry = {
                 "pkg": info["pkg"],
@@ -515,6 +569,7 @@ def main() -> int:
                 "category": req["category"],
                 "summary": req["summary"] or info["summary"],
                 **( {"icon": req["icon"]} if req["icon"] else {}),
+                **( {"upstream": req["upstream"]} if req["upstream"] else {}),
             }
             # Checked against the applicationId read out of the APK, so a submitter can only
             # ask for grants on the app they actually shipped.
