@@ -1,0 +1,5 @@
+pkg: com.lightphone.tasks
+name: tasks
+repo: fenleon/tasks
+category: utilities
+summary: Tasks — a calm, local-first to-do list for the Light Phone III
