@@ -462,8 +462,18 @@ def load_history() -> dict:
     Shape: {"days": {"2026-09-02": {"<pkg>": <lifetime downloads>, ...}, ...}}. One
     entry per app per UTC day; the last build of the day wins, so a day's number is
     "where the counter stood at the end of that day". Everything on the stats page
-    -- the top-20 lines, "+21 today", the movers -- is a difference between two of
-    these snapshots. Nothing is counted client-side and nothing about visitors is
+    -- the top-20 lines, the movers -- is a difference between two of these snapshots.
+
+    Two more sections exist only for "+21 today":
+
+    * "open": the first snapshot taken on the current day, per release. Kept so the
+      marker has a baseline on the day the history starts (and on the first day after
+      a gap) instead of reading +0 until midnight.
+    * "releases": per-release counts for the last few days. A lifetime total is a sum
+      over releases, and it goes DOWN when old releases are pruned -- BrightControl
+      read 358 then 351 on the same afternoon. Differencing totals would then hide a
+      real day's gains behind the drop, so "today" is summed per release instead:
+      a tag that vanished simply drops out, a new tag counts in full. Nothing is counted client-side and nothing about visitors is
     recorded: the source is still GitHub's own download_count, just remembered.
 
     Like the index, this lives only in the deployment, so it is read back from the
@@ -472,7 +482,7 @@ def load_history() -> dict:
     would publish a history file with one day in it over one with months.
     """
     if os.environ.get("ALLOW_EMPTY_HISTORY") == "1":
-        return {"days": {}}
+        return {"days": {}, "open": {}, "releases": {}}
     url = f"{PUBLISHED_HISTORY}?t={int(datetime.datetime.now().timestamp())}"
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "brightmarket-index"})
@@ -481,11 +491,11 @@ def load_history() -> dict:
         days = doc.get("days") or {}
         if not isinstance(days, dict):
             raise ValueError("days is not an object")
-        return {"days": days}
+        return {"days": days, "open": doc.get("open") or {}, "releases": doc.get("releases") or {}}
     except urllib.error.HTTPError as e:
         if e.code == 404:
             warn("no published history yet; starting the download history today")
-            return {"days": {}}
+            return {"days": {}, "open": {}, "releases": {}}
         raise SystemExit(f"FATAL: could not read {PUBLISHED_HISTORY} ({e}); refusing to publish "
                          "a history that would overwrite the real one")
     except Exception as e:
@@ -493,12 +503,23 @@ def load_history() -> dict:
                          "a history that would overwrite the real one")
 
 
-def downloads_before(days: dict, today: str, pkg: str) -> int | None:
-    """The most recent snapshot strictly before today, or None when there is none."""
-    for day in sorted(days, reverse=True):
-        if day < today and pkg in days[day]:
-            return days[day][pkg]
-    return None
+def get_all_releases(repo: str) -> list:
+    """Every release, not the first hundred.
+
+    A single page silently capped the download total of any app with more than 100
+    releases, and -- worse -- made it FALL with each new release, as the oldest one
+    dropped off the page and took its downloads with it. BrightControl had 210
+    releases and read 358 when GitHub's own total was around 725. Capped at ten
+    pages, which is a thousand releases, so one runaway repo cannot eat the rate
+    limit.
+    """
+    out: list = []
+    for page in range(1, 11):
+        chunk = get(f"{API}/repos/{repo}/releases?per_page=100&page={page}")
+        out.extend(chunk)
+        if len(chunk) < 100:
+            break
+    return out
 
 
 def main() -> int:
@@ -519,7 +540,7 @@ def main() -> int:
         # has been read. Two things below need it.
         carried = previous_by_repo.get(repo.lower())
         try:
-            releases = get(f"{API}/repos/{repo}/releases?per_page=100")
+            releases = get_all_releases(repo)
         except urllib.error.HTTPError as e:
             warn(f"{pkg}: cannot read releases for {repo} ({e.code}) -- keeping previous entry")
             # carried first, for the same reason as the empty-list branch below: the catalogue's
@@ -714,6 +735,8 @@ def main() -> int:
                 "screenshots": screenshots,
                 "shotsChecked": shots_checked,
                 "downloads": downloads,
+                # Per release, for the history baseline. Popped before the index is written.
+                "_perRelease": {r["tag_name"]: asset["download_count"] for r, asset in apk_releases},
                 # Carried forward, never recomputed -- see module docstring.
                 "firstSeen": prev.get("firstSeen") or today,
                 "signer": signer,
@@ -765,25 +788,60 @@ def main() -> int:
             # clients test for the key and draw a lettered tile instead.
             entry.pop("icon", None)
 
-    # Today's snapshot, then "+N today" on every entry. The delta is against the last
-    # snapshot before today -- yesterday's normally, or older if a day was missed --
-    # so a gap in runs never shows as a spike. On the very first day there is nothing
-    # to compare against and every app reads 0, which is honest.
+    # Today's snapshot, then "+N today" on every entry.
+    #
+    # The baseline is per release (see load_history): the last day before today that
+    # has one, else the first snapshot taken today. On an app's very first day in the
+    # index there is nothing to compare against and it reads 0, which is honest.
     days = history["days"]
+    rel = history["releases"]
+    opened = history["open"]
+    per_release = {a["pkg"]: a.pop("_perRelease", None) for a in out}
+    # A carried entry (releases unreadable this run) keeps whatever it had.
+    for pkg in list(per_release):
+        if per_release[pkg] is None:
+            per_release[pkg] = (rel.get(today) or {}).get(pkg) or (opened.get("counts") or {}).get(pkg) or {}
     days[today] = {a["pkg"]: a["downloads"] for a in out}
+    rel[today] = per_release
+    if opened.get("day") != today:
+        opened = {"day": today, "counts": per_release}
+        # One-time recovery, like SEED_INDEX: a day's opening snapshot recovered from a
+        # run log, for the day the history was first switched on. Totals only, so they
+        # are wrapped as one pseudo-release and differenced as sums.
+        seed = os.path.join(root, "recovery", f"open-{today}.json")
+        if os.path.exists(seed):
+            with open(seed) as f:
+                seeded = json.load(f)
+            if seeded.get("day") == today and isinstance(seeded.get("counts"), dict):
+                opened["counts"] = {
+                    p: (c if isinstance(c, dict) else {"*total*": c}) for p, c in seeded["counts"].items()
+                }
+                warn(f"opening snapshot for {today} seeded from {seed}")
+    prior = [d for d in sorted(rel, reverse=True) if d < today]
+    base_day = prior[0] if prior else None
     for a in out:
-        before = downloads_before(days, today, a["pkg"])
-        a["downloadsToday"] = max(0, a["downloads"] - before) if before is not None else 0
+        pkg = a["pkg"]
+        now = per_release.get(pkg) or {}
+        base = (rel[base_day].get(pkg) if base_day else None) or opened["counts"].get(pkg) or {}
+        if "*total*" in base:
+            a["downloadsToday"] = max(0, a["downloads"] - base["*total*"])
+        else:
+            a["downloadsToday"] = sum(max(0, n - base.get(tag, 0)) for tag, n in now.items())
     for stale in sorted(days)[:-HISTORY_DAYS]:
         del days[stale]
+    # Per-release detail is only needed for the baseline; a few days covers a gap.
+    for stale in sorted(rel)[:-4]:
+        del rel[stale]
     with open(os.path.join(root, "history-v1.json"), "w") as f:
         json.dump(
             {"format": 1,
              "generated": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-             "days": {d: days[d] for d in sorted(days)}},
+             "days": {d: days[d] for d in sorted(days)},
+             "open": opened,
+             "releases": {d: rel[d] for d in sorted(rel)}},
             f, separators=(",", ":"),
         )
-    print(f"  /history-v1.json -> {len(days)} day(s)")
+    print(f"  /history-v1.json -> {len(days)} day(s), +{sum(a['downloadsToday'] for a in out)} today")
 
     doc = {
         "format": 1,
