@@ -1,0 +1,6 @@
+pkg: com.lightcommunity.nfcreader
+name: NFC-Reader
+repo: tyshi00/NFC-Reader
+category: utilities
+summary: NFC reader for the Light Phone III.
+icon: https://github.com/tyshi00/NFC-Reader/blob/main/nfc-reader/src/main/res/mipmap-mdpi/ic_launcher.png
