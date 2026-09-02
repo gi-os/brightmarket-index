@@ -63,6 +63,21 @@ workflow deploys the tree it just built.
 The phone's equivalent is unchanged: `brightmarket://app/<applicationId>`, which
 is what the hero QR encodes.
 
+## Stats
+
+`https://brightmarket.gzl.dev/stats.html` — the top 20 over time, what got
+downloaded today, and a `+N TODAY` marker on every app (also on the tiles in
+`browse.html`). The numbers are GitHub's own `download_count`, which the index has
+always summed for the GETS figure; what is new is that `scripts/build_index.py`
+now remembers where each counter stood at the end of every UTC day, in
+`history-v1.json`. "Today" is the difference to the last snapshot before today.
+Nothing is counted in the browser and nothing about visitors is recorded.
+
+Like the index, the history lives only in the deployment: the builder reads the
+published copy back, adds today, and the workflow deploys it. It is never
+committed. A 404 is the one normal start; any other failure to read it is fatal,
+so a blip can't publish a one-day history over a long one.
+
 ## How an app gets in
 
 Either open a [submission issue](../../issues/new?template=submit-app.yml), or use

@@ -169,6 +169,11 @@
   .tile-sum { font-size:11.5px; line-height:1.45; color:var(--dim); margin-top:9px; flex:1; }
   .tile-pill { font-family:var(--mono); font-size:9px; letter-spacing:.1em; padding:2px 8px;
     border-radius:999px; box-shadow:inset 0 0 0 1px var(--line-2); color:var(--dim); }
+  /* "+21 TODAY": gets since yesterday's snapshot, stamped by the builder as
+     downloadsToday. Drawn only when it is above zero -- a wall of "+0" says
+     nothing -- and inverted so a moving app reads at a glance. */
+  .today { font-family:var(--mono); font-size:9px; letter-spacing:.1em; padding:2px 7px; border-radius:999px;
+    background:var(--fg); color:#000; font-weight:600; white-space:nowrap; }
   .add-tile { display:flex; flex-direction:column; justify-content:center; gap:6px; padding:12px;
     border-radius:12px; border:2px dashed #34343a; min-height:124px; transition:.15s; }
   .add-tile:hover { border-color:var(--fg); transform:translateY(-3px); }
@@ -216,6 +221,7 @@
       <div class="wordmark">BRIGHTMARKET</div>
     </div>
     <div style="display:flex; align-items:center; gap:12px;">
+      <a class="pill-link" href="./stats.html">STATS</a>
       <div class="pill-link" id="setup-btn" style="cursor:pointer;">HOW TO SET UP</div>
       <a class="pill-link" href="./submit.html"><span style="font-size:14px; line-height:1;">＋</span>ADD YOUR APP</a>
     </div>
@@ -374,6 +380,7 @@
       ? `<img src="${esc(a.icon)}" alt="" loading="lazy" />`
       : esc(a.name[0]);
   }
+  const today = (a) => (a.downloadsToday > 0 ? `<span class="today">+${a.downloadsToday} TODAY</span>` : "");
 
   function renderHero(app) {
     if (!app) { $("hero").innerHTML = ""; return; }
@@ -411,7 +418,7 @@
         <div class="stats">
           <div class="stat"><b>VERSION</b><i>${esc(ver(app.latest.version))}</i></div>
           <div class="stat"><b>SIZE</b><i>${mb(app.latest.size)}</i></div>
-          <div class="stat"><b>GETS</b><i>${app.downloads || 0}</i></div>
+          <div class="stat"><b>GETS</b><i style="display:flex; align-items:center; gap:8px;">${app.downloads || 0}${today(app)}</i></div>
           <div class="stat"><b>UPDATED</b><i>${day(app.latest.published)}</i></div>
         </div>
         ${shots.length
@@ -754,7 +761,7 @@
         <div class="tile-sum">${esc(a.summary)}</div>
         <div style="margin-top:9px; display:flex; align-items:center; justify-content:space-between;">
           <div class="tile-meta">${esc((a.category || "").toUpperCase())}</div>
-          <div class="tile-pill">${a.downloads || 0} GETS</div>
+          <div style="display:flex; align-items:center; gap:6px;">${today(a)}<div class="tile-pill">${a.downloads || 0} GETS</div></div>
         </div>
       </div>`).join("") + `
       <a class="add-tile" href="./submit.html">

@@ -7,3 +7,7 @@ __pycache__/
 # Not committed: the workflow deploys the tree it builds, so a copy in here
 # could only ever be a stale one.
 /app/
+
+# Generated too: the download history behind /stats.html, read back from the live
+# site on every run. A committed copy would only ever be stale.
+/history-v1.json

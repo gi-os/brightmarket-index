@@ -454,6 +454,55 @@ def unchanged(prev: dict | None, asset: dict) -> bool:
     )
 
 
+PUBLISHED_HISTORY = f"{SITE}/history-v1.json"
+HISTORY_DAYS = 400
+
+
+def load_history() -> dict:
+    """The per-day download snapshots behind /stats.html.
+
+    Shape: {"days": {"2026-09-02": {"<pkg>": <lifetime downloads>, ...}, ...}}. One
+    entry per app per UTC day; the last build of the day wins, so a day's number is
+    "where the counter stood at the end of that day". Everything on the stats page
+    -- the top-20 lines, "+21 today", the movers -- is a difference between two of
+    these snapshots. Nothing is counted client-side and nothing about visitors is
+    recorded: the source is still GitHub's own download_count, just remembered.
+
+    Like the index, this lives only in the deployment, so it is read back from the
+    live site. A 404 is the one normal start (no history has ever been published);
+    any other failure is fatal for the same reason load_previous is -- carrying on
+    would publish a history file with one day in it over one with months.
+    """
+    if os.environ.get("ALLOW_EMPTY_HISTORY") == "1":
+        return {"days": {}}
+    url = f"{PUBLISHED_HISTORY}?t={int(datetime.datetime.now().timestamp())}"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "brightmarket-index"})
+        with urllib.request.urlopen(req, timeout=60) as r:
+            doc = json.load(r)
+        days = doc.get("days") or {}
+        if not isinstance(days, dict):
+            raise ValueError("days is not an object")
+        return {"days": days}
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            warn("no published history yet; starting the download history today")
+            return {"days": {}}
+        raise SystemExit(f"FATAL: could not read {PUBLISHED_HISTORY} ({e}); refusing to publish "
+                         "a history that would overwrite the real one")
+    except Exception as e:
+        raise SystemExit(f"FATAL: could not read {PUBLISHED_HISTORY} ({e}); refusing to publish "
+                         "a history that would overwrite the real one")
+
+
+def downloads_before(days: dict, today: str, pkg: str) -> int | None:
+    """The most recent snapshot strictly before today, or None when there is none."""
+    for day in sorted(days, reverse=True):
+        if day < today and pkg in days[day]:
+            return days[day][pkg]
+    return None
+
+
 def main() -> int:
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     index_path = os.path.join(root, "index-v1.json")
@@ -461,7 +510,9 @@ def main() -> int:
     apps = load_catalogue(root)
 
     previous, previous_by_repo = load_previous(index_path)
-    today = datetime.date.today().isoformat()
+    # UTC, so the day boundary is the same one the history snapshots use.
+    today = datetime.datetime.now(datetime.timezone.utc).date().isoformat()
+    history = load_history()
     out = []
 
     for app in apps:
@@ -722,6 +773,26 @@ def main() -> int:
             # Eighteen of these declare no icon anywhere. Absent, not empty:
             # clients test for the key and draw a lettered tile instead.
             entry.pop("icon", None)
+
+    # Today's snapshot, then "+N today" on every entry. The delta is against the last
+    # snapshot before today -- yesterday's normally, or older if a day was missed --
+    # so a gap in runs never shows as a spike. On the very first day there is nothing
+    # to compare against and every app reads 0, which is honest.
+    days = history["days"]
+    days[today] = {a["pkg"]: a["downloads"] for a in out}
+    for a in out:
+        before = downloads_before(days, today, a["pkg"])
+        a["downloadsToday"] = max(0, a["downloads"] - before) if before is not None else 0
+    for stale in sorted(days)[:-HISTORY_DAYS]:
+        del days[stale]
+    with open(os.path.join(root, "history-v1.json"), "w") as f:
+        json.dump(
+            {"format": 1,
+             "generated": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+             "days": {d: days[d] for d in sorted(days)}},
+            f, separators=(",", ":"),
+        )
+    print(f"  /history-v1.json -> {len(days)} day(s)")
 
     doc = {
         "format": 1,
