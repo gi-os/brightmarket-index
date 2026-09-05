@@ -1,0 +1,9 @@
+pkg: com.gios.brighthermes
+name: BrightHermes
+repo: gi-os/BrightHermes
+category: productivity
+icon: docs/icon.png
+summary: >-
+  A glanceable agent: an Info Deck of tiles on top — weather, what's next, the home, what June
+  did overnight — and a conversation with a self-hosted Hermes agent below. Hold the camera
+  button to talk; speech is transcribed on the phone. Needs your own gateway on your own box.
