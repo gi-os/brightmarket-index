@@ -1,0 +1,6 @@
+pkg: com.thelightphone.pulse
+name: Pulse
+repo: Zarrasko/pulse
+category: health
+summary: Aggregate fitness tracker for LP3. See details of your latest workouts, daily
+  stats, and schedule workouts within tool.
