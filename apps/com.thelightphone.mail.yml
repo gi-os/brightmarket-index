@@ -1,0 +1,5 @@
+pkg: com.thelightphone.mail
+name: light-mail
+repo: Zarrasko/light-mail
+category: productivity
+summary: Minimal IMAP/SMTP email client for LightOS (Light Phone III)
