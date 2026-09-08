@@ -1,0 +1,6 @@
+pkg: com.thelightphone.kaginews
+name: Brief
+repo: Zarrasko/brief
+category: reading
+summary: Kagi News for LP3. Limited to top 3 stories each day in selected categories.
+  Be informed without being overwhelmed
