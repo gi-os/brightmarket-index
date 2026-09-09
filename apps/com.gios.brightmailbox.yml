@@ -1,0 +1,11 @@
+pkg: com.gios.brightmailbox
+name: Mailbox
+repo: gi-os/BrightMailbox
+category: communication
+summary: >-
+  Gmail and Outlook, sorted into two piles. Letters are messages a human wrote to a human —
+  full screen, one at a time, set as a page. Notices are everything a machine sent — receipts,
+  shipping, 2FA codes, newsletters — collapsed to one line each, and they never make a sound.
+  Set a ration of five Letters a day and when you have read them the app says so and stops.
+  The sorting runs on the phone, tells you why it put a message where it did, and learns the
+  senders you move.
