@@ -1,0 +1,11 @@
+pkg: com.gios.webtools
+name: Web Tools
+repo: gi-os/WebTools
+category: utilities
+summary: >-
+  A shelf of web pages you need now and then. A ticket, a train status, a form you fill twice a
+  year. Each one opens full screen and stays inside its own site, so it is not a browser and
+  cannot become one. Turn on Keeping a copy and the page is saved after every visit, then opens
+  with no signal at all. Add a page by scanning a code from the companion site, typing an
+  address, or taking a starter. Pull down to leave. The wheel scrolls, the camera button goes
+  back, and a bill splitter and a unit converter ship inside.
