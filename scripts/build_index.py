@@ -528,7 +528,7 @@ def load_history() -> dict:
     would publish a history file with one day in it over one with months.
     """
     if os.environ.get("ALLOW_EMPTY_HISTORY") == "1":
-        return {"days": {}, "open": {}, "releases": {}}
+        return {"days": {}, "open": {}, "releases": {}, "gains": {}}
     url = f"{PUBLISHED_HISTORY}?t={int(datetime.datetime.now().timestamp())}"
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "brightmarket-index"})
@@ -537,7 +537,8 @@ def load_history() -> dict:
         days = doc.get("days") or {}
         if not isinstance(days, dict):
             raise ValueError("days is not an object")
-        return {"days": days, "open": doc.get("open") or {}, "releases": doc.get("releases") or {}}
+        return {"days": days, "open": doc.get("open") or {},
+                "releases": doc.get("releases") or {}, "gains": doc.get("gains") or {}}
     except urllib.error.HTTPError as e:
         if e.code == 404:
             # A 404 is indistinguishable, over the wire, from "the deployment lost
@@ -558,7 +559,7 @@ def load_history() -> dict:
                     "the file, or delete the marker to start the history over on purpose."
                 )
             warn("no published history yet; starting the download history today")
-            return {"days": {}, "open": {}, "releases": {}}
+            return {"days": {}, "open": {}, "releases": {}, "gains": {}}
         raise SystemExit(f"FATAL: could not read {PUBLISHED_HISTORY} ({e}); refusing to publish "
                          "a history that would overwrite the real one")
     except Exception as e:
@@ -859,6 +860,11 @@ def main() -> int:
     days = history["days"]
     rel = history["releases"]
     opened = history["open"]
+    # The page used to derive a day's gain itself, by differencing lifetime totals. That
+    # is a different number from the one on the tiles: a day where an app gains downloads
+    # and also prunes an old release nets out to nothing, so the tile read +N and the chart
+    # read 0. Recording the gain here leaves one definition of "today" in the whole system.
+    gains = history["gains"]
     per_release = {a["pkg"]: a.pop("_perRelease", None) for a in out}
     # A carried entry (releases unreadable this run) keeps whatever it had.
     for pkg in list(per_release):
@@ -890,8 +896,11 @@ def main() -> int:
             a["downloadsToday"] = max(0, a["downloads"] - base["*total*"])
         else:
             a["downloadsToday"] = sum(max(0, n - base.get(tag, 0)) for tag, n in now.items())
+    gains[today] = {a["pkg"]: a["downloadsToday"] for a in out}
     for stale in sorted(days)[:-HISTORY_DAYS]:
         del days[stale]
+    for stale in sorted(gains)[:-HISTORY_DAYS]:
+        del gains[stale]
     # Per-release detail is only needed for the baseline; a few days covers a gap.
     for stale in sorted(rel)[:-4]:
         del rel[stale]
@@ -900,6 +909,7 @@ def main() -> int:
             {"format": 1,
              "generated": datetime.datetime.now(datetime.timezone.utc).isoformat(),
              "days": {d: days[d] for d in sorted(days)},
+             "gains": {d: gains[d] for d in sorted(gains)},
              "open": opened,
              "releases": {d: rel[d] for d in sorted(rel)}},
             f, separators=(",", ":"),

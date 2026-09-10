@@ -100,6 +100,9 @@
   .ln { fill:none; stroke:#3e3e44; stroke-width:1.4; stroke-linejoin:round; stroke-linecap:round; transition:stroke .15s, stroke-width .15s, opacity .15s; }
   .ln.top { stroke:#8a8a8e; }
   .ln.hot { stroke:var(--fg); stroke-width:2.4; }
+  /* Trailing average, drawn only for the pinned app in DAILY. Dashed so it cannot be
+     mistaken for a day's own value. */
+  .avg { fill:none; stroke:var(--fg); stroke-width:1.2; stroke-dasharray:3 4; opacity:.55; }
   .ln.cold { opacity:.25; }
   .dot { fill:var(--fg); }
   .tip { position:absolute; pointer-events:none; background:var(--fg); color:#000; font-family:var(--mono); font-size:10px;
@@ -210,7 +213,8 @@
   const link = (a) => `./browse.html?app=${encodeURIComponent(a.pkg)}`;
   const short = (d) => { const [y, m, dd] = d.split("-"); return `${["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"][+m - 1]} ${+dd}`; };
 
-  let apps = [], days = [], snap = {}, top20 = [], mode = "RANK", range = "30D", sel = null;
+  let apps = [], days = [], snap = {}, gains = {}, top20 = [], mode = "RANK", range = "30D", sel = null;
+  const AVG_WINDOW = 7;
   const MODES = ["RANK", "DAILY", "TOTAL"], RANGES = ["7D", "30D", "90D", "ALL"];
 
   // Series helpers. `days` is sorted ascending; `snap[day][pkg]` is lifetime downloads.
@@ -220,11 +224,35 @@
     let last = null;
     return days.map((d) => { const v = at(d, pkg); if (v != null) last = v; return last; });
   }
-  // Downloads gained on each day: difference to the previous known snapshot. First day is null.
+  // Downloads gained on each day.
+  //
+  // Prefers the gain the builder recorded, which is summed per release from that
+  // release's own baseline -- the same number the +N TODAY pills show. Differencing
+  // lifetime totals here instead gave a second, quieter answer: a day where an app
+  // gains downloads and also prunes an old release nets out, so the pill read +N and
+  // the chart read 0.
+  //
+  // Days recorded before gains existed still fall back to the difference, and a day the
+  // app has no snapshot on is null rather than 0 -- an unmeasured day and a day nobody
+  // downloaded anything look nothing alike, and drawing both as zero is how one spike
+  // ends up looking like the only thing that ever happened.
   function deltas(pkg) {
-    const t = totals(pkg); const out = [null];
-    for (let i = 1; i < t.length; i++) out.push(t[i] == null || t[i - 1] == null ? null : Math.max(0, t[i] - t[i - 1]));
-    return out;
+    const t = totals(pkg);
+    return days.map((d, i) => {
+      const g = gains[d]?.[pkg];
+      if (g != null) return g;
+      if (i === 0 || at(d, pkg) == null || t[i] == null || t[i - 1] == null) return null;
+      return Math.max(0, t[i] - t[i - 1]);
+    });
+  }
+  // Mean of the last AVG_WINDOW measured days, so a loud day reads against its own run.
+  // Null until three days are in the window; two points is not a trend.
+  function trailing(pkg) {
+    const d = deltas(pkg);
+    return d.map((_, i) => {
+      const win = d.slice(Math.max(0, i - AVG_WINDOW + 1), i + 1).filter((v) => v != null);
+      return win.length < 3 ? null : win.reduce((a, b) => a + b, 0) / win.length;
+    });
   }
   function gainedOver(pkg, n) {
     const t = totals(pkg); const i = Math.max(0, t.length - 1 - n);
@@ -251,13 +279,18 @@
     const hot = [...apps].sort((a, b) => (b.downloadsToday || 0) - (a.downloadsToday || 0))[0];
     const week = apps.map((a) => [a, gainedOver(a.pkg, 7)]).sort((a, b) => b[1] - a[1])[0];
     const newest = [...apps].sort((a, b) => (b.firstSeen || "").localeCompare(a.firstSeen || ""))[0];
-    // Busiest day the history has seen: sum of every app's delta.
+    // Every app's per-day gain, computed once: the two cards below both walk it.
+    const D = {}; apps.forEach((a) => D[a.pkg] = deltas(a.pkg));
+    const dayTotal = days.map((d, i) => apps.reduce((s, a) => s + (D[a.pkg][i] || 0), 0));
+    // Busiest day the history has seen: sum of every app's gain.
     let busiest = null;
     days.forEach((d, i) => {
       if (i === 0) return;
-      const sum = apps.reduce((s, a) => { const dl = deltas(a.pkg)[i]; return s + (dl || 0); }, 0);
-      if (!busiest || sum > busiest[1]) busiest = [d, sum];
+      if (!busiest || dayTotal[i] > busiest[1]) busiest = [d, dayTotal[i]];
     });
+    // And what a day normally looks like, so the busiest one has something to be busy against.
+    const recent = dayTotal.slice(1).slice(-AVG_WINDOW);
+    const typical = recent.length ? Math.round(recent.reduce((a, b) => a + b, 0) / recent.length) : null;
     const sorted = apps.map((a) => a.downloads || 0).sort((a, b) => a - b);
     const median = sorted.length ? sorted[Math.floor(sorted.length / 2)] : 0;
     const active = apps.filter((a) => (a.downloadsToday || 0) > 0).length;
@@ -278,6 +311,8 @@
       ${appCard("NEWEST LISTING", newest, `LISTED ${newest?.firstSeen || "—"}`)}
       <div class="card"><b>BUSIEST DAY</b><i>${busiest ? "+" + fmt(busiest[1]) : "—"}</i>
         <small>${busiest ? busiest[0].toUpperCase() : "NEEDS A SECOND DAY OF HISTORY"}</small></div>
+      <div class="card"><b>TYPICAL DAY</b><i>${typical == null ? "—" : "+" + fmt(typical)}</i>
+        <small>${typical == null ? "NEEDS A SECOND DAY OF HISTORY" : "MEAN OF THE LAST " + recent.length + " DAY" + (recent.length === 1 ? "" : "S")}</small></div>
       <div class="card"><b>UPDATED THIS WEEK</b><i>${fmt(fresh)}</i><small>APPS WITH A RELEASE IN 7 DAYS</small></div>
       <div class="card"><b>HISTORY</b><i>${fmt(days.length)}</i><small>${days.length === 1 ? "DAY · STARTED " + short(days[0]) : "DAYS · SINCE " + short(days[0])}</small></div>`;
   }
@@ -363,8 +398,18 @@
       return `<path class="hit" data-pkg="${esc(a.pkg)}" d="${d.trim()}" fill="none" stroke="transparent" stroke-width="12" style="cursor:pointer"/>`;
     }).join("");
 
+    // The pinned app's trailing average, over its own line. Only in DAILY, only when one
+    // app is pinned: twenty dashed lines would be worse than none.
+    let avg = "";
+    if (mode === "DAILY" && sel) {
+      const tr = trailing(sel).slice(off);
+      let d = "", pen = false;
+      tr.forEach((val, i) => { if (val == null) { pen = false; return; } d += (pen ? "L" : "M") + x(i).toFixed(1) + " " + y(val).toFixed(1) + " "; pen = true; });
+      if (d) avg = `<path class="avg" d="${d.trim()}"/>`;
+    }
+
     $("chart").innerHTML = `<div class="tip" id="tip"></div>
-      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${grid}${xax}${paths}${hits}</svg>`;
+      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${grid}${xax}${paths}${avg}${hits}</svg>`;
     const chart = $("chart"), tip = $("tip");
     chart.querySelectorAll(".hit").forEach((h) => {
       h.addEventListener("mouseenter", () => highlight(h.dataset.pkg));
@@ -375,7 +420,15 @@
         const i = Math.round(((e.clientX - svg.left) / svg.width * W - L) / (iw || 1) * (vis.length - 1));
         const ci = Math.max(0, Math.min(vis.length - 1, i)); const val = s.v[ci];
         tip.style.display = "block"; tip.style.left = (e.clientX - rect.left + 12) + "px"; tip.style.top = (e.clientY - rect.top - 30) + "px";
-        tip.textContent = `${s.a.name.toUpperCase()} · ${short(vis[ci])} · ${val == null ? "—" : mode === "RANK" ? "#" + val : (mode === "DAILY" ? "+" : "") + fmt(val)}`;
+        const shown = val == null ? "—" : mode === "RANK" ? "#" + val : (mode === "DAILY" ? "+" : "") + fmt(val);
+        // In DAILY the day alone is not readable -- 89 is enormous or nothing depending on
+        // the run it sits in. Carry the trailing average with it.
+        let ctx = "";
+        if (mode === "DAILY") {
+          const av = trailing(s.a.pkg).slice(off)[ci];
+          if (av != null) ctx = ` · ${AVG_WINDOW}D AVG +${fmt(Math.round(av))}`;
+        }
+        tip.textContent = `${s.a.name.toUpperCase()} · ${short(vis[ci])} · ${shown}${ctx}`;
       });
       h.addEventListener("mouseleave", () => { highlight(sel); tip.style.display = "none"; });
       h.addEventListener("click", () => { sel = sel === h.dataset.pkg ? null : h.dataset.pkg; renderBoard(); renderChart(); });
@@ -417,7 +470,7 @@
       const [ir, hr] = await Promise.all([fetch(INDEX, { cache: "no-store" }), fetch(HISTORY, { cache: "no-store" })]);
       const idx = await ir.json();
       apps = (idx.apps || []).filter((a) => !a.deprecated);
-      if (hr.ok) { const h = await hr.json(); snap = h.days || {}; }
+      if (hr.ok) { const h = await hr.json(); snap = h.days || {}; gains = h.gains || {}; }
       days = Object.keys(snap).sort();
       // Without a published history yet, stand today's index in for a one-day history so the
       // page still renders and the counters still read.
