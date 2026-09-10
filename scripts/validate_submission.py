@@ -2,8 +2,10 @@
 """Validate a submission issue and, if it passes, write it into apps/.
 
 Run by .github/workflows/submit.yml on every issue labelled `submission`.
-On pass it writes the app's own file under apps/ and prints a PR body; on fail it prints the
-reason, which the workflow posts back as an issue comment.
+On pass it writes the app's own file under apps/ and writes the PR body -- the repo, the
+category, the summary, the submitted fields and the resulting listing -- to $PR_BODY_PATH for
+create-pull-request to read; on fail it prints the reason, which the workflow posts back as an
+issue comment.
 
 The checks exist for specific reasons, not as generic hygiene:
 
@@ -302,9 +304,16 @@ def parse_issue(body: str) -> dict:
             )
         upstream = up_m.group(1)
 
+    # The portal writes `**Submitted by:** @login (verified via ...)`. Only the
+    # handle is kept: the rest of that line is a sentence about our own process,
+    # and a handle is the one part a reviewer wants in front of them. Matched
+    # rather than trusted, so free text on that line cannot reach the PR body.
+    by_m = re.match(r"@([\w-]{1,39})", field(body, "Submitted by"))
+
     return {
         "action": action,
         "repo": repo_m.group(1).removesuffix(".git"),
+        "submitted_by": by_m.group(1) if by_m else "",
         "category": category,
         "name": name,
         "summary": summary,
@@ -433,6 +442,11 @@ def validate(repo: str) -> dict:
             raise Reject("Couldn't read an applicationId out of that APK's manifest.")
         app_id = max(set(pkgs), key=pkgs.count)
 
+    # Everything below "apk" is only ever read by the PR body. It is here rather
+    # than fetched again there because this function already holds both API
+    # responses, and a reviewer deciding on a new listing was otherwise opening
+    # the app's repo in another tab to find exactly these five things.
+    spdx = ((meta.get("license") or {}).get("spdx_id") or "").strip()
     return {
         "pkg": app_id,
         "repo": repo,
@@ -441,7 +455,156 @@ def validate(repo: str) -> dict:
         "version": latest["tag_name"],
         "versionCode": version_code,
         "apk": apks[0]["name"],
+        "apk_bytes": size or len(blob),
+        "release_url": latest.get("html_url") or "",
+        "released": (latest.get("published_at") or "")[:10],
+        "stars": meta.get("stargazers_count") or 0,
+        "pushed": (meta.get("pushed_at") or "")[:10],
+        "license": "" if spdx in ("", "NOASSERTION") else spdx,
     }
+
+
+def _table(rows: list[tuple[str, str]]) -> str:
+    """A two-column facts table with the empty rows dropped.
+
+    Headerless on purpose -- the left column is the label, and a `Field | Value`
+    header row reads like a form rather than like a listing.
+    """
+    kept = [f"| **{k}** | {v} |" for k, v in rows if v]
+    return "\n".join(["| | |", "| --- | --- |"] + kept) if kept else ""
+
+
+def _joined(*parts: str) -> str:
+    return " \u00b7 ".join(p for p in parts if p)
+
+
+def _size(n: int) -> str:
+    return f"{n / (1024 * 1024):.1f} MB" if n else ""
+
+
+def _yaml_block(entry: dict) -> str:
+    """The file as it will land, so the listing can be read without the diff."""
+    dumped = yaml.safe_dump(
+        entry, sort_keys=False, default_flow_style=False, allow_unicode=True
+    ).strip()
+    return "```yaml\n" + dumped + "\n```"
+
+
+def submit_details(req: dict, info: dict, entry: dict, filename: str) -> str:
+    """Everything known about a new listing, laid out for whoever merges it.
+
+    The PR used to carry `Closes #N` and a paragraph of boilerplate, so deciding
+    on a listing meant opening the issue for the category and the summary, the
+    diff for the file, and the app's own releases page for the version -- three
+    tabs for facts the validator was already holding when it opened the PR.
+    """
+    repo = info["repo"]
+    rows = [
+        ("Repo", _joined(
+            f"[{repo}](https://github.com/{repo})",
+            f"{info['stars']}\u2605" if info.get("stars") else "",
+            f"last push {info['pushed']}" if info.get("pushed") else "",
+            info.get("license") or "",
+        )),
+        ("Category", f"`{entry['category']}`"),
+        ("Package", f"`{info['pkg']}`"),
+        ("Release", _joined(
+            f"[`{info['version']}`]({info['release_url']})" if info.get("release_url")
+            else f"`{info['version']}`",
+            f"versionCode {info['versionCode']}",
+            f"published {info['released']}" if info.get("released") else "",
+        )),
+        ("APK", _joined(f"`{info['apk']}`", _size(info.get("apk_bytes") or 0))),
+        ("Icon", f"`{entry['icon']}`" if entry.get("icon") else "looked up from the repo and the APK"),
+        ("Upstream", f"[{entry['upstream']}](https://github.com/{entry['upstream']})"
+                     if entry.get("upstream") else ""),
+        ("ADB setup", ", ".join(f"`{c}`" for c in entry.get("adb", [])) or "none"),
+        ("Submitted by", f"@{req['submitted_by']}" if req.get("submitted_by") else ""),
+    ]
+
+    # Both fields are optional, and when they are blank the listing carries
+    # GitHub's words rather than the submitter's. That is a thing to notice
+    # while reading the summary, not a footnote underneath it.
+    fallback = []
+    if not req.get("name"):
+        fallback.append("name")
+    if not req.get("summary"):
+        fallback.append("summary")
+    note = (f"\n\n_No {' or '.join(fallback)} was submitted, so the repo's own "
+            f"{' and '.join(fallback)} {'is' if len(fallback) == 1 else 'are'} used._"
+            ) if fallback else ""
+
+    return "\n\n".join([
+        f"### {entry['name']}",
+        "> " + (entry["summary"] or "_no summary_") + note,
+        _table(rows),
+        f"**`apps/{filename}`** — the listing as it will land:",
+        _yaml_block(entry),
+    ])
+
+
+def edit_details(req: dict, match: dict, changed: list[str]) -> str:
+    lines = "\n".join(f"- {c}" for c in changed)
+    return "\n\n".join([
+        f"### {match['name']}",
+        _table([
+            ("Repo", f"[{match['repo']}](https://github.com/{match['repo']})"),
+            ("Category", f"`{match.get('category', '')}`"),
+            ("Package", f"`{match['pkg']}`"),
+            ("Submitted by", f"@{req['submitted_by']}" if req.get("submitted_by") else ""),
+        ]),
+        "**Changed:**",
+        lines,
+    ])
+
+
+def remove_details(req: dict, match: dict) -> str:
+    return "\n\n".join([
+        f"### {match['name']}",
+        _table([
+            ("Repo", f"[{match['repo']}](https://github.com/{match['repo']})"),
+            ("Category", f"`{match.get('category', '')}`"),
+            ("Package", f"`{match['pkg']}`"),
+            ("Submitted by", f"@{req['submitted_by']}" if req.get("submitted_by") else ""),
+        ]),
+        "Delisted at the owner's request.",
+    ])
+
+
+def write_pr_body(path: str, issue: str, action: str, details: str) -> None:
+    """The PR body, written to a file rather than passed through the workflow.
+
+    It is multi-line markdown with tables and a fenced block in it, and a `with:`
+    input is substituted into the workflow text before YAML is parsed -- so
+    interpolating this into `body: |` would break the file on the first line that
+    did not happen to match the block's indentation. create-pull-request reads
+    `body-path` instead. The path is outside the workspace on purpose: the action
+    stages everything it finds there, and a body file under the checkout would be
+    committed into the PR it describes.
+    """
+    header = []
+    if issue:
+        # The keyword, and the only thing that closes a submission issue when a
+        # `submit` PR is merged -- nothing in submit.yml closes it for this
+        # action, because at the time the issue is answered the listing is not in
+        # the catalogue yet. GitHub acts on this on merge into the default branch.
+        header.append(f"Closes #{issue}")
+    body = "\n\n".join(x for x in ["\n".join(header), details, PROVENANCE[action]] if x)
+    with open(path, "w") as f:
+        f.write(body.rstrip() + "\n")
+
+
+_OAUTH = ("Ownership of the repo was proved through GitHub OAuth before the issue was "
+          "filed, and re-checked server-side against the signed repo list rather than "
+          "against anything the browser sent.")
+
+PROVENANCE = {
+    "submit": "---\n\nAutomated checks passed: the repo is public and not archived, it has a "
+              "published release carrying one unambiguous `.apk`, a versionCode was read out of "
+              "that APK, and its applicationId is not already indexed. " + _OAUTH,
+    "edit": "---\n\n" + _OAUTH,
+    "remove": "---\n\n" + _OAUTH,
+}
 
 
 def write_entry(path: str, entry: dict) -> None:
@@ -492,6 +655,7 @@ def main() -> int:
             os.remove(path_of[id(match)])
             summary = f"Removed **{match['name']}** (`{match['pkg']}`) at the owner's request."
             out_pkg, out_name = match["pkg"], match["name"]
+            details = remove_details(req, match)
 
         elif action == "edit":
             match = next((a for a in existing if a["repo"].lower() == repo.lower()), None)
@@ -516,6 +680,7 @@ def main() -> int:
                 raise Reject("Nothing in that request differs from what's already listed.")
             summary = f"Updated **{match['name']}** — " + "; ".join(changed)
             out_pkg, out_name = match["pkg"], match["name"]
+            details = edit_details(req, match, changed)
 
         else:
             # A new entry is the only action that has to touch the network: it
@@ -577,6 +742,7 @@ def main() -> int:
             if adb:
                 entry["adb"] = adb
             write_entry(os.path.join(apps_dir, slug(info["pkg"])), entry)
+            details = submit_details(req, info, entry, slug(info["pkg"]))
             summary = (
                 f"Validated **{req['name'] or info['name']}** (`{info['pkg']}`) — latest "
                 f"release `{info['version']}`, one asset `{info['apk']}`."
@@ -593,6 +759,17 @@ def main() -> int:
             f.write(f"action={action}\n")
             f.write(f"pkg={out_pkg}\n")
             f.write(f"name={out_name}\n")
+
+        # Only the `submit` path opens a PR, but the file is written for all
+        # three: an edit or a removal that starts opening one later should not
+        # have to remember this step existed.
+        if os.environ.get("PR_BODY_PATH"):
+            write_pr_body(
+                os.environ["PR_BODY_PATH"],
+                os.environ.get("ISSUE_NUMBER", ""),
+                action,
+                details,
+            )
         print(summary)
         return 0
 

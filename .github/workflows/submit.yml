@@ -60,6 +60,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          # Outside the checkout. create-pull-request stages everything it finds
+          # in the workspace, so a body file next to apps/ would be committed
+          # into the PR it describes.
+          PR_BODY_PATH: ${{ runner.temp }}/pr-body.md
         run: python3 scripts/validate_submission.py
 
       # An edit or a removal is the verified owner changing the text of a listing
@@ -116,14 +121,15 @@ jobs:
           # app don't overwrite each other's branch.
           branch: ${{ steps.validate.outputs.action }}/${{ steps.validate.outputs.pkg }}
           title: "${{ steps.validate.outputs.action }}: ${{ steps.validate.outputs.name }}"
-          body: |
-            Closes #${{ github.event.issue.number }}
-
-            Requested by the repo's owner, verified through GitHub OAuth before
-            the issue was filed. For a new listing the automated checks also
-            passed: public repo, published release, exactly one `.apk` asset,
-            parseable tag, and an applicationId read out of the APK itself that
-            isn't already indexed.
+          # Written by scripts/validate_submission.py: the repo, the category,
+          # the summary, what the submitter sent, the release and APK the checks
+          # actually read, the resulting apps/<pkg>.yml, and `Closes #<issue>`.
+          #
+          # A file rather than `body:` because that is a `with:` input, and a
+          # with: input is substituted into this file's text before YAML is
+          # parsed -- a body carrying a markdown table would break the workflow
+          # on the first line whose indentation didn't match the block.
+          body-path: ${{ runner.temp }}/pr-body.md
           commit-message: "index: ${{ steps.validate.outputs.action }} ${{ steps.validate.outputs.name }}"
 
       # Runs on success and on failure, but NOT on cancellation.
