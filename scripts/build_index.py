@@ -361,6 +361,32 @@ def share_page(entry: dict) -> str:
     )
 
 
+LOCAL_INDEX_MAX_AGE_H = 6
+
+
+class StaleLocalIndex(Exception):
+    """The on-disk index is too old to stand in for the published one."""
+
+
+def local_index_age_hours(generated: str | None) -> float | None:
+    """Hours since `generated`, or None when it cannot be read.
+
+    Read from the document, not from the file's mtime: a CI checkout stamps every
+    file with the time of the checkout, so mtime says "seconds old" about an index
+    built in August.
+    """
+    if not generated:
+        return None
+    try:
+        then = datetime.datetime.fromisoformat(generated)
+    except ValueError:
+        return None
+    if then.tzinfo is None:
+        then = then.replace(tzinfo=datetime.timezone.utc)
+    now = datetime.datetime.now(datetime.timezone.utc)
+    return (now - then).total_seconds() / 3600
+
+
 def load_previous(path: str) -> tuple[dict, dict]:
     """The last published index, keyed by pkg and also by repo.
 
@@ -412,11 +438,28 @@ def load_previous(path: str) -> tuple[dict, dict]:
     except Exception as e:
         # Local runs and the very first deploy have no published index yet; a
         # file on disk is an acceptable stand-in for those, and only those.
+        #
+        # It has to be a RECENT file. The copy committed to this repo is written by
+        # a deploy, not by a commit, so it stops moving the moment a run forgets to
+        # stage it -- ours sat at 2026-08-08 for a month. Falling back to that on a
+        # transient network failure would republish a month-old index: every
+        # download count frozen at its August value, every entry deleted since
+        # brought back, and every signing certificate re-pinned from a month ago.
+        # A copy older than LOCAL_INDEX_MAX_AGE_H is treated as no copy at all.
         try:
             with open(path) as f:
-                apps = json.load(f)["apps"]
+                doc = json.load(f)
+            apps = doc["apps"]
+            hours = local_index_age_hours(doc.get("generated"))
+            if hours is None or hours > LOCAL_INDEX_MAX_AGE_H:
+                stamp = doc.get("generated") or "no timestamp"
+                raise StaleLocalIndex(
+                    f"the local {path} was generated {stamp} "
+                    f"({'unknown age' if hours is None else f'{hours:.0f}h old'}), "
+                    f"past the {LOCAL_INDEX_MAX_AGE_H}h limit"
+                )
             warn(f"couldn't read the published index ({e}); used the local copy")
-        except (FileNotFoundError, KeyError, json.JSONDecodeError):
+        except (FileNotFoundError, KeyError, json.JSONDecodeError, StaleLocalIndex):
             if os.environ.get("ALLOW_EMPTY_HISTORY") == "1":
                 warn("no previous index anywhere; starting fresh because ALLOW_EMPTY_HISTORY=1")
                 return {}, {}
@@ -453,6 +496,9 @@ def unchanged(prev: dict | None, asset: dict) -> bool:
 
 
 PUBLISHED_HISTORY = f"{SITE}/history-v1.json"
+# Committed, unlike the history itself. Its only job is to say that a history exists,
+# so a 404 can be told apart from a genuine first run.
+HISTORY_MARKER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "history_started")
 HISTORY_DAYS = 400
 
 
@@ -494,6 +540,23 @@ def load_history() -> dict:
         return {"days": days, "open": doc.get("open") or {}, "releases": doc.get("releases") or {}}
     except urllib.error.HTTPError as e:
         if e.code == 404:
+            # A 404 is indistinguishable, over the wire, from "the deployment lost
+            # the file" -- and treating that as a first run replaces every snapshot
+            # with today's, silently, with a warning nobody reads. The marker is
+            # committed, so it survives anything that happens to a deployment: once
+            # it exists, a 404 is a failure, not a beginning.
+            if os.path.exists(HISTORY_MARKER):
+                since = ""
+                try:
+                    since = open(HISTORY_MARKER).read().strip().splitlines()[0]
+                except OSError:
+                    pass
+                raise SystemExit(
+                    f"FATAL: {PUBLISHED_HISTORY} is a 404, but {HISTORY_MARKER} records a history "
+                    f"published since {since or 'an earlier run'}. The deployment has lost the "
+                    "file; publishing now would put one day of snapshots over all of them. Restore "
+                    "the file, or delete the marker to start the history over on purpose."
+                )
             warn("no published history yet; starting the download history today")
             return {"days": {}, "open": {}, "releases": {}}
         raise SystemExit(f"FATAL: could not read {PUBLISHED_HISTORY} ({e}); refusing to publish "

@@ -381,11 +381,17 @@
       h.addEventListener("click", () => { sel = sel === h.dataset.pkg ? null : h.dataset.pkg; renderBoard(); renderChart(); });
     });
 
-    $("note").textContent = {
+    // DAILY carries no note. The chart is its own explanation, and the sentence that
+    // used to sit here described a first blank day that stopped being blank once the
+    // opening snapshot became a baseline.
+    const NOTE = {
       RANK: "POSITION IN THE CATALOGUE BY ALL-TIME GETS, DAY BY DAY. HOVER A LINE OR A ROW; CLICK TO PIN; DOUBLE-CLICK A ROW TO OPEN THE APP.",
-      DAILY: "GETS GAINED EACH DAY. THE FIRST DAY OF HISTORY HAS NOTHING BEFORE IT TO COMPARE AGAINST, SO IT IS BLANK.",
       TOTAL: "ALL-TIME GETS ON A LOG SCALE, SO ONE RUNAWAY APP DOESN'T FLATTEN THE OTHER NINETEEN.",
-    }[mode] + (days.length < 3 ? "  ·  THE HISTORY IS " + days.length + " DAY" + (days.length === 1 ? "" : "S") + " OLD — LINES APPEAR AS DAYS ACCUMULATE." : "");
+    };
+    const young = days.length < 3
+      ? "THE HISTORY IS " + days.length + " DAY" + (days.length === 1 ? "" : "S") + " OLD — LINES APPEAR AS DAYS ACCUMULATE."
+      : "";
+    $("note").textContent = [NOTE[mode], young].filter(Boolean).join("  ·  ");
   }
 
   function renderChips() {
