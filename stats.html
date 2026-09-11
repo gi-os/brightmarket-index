@@ -535,16 +535,25 @@
    * Drawn only when there is actually a split. One version is one full-width bar,
    * which reads as an underline rather than as data -- the version label says it
    * better and in fewer pixels.
+   *
+   * Drawn OLDEST first, so the newest build is the right-hand end and the bar fills
+   * rightward as people update. splitOf stays newest-first because the row label and
+   * the newest-version card both mean "the current one", which is its first entry.
    */
   function versionBar(p) {
     const vs = splitOf(p);
     if (vs.length < 2) return "";
     const tot = vs.reduce((sum, [, n]) => sum + n, 0) || 1;
+    const ordered = [...vs].reverse();
+    // Age from the newest end, so the current build stays the solid segment however
+    // many older ones are still out there.
+    const fade = (j) => Math.max(0.2, 1 - (ordered.length - 1 - j) * 0.22).toFixed(2);
     // No `title`: the native tooltip waits a second, cannot be styled, and shows
     // one segment's number when the useful thing is the whole split at once.
-    const seg = vs.map(([v, n], i) => `<span class="vseg" data-v="${esc(v)}"` +
-      ` style="width:${(n / tot * 100).toFixed(2)}%; opacity:${Math.max(0.2, 1 - i * 0.22).toFixed(2)}"></span>`).join("");
-    const rows = vs.map(([v, n]) =>
+    const seg = ordered.map(([v, n], j) => `<span class="vseg" data-v="${esc(v)}"` +
+      ` style="width:${(n / tot * 100).toFixed(2)}%; opacity:${fade(j)}"></span>`).join("");
+    // Same order as the bar, so the list and the picture read the same way round.
+    const rows = ordered.map(([v, n]) =>
       `<span class="row" data-v="${esc(v)}"><span>v${esc(v)}</span><span>${fmt(n)} USER${n === 1 ? "" : "S"}</span></span>`
     ).join("");
     return `<span class="vbar" data-rows="${esc(rows)}">${seg}</span>`;
