@@ -44,7 +44,7 @@ const SESSION_TTL_SECONDS = 10 * 60; // the signed session is only good for 10 m
 // go green until the running worker answers with the string that is in the source -- which is
 // the check that would have caught the ADB, Name and Summary fields shipping to a bundle that
 // was never redeployed.
-const VERSION = "7-pulse";
+const VERSION = "8-feed";
 
 export default {
   async fetch(request, env) {
@@ -434,6 +434,22 @@ const PULSE_DEDUPE_DAYS = 7;
 // PulseStore.record().
 const PULSE_DAILY_DAYS = 120;
 
+// The wire on the front page. Two rules make an ordered public feed of individual
+// events safe to publish at this scale:
+//
+//  1. The census is excluded. A phone's FIRST report is every catalogue app it
+//     already has, arriving in one batch -- publishing that in order would put one
+//     person's app list on a public page, which is the exact fingerprint this whole
+//     design refuses elsewhere.
+//  2. Times are rounded to a bucket and the order inside a bucket is random. Two
+//     installs from one phone minutes apart therefore do not sit adjacent, and the
+//     sequence carries no information about who did what first. The exact arrival
+//     time is never stored.
+const FEED_BUCKET_MS = 5 * 60 * 1000;
+const FEED_KEEP = 200;
+const FEED_SHOW = 60;
+const FEED_DAYS = 7;
+
 const RE_EVENT_ID = /^[0-9a-f]{32}$/;
 const RE_PKG = /^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z0-9_]+)+$/;
 const RE_VERSION = /^[A-Za-z0-9._+-]{1,24}$/;
@@ -557,6 +573,16 @@ export class PulseStore extends DurableObject {
     // must not count twice. Swept weekly -- an id older than that cannot still
     // be in flight.
     this.sql.exec(`CREATE TABLE IF NOT EXISTS seen (e TEXT PRIMARY KEY, at INTEGER NOT NULL)`);
+    this.sql.exec(
+      `CREATE TABLE IF NOT EXISTS feed (
+         id   INTEGER PRIMARY KEY AUTOINCREMENT,
+         at   INTEGER NOT NULL,
+         r    REAL NOT NULL,
+         app  TEXT NOT NULL,
+         ver  TEXT NOT NULL,
+         kind TEXT NOT NULL
+       )`
+    );
   }
 
   record(events) {
@@ -577,9 +603,28 @@ export class PulseStore extends DurableObject {
         ev.dst
       );
       kept++;
+
+      // Arrivals only. A removal is nobody's business on a public page, and the
+      // census is excluded for the reason given at FEED_BUCKET_MS.
+      if (ev.frm !== "?" && ev.dst !== "") {
+        this.sql.exec(
+          "INSERT INTO feed (at, r, app, ver, kind) VALUES (?, ?, ?, ?, ?)",
+          Math.floor(now / FEED_BUCKET_MS) * FEED_BUCKET_MS,
+          Math.random(),
+          ev.app,
+          ev.dst,
+          ev.frm === "" ? "new" : "update"
+        );
+      }
     }
 
     this.sql.exec("DELETE FROM seen WHERE at < ?", now - PULSE_DEDUPE_DAYS * 86400000);
+    this.sql.exec("DELETE FROM feed WHERE at < ?", now - FEED_DAYS * 86400000);
+    this.sql.exec(
+      `DELETE FROM feed WHERE id NOT IN
+         (SELECT id FROM feed ORDER BY at DESC, r DESC LIMIT ?)`,
+      FEED_KEEP
+    );
 
     // Old days are folded into a single '*' bucket, never dropped. The install
     // count is arithmetic over every event ever recorded, so deleting a row
@@ -629,8 +674,12 @@ export class PulseStore extends DurableObject {
       if (r.frm !== "" && r.frm !== "?") a.versions[r.frm] = (a.versions[r.frm] || 0) - n;
 
       if (r.day !== "*") {
-        const d = (a.daily[r.day] ||= { installs: 0, removed: 0 });
+        const d = (a.daily[r.day] ||= { installs: 0, existing: 0, removed: 0 });
         if (r.frm === "") d.installs += n;
+        // Counted separately from installs so a day reads honestly -- these are
+        // people who already had the app -- but still carried, because a users
+        // line has to start from them or it starts from zero.
+        else if (r.frm === "?") d.existing += n;
         if (r.dst === "") d.removed += n;
       }
     }
@@ -642,9 +691,17 @@ export class PulseStore extends DurableObject {
       for (const [v, n] of Object.entries(a.versions)) if (n <= 0) delete a.versions[v];
     }
 
+    const feed = [
+      ...this.sql.exec(
+        "SELECT at, app, ver, kind FROM feed ORDER BY at DESC, r DESC LIMIT ?",
+        FEED_SHOW
+      ),
+    ].map((r) => ({ at: Number(r.at), app: r.app, ver: r.ver, kind: r.kind }));
+
     return {
       format: 1,
       generated: new Date().toISOString(),
+      feed,
       // Said here so it travels with the data and not only on the page that
       // happens to draw it today.
       counts: "installs made through BrightMarket only; adb and Obtainium are invisible",

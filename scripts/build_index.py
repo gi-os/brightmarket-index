@@ -965,6 +965,7 @@ def main() -> int:
         # those rows would draw a bar for an app the page cannot name, so they are
         # dropped here rather than in the worker, which should keep counting either way.
         pulse["apps"] = {k: v for k, v in pulse["apps"].items() if k in listed}
+        pulse["feed"] = [e for e in (pulse.get("feed") or []) if e.get("app") in listed]
         with open(os.path.join(root, "pulse-v1.json"), "w") as f:
             json.dump(pulse, f, separators=(",", ":"))
         total = sum(a.get("installed", 0) for a in pulse["apps"].values())

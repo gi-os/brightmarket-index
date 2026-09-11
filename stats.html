@@ -175,7 +175,7 @@
 
   <div class="panel" id="installs" style="display:none;">
     <div class="panel-head">
-      <div class="panel-title">Installed via BrightMarket</div>
+      <div class="panel-title">Users via BrightMarket</div>
       <div class="label" id="installcount"></div>
     </div>
     <div class="cards" id="installcards"></div>
@@ -236,7 +236,7 @@
   // Install counts, absent on any run the worker could not be read.
   let pulse = null;
   const AVG_WINDOW = 7;
-  const MODES = ["RANK", "DAILY", "TOTAL"], RANGES = ["7D", "30D", "90D", "ALL"];
+  const MODES = ["RANK", "DAILY", "TOTAL", "USERS"], RANGES = ["7D", "30D", "90D", "ALL"];
 
   // Series helpers. `days` is sorted ascending; `snap[day][pkg]` is lifetime downloads.
   const at = (day, pkg) => snap[day]?.[pkg];
@@ -347,13 +347,25 @@
     return `<svg class="spark" viewBox="0 0 56 18"><path d="${pts.map(([i, v], k) => (k ? "L" : "M") + x(i).toFixed(1) + " " + y(v).toFixed(1)).join(" ")}"/></svg>`;
   }
 
+  /**
+   * The twenty apps the chart and the board show. Ranked by users in USERS mode and
+   * by gets everywhere else, because those are genuinely different orders: an app
+   * a mirror has been pulling all month tops one list and not the other.
+   */
+  function leaders() {
+    if (mode !== "USERS") return top20;
+    const withUsers = apps.map((a) => [a, usersOf(a) || 0]).filter(([, n]) => n > 0);
+    if (!withUsers.length) return top20;
+    return withUsers.sort((x, y) => y[1] - x[1]).slice(0, 20).map(([a]) => a);
+  }
+
   function renderBoard() {
-    $("board").innerHTML = top20.map((a, i) => `
+    $("board").innerHTML = leaders().map((a, i) => `
       <div class="row" data-pkg="${esc(a.pkg)}" aria-selected="${sel === a.pkg}">
         <div class="rk">${String(i + 1).padStart(2, "0")}</div>
         <div class="ic">${mark(a)}</div>
         <div class="nm">${esc(a.name)}<small>BY ${esc(dev(a).toUpperCase())}</small></div>
-        <div class="gets">${fmt(a.downloads)}<div class="label" style="font-size:8px; letter-spacing:.14em; margin-top:2px;">GETS</div></div>
+        <div class="gets">${mode === "USERS" ? fmt(usersOf(a) || 0) : fmt(a.downloads)}<div class="label" style="font-size:8px; letter-spacing:.14em; margin-top:2px;">${mode === "USERS" ? "USERS" : "GETS"}</div></div>
         <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">${up(a.downloadsToday || 0)}${sparkline(a.pkg)}</div>
       </div>`).join("");
     $("board").querySelectorAll(".row").forEach((n) => {
@@ -372,13 +384,37 @@
     document.querySelectorAll(".row").forEach((r) => r.setAttribute("aria-selected", r.dataset.pkg === pkg));
   }
 
+  /**
+   * Users on each day, cumulative, from the day counting started.
+   *
+   * Built from the same events the totals are: people who already had the app,
+   * plus installs, minus removals. Null before the first day anyone reported, which
+   * is not zero -- nobody had measured it yet.
+   */
+  function userSeries(pkg) {
+    const d = ((pulse && pulse.apps || {})[pkg] || {}).daily || {};
+    const seen = Object.keys(d).sort();
+    if (!seen.length) return days.map(() => null);
+    const from = seen[0];
+    let run = 0;
+    return days.map((day) => {
+      if (day < from) return null;
+      const e = d[day];
+      if (e) run += (e.installs || 0) + (e.existing || 0) - (e.removed || 0);
+      return run;
+    });
+  }
+
   function renderChart() {
     const vis = visibleDays(), off = days.length - vis.length;
     const W = 900, H = 440, L = 46, R = 16, T = 18, B = 34;
     const iw = W - L - R, ih = H - T - B;
     const ranks = mode === "RANK" ? rankSeries() : null;
-    const series = top20.map((a) => {
-      let v = mode === "RANK" ? (ranks[a.pkg] || []) : mode === "DAILY" ? deltas(a.pkg) : totals(a.pkg);
+    const series = leaders().map((a) => {
+      let v = mode === "RANK" ? (ranks[a.pkg] || [])
+        : mode === "DAILY" ? deltas(a.pkg)
+        : mode === "USERS" ? userSeries(a.pkg)
+        : totals(a.pkg);
       return { a, v: v.slice(off) };
     });
     const all = series.flatMap((s) => s.v).filter((v) => v != null);
@@ -461,6 +497,7 @@
     const NOTE = {
       RANK: "POSITION IN THE CATALOGUE BY ALL-TIME GETS, DAY BY DAY. HOVER A LINE OR A ROW; CLICK TO PIN; DOUBLE-CLICK A ROW TO OPEN THE APP.",
       TOTAL: "ALL-TIME GETS ON A LOG SCALE, SO ONE RUNAWAY APP DOESN'T FLATTEN THE OTHER NINETEEN.",
+      USERS: "PEOPLE WHO HAVE THE APP, THROUGH BRIGHTMARKET, DAY BY DAY. RANKED BY USERS RATHER THAN GETS, WHICH IS A DIFFERENT ORDER.",
     };
     const young = days.length < 3
       ? "THE HISTORY IS " + days.length + " DAY" + (days.length === 1 ? "" : "S") + " OLD — LINES APPEAR AS DAYS ACCUMULATE."
@@ -483,16 +520,23 @@
    * the thing download counts have never been able to show: a get says someone
    * fetched an APK once, it cannot say what they are running today.
    */
+  const splitOf = (p) => Object.entries(p.versions || {}).filter(([, n]) => n > 0).sort((x, y) => vcmp(x[0], y[0]));
+
+  /**
+   * Drawn only when there is actually a split. One version is one full-width bar,
+   * which reads as an underline rather than as data -- the version label says it
+   * better and in fewer pixels.
+   */
   function versionBar(p) {
-    const vs = Object.entries(p.versions || {}).filter(([, n]) => n > 0).sort((x, y) => vcmp(x[0], y[0]));
-    if (!vs.length) return "";
+    const vs = splitOf(p);
+    if (vs.length < 2) return "";
     const tot = vs.reduce((sum, [, n]) => sum + n, 0) || 1;
     const seg = vs.map(([v, n], i) => `<span class="vseg" style="width:${(n / tot * 100).toFixed(2)}%;` +
-      ` opacity:${Math.max(0.18, 1 - i * 0.16).toFixed(2)}" title="v${esc(v)} · ${fmt(n)}"></span>`).join("");
+      ` opacity:${Math.max(0.2, 1 - i * 0.22).toFixed(2)}" title="v${esc(v)} · ${fmt(n)}"></span>`).join("");
     return `<span class="vbar">${seg}</span>`;
   }
 
-  function renderInstalls() {
+  function renderUsers() {
     const P = (pulse && pulse.apps) || {};
     const rows = apps.map((a) => [a, P[a.pkg]])
       .filter(([, p]) => p && p.installed > 0)
@@ -505,39 +549,42 @@
     const newToday = rows.reduce((sum, [, p]) => sum + (((p.daily || {})[today] || {}).installs || 0), 0);
     const most = rows[0];
 
-    // How much of the installed base is on the newest version anyone reported.
-    // A low number is the useful one: it says an update is not reaching people.
+    // How much of the user base is on the newest version anyone reported. The low
+    // number is the useful one: it says an update is not reaching people.
     let current = 0;
     for (const [, p] of rows) {
-      const vs = Object.entries(p.versions || {}).filter(([, n]) => n > 0).sort((x, y) => vcmp(x[0], y[0]));
+      const vs = splitOf(p);
       if (vs.length) current += vs[0][1];
     }
 
     $("installcount").textContent = `${rows.length} APP${rows.length === 1 ? "" : "S"} REPORTING`;
     $("installcards").innerHTML = `
-      <div class="card"><b>INSTALLED VIA BRIGHTMARKET</b><i>${fmt(total)}</i>
-        <small>ACROSS ${rows.length} APPS · A FLOOR, NOT A TOTAL</small></div>
-      <div class="card"><b>INSTALLED TODAY</b><i>${newToday > 0 ? "+" : ""}${fmt(newToday)}</i>
-        <small>THROUGH BRIGHTMARKET, UTC</small></div>
-      <div class="card"><b>MOST INSTALLED</b>
+      <div class="card"><b>USERS</b><i>${fmt(total)}</i>
+        <small>ACROSS ${rows.length} APPS</small></div>
+      <div class="card"><b>NEW TODAY</b><i>${newToday > 0 ? "+" : ""}${fmt(newToday)}</i>
+        <small>THROUGH BRIGHTMARKET</small></div>
+      <div class="card"><b>MOST USERS</b>
         <i><a href="${link(most[0])}" style="display:flex; align-items:center; gap:10px; min-width:0;">
           <span class="ic">${mark(most[0])}</span><span>${esc(most[0].name)}</span></a></i>
-        <small>${fmt(most[1].installed)} INSTALLED · ${fmt(most[0].downloads)} GETS</small></div>
+        <small>${fmt(most[1].installed)} USERS · ${fmt(most[0].downloads)} GETS</small></div>
       <div class="card"><b>ON THE NEWEST VERSION</b><i>${Math.round(current / total * 100)}%</i>
-        <small>OF INSTALLS THIS PAGE CAN SEE</small></div>`;
+        <small>OF USERS COUNTED</small></div>`;
 
-    $("installgrid").innerHTML = rows.map(([a, p]) => `
+    $("installgrid").innerHTML = rows.map(([a, p]) => {
+      const vs = splitOf(p);
+      return `
       <a class="cell" href="${link(a)}">
         <div class="ic">${mark(a)}</div>
         <div class="nm">${esc(a.name)}
-          <small>${fmt(p.installed)} INSTALLED · ${fmt(a.downloads)} GETS</small>
+          <small>${fmt(p.installed)} USER${p.installed === 1 ? "" : "S"}${vs.length ? " · v" + esc(vs[0][0]) : ""}</small>
           ${versionBar(p)}
         </div>
-      </a>`).join("");
+      </a>`;
+    }).join("");
   }
 
-  /** Installs for an app, or null when the worker has never heard of it. */
-  const installedOf = (a) => {
+  /** Users of an app, or null when nobody using it has reported yet. */
+  const usersOf = (a) => {
     const p = (pulse && pulse.apps || {})[a.pkg];
     return p && p.installed > 0 ? p.installed : null;
   };
@@ -549,7 +596,7 @@
       <a class="cell" href="${link(a)}">
         <div class="ic">${mark(a)}</div>
         <div class="nm">${esc(a.name)}<small>${fmt(a.downloads)} GETS${
-          installedOf(a) == null ? "" : " · " + fmt(installedOf(a)) + " INSTALLED"}</small></div>
+          usersOf(a) == null ? "" : " · " + fmt(usersOf(a)) + " USERS"}</small></div>
         ${up(a.downloadsToday || 0)}
       </a>`).join("");
   }
@@ -578,7 +625,7 @@
       const gen = idx.generated ? new Date(idx.generated) : new Date();
       $("stamp").textContent = "AS OF " + gen.toISOString().slice(0, 16).replace("T", " ") + " UTC";
       $("span").textContent = `${apps.length} APPS · ${days.length} DAY${days.length === 1 ? "" : "S"} OF HISTORY`;
-      renderCards(); renderInstalls(); renderChips(); renderChart(); renderBoard(); renderAll();
+      renderCards(); renderUsers(); renderChips(); renderChart(); renderBoard(); renderAll();
     } catch (err) {
       $("cards").innerHTML = ""; $("chart").innerHTML = `<div class="empty">COULDN'T LOAD THE INDEX</div>`;
       $("stamp").textContent = "OFFLINE";

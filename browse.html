@@ -282,10 +282,12 @@
      scripting hole the moment anyone submits a repo. -->
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
 <script>
-  const INDEX = "./index-v1.json";
+  const INDEX = "./index-v1.json", PULSE = "./pulse-v1.json";
   const $ = (id) => document.getElementById(id);
 
   let apps = [], sel = 0, query = "", cat = "All", sortBy = "Popular";
+  // Recent installs, absent whenever the worker could not be read on the last build.
+  let pulse = null;
   // Which app the hero is on, by applicationId. `sel` is a position in the
   // FILTERED list, so it survives nothing -- not a category change, not a
   // re-sort -- and a link has to name an app rather than a slot. This is the
@@ -825,12 +827,52 @@
     if (e.key === "ArrowLeft") { move(-1); e.preventDefault(); }
   });
 
+  /**
+   * The wire: what people have actually been installing, newest first.
+   *
+   * The times are rounded to five minutes on the way in and the order inside a
+   * bucket is random, so this cannot be read as one person's sequence. Nothing a
+   * phone sends carries an id, and a phone's first report -- every app it already
+   * had, in one batch -- never reaches this feed at all.
+   */
+  const ago = (ms) => {
+    const m = Math.max(0, Math.round((Date.now() - ms) / 60000));
+    if (m <= 5) return "JUST NOW";
+    if (m < 60) return m + " MIN AGO";
+    const h = Math.round(m / 60);
+    if (h < 24) return h + (h === 1 ? " HOUR AGO" : " HOURS AGO");
+    const d = Math.round(h / 24);
+    return d + (d === 1 ? " DAY AGO" : " DAYS AGO");
+  };
+
+  function wireItems() {
+    const feed = (pulse && pulse.feed) || [];
+    const byPkg = Object.fromEntries(apps.map((a) => [a.pkg, a]));
+    const rows = feed.map((f) => {
+      const a = byPkg[f.app];
+      if (!a) return null;
+      return `${esc(a.name.toUpperCase())} ${esc(ver(f.ver))} · ` +
+        `${f.kind === "new" ? "INSTALLED" : "UPDATED"} · ${ago(f.at)}`;
+    }).filter(Boolean);
+    // Nothing installed yet, or no pulse this build: the wire falls back to what it
+    // always showed rather than going blank.
+    if (!rows.length) return apps.map((a) => `${esc(a.name.toUpperCase())} ${esc(ver(a.latest.version))}`);
+    // Short feeds would leave a gap mid-scroll, so the run is repeated to fill it.
+    const out = [];
+    while (out.length < 24) out.push(...rows);
+    return out;
+  }
+
   (async function init() {
     qrInto($("qr-off"), "brightmarket://focus/off", 5);
     try {
-      const res = await fetch(INDEX, { cache: "no-store" });
+      const [res, pr] = await Promise.all([
+        fetch(INDEX, { cache: "no-store" }),
+        fetch(PULSE, { cache: "no-store" }).catch(() => null),
+      ]);
       const data = await res.json();
       apps = data.apps || [];
+      if (pr && pr.ok) pulse = await pr.json().catch(() => null);
       // A link that names an app opens on that app -- the point of the whole
       // feature. An unresolvable key goes into the filter box rather than being
       // ignored: a renamed or delisted app then shows its near matches, or
@@ -843,7 +885,7 @@
         else { query = want; $("q").value = want; }
       }
       $("wire").innerHTML = [0, 1].map(() =>
-        `<span>${apps.map((a) => `${esc(a.name.toUpperCase())} ${esc(ver(a.latest.version))}`).join("</span><span>")}</span>`
+        `<span>${wireItems().join("</span><span>")}</span>`
       ).join("");
       renderChips();
       render();
