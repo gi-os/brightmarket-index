@@ -596,7 +596,7 @@
       <a class="cell" href="${link(a)}">
         <div class="ic">${mark(a)}</div>
         <div class="nm">${esc(a.name)}<small>${fmt(a.downloads)} GETS${
-          usersOf(a) == null ? "" : " · " + fmt(usersOf(a)) + " USERS"}</small></div>
+          usersOf(a) == null ? "" : " · " + fmt(usersOf(a)) + " USER" + (usersOf(a) === 1 ? "" : "S")}</small></div>
         ${up(a.downloadsToday || 0)}
       </a>`).join("");
   }
