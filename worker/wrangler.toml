@@ -6,3 +6,15 @@ compatibility_date = "2026-08-01"
 [vars]
 ALLOWED_ORIGIN = "https://brightmarket.gzl.dev"
 SUBMIT_REPO = "gi-os/brightmarket-index"
+
+# Install counting (/pulse). A Durable Object rather than D1 on purpose: it needs
+# no database to be created first, no account id, and no extra permission on
+# CLOUDFLARE_API_TOKEN, so the deploy workflow that already exists is enough.
+# One object holds the whole table; the traffic is a few hundred rows a day.
+[[durable_objects.bindings]]
+name = "PULSE"
+class_name = "PulseStore"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["PulseStore"]

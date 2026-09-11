@@ -11,3 +11,7 @@ __pycache__/
 # Generated too: the download history behind /stats.html, read back from the live
 # site on every run. A committed copy would only ever be stale.
 /history-v1.json
+
+# Generated too: install counts copied from the portal worker on every run.
+# The worker holds the real table; a committed copy could only ever be stale.
+/pulse-v1.json

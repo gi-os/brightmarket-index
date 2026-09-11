@@ -567,6 +567,48 @@ def load_history() -> dict:
                          "a history that would overwrite the real one")
 
 
+PULSE_SUMMARY = "https://brightmarket-portal.gman6849.workers.dev/pulse/summary.json"
+PUBLISHED_PULSE = f"{SITE}/pulse-v1.json"
+
+
+def load_pulse() -> dict | None:
+    """Install counts from the portal worker, for the INSTALLS panel on /stats.html.
+
+    Shape: {"apps": {"<pkg>": {"installed": n, "installs": n, "existing": n,
+    "removed": n, "versions": {"1.2": n}, "daily": {...}}}}.
+
+    What this counts, and the reason the page says so in as many words: installs made
+    THROUGH BRIGHTMARKET. The client reports a transition when it installs, updates or
+    removes a catalogue app, so an app sideloaded with adb or fetched by Obtainium is
+    not in here at all. Every figure is a floor, and BrightMarket's own is the only one
+    that is also a total.
+
+    Unlike load_history, a failure here is NOT fatal. The history lives only in the
+    deployment, so losing it loses it; the pulse lives in the worker's own storage and
+    this is just a copy, so the worst a bad run can do is publish a stale copy or none.
+    Falling back to the published file keeps the panel up through a blip, and a run with
+    neither simply omits the panel rather than failing a deploy over a statistic.
+    """
+    for url, what in ((PULSE_SUMMARY, "worker"), (PUBLISHED_PULSE, "last deployment")):
+        try:
+            req = urllib.request.Request(
+                f"{url}?t={int(datetime.datetime.now().timestamp())}",
+                headers={"User-Agent": "brightmarket-index"},
+            )
+            with urllib.request.urlopen(req, timeout=60) as r:
+                doc = json.load(r)
+            apps = doc.get("apps")
+            if not isinstance(apps, dict):
+                raise ValueError("apps is not an object")
+            if what != "worker":
+                warn(f"pulse read from the {what}; install counts may be one run stale")
+            return doc
+        except Exception as e:
+            warn(f"could not read install counts from the {what} ({e})")
+    warn("no install counts this run; /stats.html will omit the installs panel")
+    return None
+
+
 def get_all_releases(repo: str) -> list:
     """Every release, not the first hundred.
 
@@ -915,6 +957,19 @@ def main() -> int:
             f, separators=(",", ":"),
         )
     print(f"  /history-v1.json -> {len(days)} day(s), +{sum(a['downloadsToday'] for a in out)} today")
+
+    pulse = load_pulse()
+    if pulse is not None:
+        listed = {a["pkg"] for a in out}
+        # An app can leave the catalogue while its installs remain on phones. Keeping
+        # those rows would draw a bar for an app the page cannot name, so they are
+        # dropped here rather than in the worker, which should keep counting either way.
+        pulse["apps"] = {k: v for k, v in pulse["apps"].items() if k in listed}
+        with open(os.path.join(root, "pulse-v1.json"), "w") as f:
+            json.dump(pulse, f, separators=(",", ":"))
+        total = sum(a.get("installed", 0) for a in pulse["apps"].values())
+        print(f"  /pulse-v1.json -> {len(pulse['apps'])} app(s), "
+              f"{total} install(s) via BrightMarket")
 
     doc = {
         "format": 1,

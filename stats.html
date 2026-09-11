@@ -133,6 +133,9 @@
   .cell .nm { flex:1; }
   .cell .gets { color:var(--dim); font-size:10px; }
   .cell:hover { background:#0b0b0e; }
+  /* Version split. One segment per version, newest first and brightest. */
+  .vbar { display:flex; width:100%; height:4px; margin-top:6px; gap:1px; overflow:hidden; }
+  .vseg { background:var(--fg); min-width:1px; }
   .foot { margin-top:34px; padding-top:18px; border-top:1px solid var(--line); font-size:12px; line-height:1.6; color:var(--dim); max-width:70ch; }
   .empty { padding:60px 0; text-align:center; font-family:var(--mono); font-size:12px; letter-spacing:.2em; color:var(--dimmer); }
 </style>
@@ -161,13 +164,30 @@
     <div>
       <div class="label">STATS</div>
       <h1 style="margin-top:10px;">What people are getting</h1>
-      <div class="sub">GitHub's own download counters, remembered once a day. The top 20 over time,
-        and a <span class="up">+N TODAY</span> marker on every app for what moved since yesterday.</div>
+      <div class="sub">Two numbers, kept apart on purpose. <b>Gets</b> are GitHub's download counters,
+        remembered once a day. <b>Installs</b> are copies that landed on a phone through BrightMarket,
+        which is the only one of the two a mirror cannot inflate.</div>
     </div>
     <div class="label" id="span"></div>
   </div>
 
   <div class="cards" id="cards"></div>
+
+  <div class="panel" id="installs" style="display:none;">
+    <div class="panel-head">
+      <div class="panel-title">Installed via BrightMarket</div>
+      <div class="label" id="installcount"></div>
+    </div>
+    <div class="note" style="padding:0 0 14px;">
+      Installs made <b>through BrightMarket</b>, which is not the same as everyone who has the app.
+      Sideload it with adb, or let Obtainium fetch it, and nothing here knows. Every figure below is
+      a floor. Nothing identifying is sent or kept: a phone reports that some app moved from one
+      version to another and carries no id of any kind, so two of these cannot be told to have come
+      from the same phone.
+    </div>
+    <div class="cards" id="installcards"></div>
+    <div class="all-grid" id="installgrid"></div>
+  </div>
 
   <div class="panel">
     <div class="panel-head">
@@ -196,13 +216,19 @@
 
   <div class="foot">
     A "get" is a download of a release asset counted by GitHub — from here, from Obtainium,
-    from the releases page, from anywhere. Nothing on this page comes from tracking anyone;
-    the index just writes down where each counter stood at the end of every day.
+    from the releases page, from anywhere. It counts bytes leaving a release, so a mirror or a
+    crawler reads exactly like a person: one app in this catalogue drew 87 a day for a month from
+    something that was never a phone. An "install" is a copy that landed on a phone through
+    BrightMarket and said so. A mirror cannot inflate that, and it cannot see apps installed any
+    other way either, so the two numbers disagree by design. Nothing on this page comes from
+    tracking anyone: the index writes down where each download counter stood at the end of every
+    day, and the install figures carry no identifier, no device id and no account — by
+    construction, not by policy.
   </div>
 </div>
 
 <script>
-  const INDEX = "./index-v1.json", HISTORY = "./history-v1.json";
+  const INDEX = "./index-v1.json", HISTORY = "./history-v1.json", PULSE = "./pulse-v1.json";
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -214,6 +240,8 @@
   const short = (d) => { const [y, m, dd] = d.split("-"); return `${["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"][+m - 1]} ${+dd}`; };
 
   let apps = [], days = [], snap = {}, gains = {}, top20 = [], mode = "RANK", range = "30D", sel = null;
+  // Install counts, absent on any run the worker could not be read.
+  let pulse = null;
   const AVG_WINDOW = 7;
   const MODES = ["RANK", "DAILY", "TOTAL"], RANGES = ["7D", "30D", "90D", "ALL"];
 
@@ -454,23 +482,98 @@
     $("ranges").querySelectorAll(".chip").forEach((c) => c.addEventListener("click", () => { range = c.dataset.r; renderChips(); renderChart(); renderBoard(); }));
   }
 
+  /** Newest version first. Numeric compare, so 1.10 sorts above 1.9. */
+  const vcmp = (a, b) => String(b).localeCompare(String(a), undefined, { numeric: true });
+
+  /**
+   * One bar per app, split by the version its installs are actually on. This is
+   * the thing download counts have never been able to show: a get says someone
+   * fetched an APK once, it cannot say what they are running today.
+   */
+  function versionBar(p) {
+    const vs = Object.entries(p.versions || {}).filter(([, n]) => n > 0).sort((x, y) => vcmp(x[0], y[0]));
+    if (!vs.length) return "";
+    const tot = vs.reduce((sum, [, n]) => sum + n, 0) || 1;
+    const seg = vs.map(([v, n], i) => `<span class="vseg" style="width:${(n / tot * 100).toFixed(2)}%;` +
+      ` opacity:${Math.max(0.18, 1 - i * 0.16).toFixed(2)}" title="v${esc(v)} · ${fmt(n)}"></span>`).join("");
+    return `<span class="vbar">${seg}</span>`;
+  }
+
+  function renderInstalls() {
+    const P = (pulse && pulse.apps) || {};
+    const rows = apps.map((a) => [a, P[a.pkg]])
+      .filter(([, p]) => p && p.installed > 0)
+      .sort((x, y) => y[1].installed - x[1].installed);
+    if (!rows.length) return;
+    $("installs").style.display = "";
+
+    const total = rows.reduce((sum, [, p]) => sum + p.installed, 0);
+    const today = new Date().toISOString().slice(0, 10);
+    const newToday = rows.reduce((sum, [, p]) => sum + (((p.daily || {})[today] || {}).installs || 0), 0);
+    const most = rows[0];
+
+    // How much of the installed base is on the newest version anyone reported.
+    // A low number is the useful one: it says an update is not reaching people.
+    let current = 0;
+    for (const [, p] of rows) {
+      const vs = Object.entries(p.versions || {}).filter(([, n]) => n > 0).sort((x, y) => vcmp(x[0], y[0]));
+      if (vs.length) current += vs[0][1];
+    }
+
+    $("installcount").textContent = `${rows.length} APP${rows.length === 1 ? "" : "S"} REPORTING`;
+    $("installcards").innerHTML = `
+      <div class="card"><b>INSTALLED VIA BRIGHTMARKET</b><i>${fmt(total)}</i>
+        <small>ACROSS ${rows.length} APPS · A FLOOR, NOT A TOTAL</small></div>
+      <div class="card"><b>INSTALLED TODAY</b><i>${newToday > 0 ? "+" : ""}${fmt(newToday)}</i>
+        <small>THROUGH BRIGHTMARKET, UTC</small></div>
+      <div class="card"><b>MOST INSTALLED</b>
+        <i><a href="${link(most[0])}" style="display:flex; align-items:center; gap:10px; min-width:0;">
+          <span class="ic">${mark(most[0])}</span><span>${esc(most[0].name)}</span></a></i>
+        <small>${fmt(most[1].installed)} INSTALLED · ${fmt(most[0].downloads)} GETS</small></div>
+      <div class="card"><b>ON THE NEWEST VERSION</b><i>${Math.round(current / total * 100)}%</i>
+        <small>OF INSTALLS THIS PAGE CAN SEE</small></div>`;
+
+    $("installgrid").innerHTML = rows.map(([a, p]) => `
+      <a class="cell" href="${link(a)}">
+        <div class="ic">${mark(a)}</div>
+        <div class="nm">${esc(a.name)}
+          <small>${fmt(p.installed)} INSTALLED · ${fmt(a.downloads)} GETS</small>
+          ${versionBar(p)}
+        </div>
+      </a>`).join("");
+  }
+
+  /** Installs for an app, or null when the worker has never heard of it. */
+  const installedOf = (a) => {
+    const p = (pulse && pulse.apps || {})[a.pkg];
+    return p && p.installed > 0 ? p.installed : null;
+  };
+
   function renderAll() {
     const list = [...apps].sort((a, b) => (b.downloadsToday || 0) - (a.downloadsToday || 0) || (b.downloads || 0) - (a.downloads || 0));
     $("allcount").textContent = `${apps.length} APPS`;
     $("all").innerHTML = list.map((a) => `
       <a class="cell" href="${link(a)}">
         <div class="ic">${mark(a)}</div>
-        <div class="nm">${esc(a.name)}<small>${fmt(a.downloads)} GETS</small></div>
+        <div class="nm">${esc(a.name)}<small>${fmt(a.downloads)} GETS${
+          installedOf(a) == null ? "" : " · " + fmt(installedOf(a)) + " INSTALLED"}</small></div>
         ${up(a.downloadsToday || 0)}
       </a>`).join("");
   }
 
   (async function init() {
     try {
-      const [ir, hr] = await Promise.all([fetch(INDEX, { cache: "no-store" }), fetch(HISTORY, { cache: "no-store" })]);
+      // The pulse is allowed to be missing: a run that could not reach the worker
+      // publishes no copy, and the page simply does not draw the installs panel.
+      const [ir, hr, pr] = await Promise.all([
+        fetch(INDEX, { cache: "no-store" }),
+        fetch(HISTORY, { cache: "no-store" }),
+        fetch(PULSE, { cache: "no-store" }).catch(() => null),
+      ]);
       const idx = await ir.json();
       apps = (idx.apps || []).filter((a) => !a.deprecated);
       if (hr.ok) { const h = await hr.json(); snap = h.days || {}; gains = h.gains || {}; }
+      if (pr && pr.ok) pulse = await pr.json().catch(() => null);
       days = Object.keys(snap).sort();
       // Without a published history yet, stand today's index in for a one-day history so the
       // page still renders and the counters still read.
@@ -482,7 +585,7 @@
       const gen = idx.generated ? new Date(idx.generated) : new Date();
       $("stamp").textContent = "AS OF " + gen.toISOString().slice(0, 16).replace("T", " ") + " UTC";
       $("span").textContent = `${apps.length} APPS · ${days.length} DAY${days.length === 1 ? "" : "S"} OF HISTORY`;
-      renderCards(); renderChips(); renderChart(); renderBoard(); renderAll();
+      renderCards(); renderInstalls(); renderChips(); renderChart(); renderBoard(); renderAll();
     } catch (err) {
       $("cards").innerHTML = ""; $("chart").innerHTML = `<div class="empty">COULDN'T LOAD THE INDEX</div>`;
       $("stamp").textContent = "OFFLINE";

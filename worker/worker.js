@@ -30,6 +30,8 @@
 //   ALLOWED_ORIGIN         -- the exact origin the portal is served from, e.g. https://brightmarket.gzl.dev
 //   SUBMIT_REPO            -- "gi-os/brightmarket-index"
 
+import { DurableObject } from "cloudflare:workers";
+
 const SESSION_TTL_SECONDS = 10 * 60; // the signed session is only good for 10 minutes
 
 /**
@@ -42,7 +44,7 @@ const SESSION_TTL_SECONDS = 10 * 60; // the signed session is only good for 10 m
 // go green until the running worker answers with the string that is in the source -- which is
 // the check that would have caught the ADB, Name and Summary fields shipping to a bundle that
 // was never redeployed.
-const VERSION = "6-manage-edit-remove";
+const VERSION = "7-pulse";
 
 export default {
   async fetch(request, env) {
@@ -72,6 +74,14 @@ export default {
       if (url.pathname === "/remove" && request.method === "POST") {
         return await handleManageAction("remove", request, env, cors);
       }
+      // Anonymous install counting. See the Pulse section at the bottom of this
+      // file: no identifier of any kind is sent, received or stored.
+      if (url.pathname === "/pulse" && request.method === "POST") {
+        return await handlePulse(request, env, cors);
+      }
+      if (url.pathname === "/pulse/summary.json" && request.method === "GET") {
+        return await handlePulseSummary(request, env, cors);
+      }
       return json({ error: "not found" }, 404, cors);
     } catch (err) {
       // Never leak internals (token fragments, stack traces) to the client.
@@ -84,7 +94,7 @@ export default {
 function corsHeaders(env) {
   return {
     "Access-Control-Allow-Origin": env.ALLOWED_ORIGIN, // exact origin, never "*"
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
   };
 }
@@ -380,4 +390,265 @@ function timingSafeEqual(a, b) {
   let result = 0;
   for (let i = 0; i < a.length; i++) result |= a.charCodeAt(i) ^ b.charCodeAt(i);
   return result === 0;
+}
+
+// ---------------------------------------------------------------------------
+// Pulse -- how many installs of each catalogue app exist, and on which version.
+//
+// GitHub's download counters cannot answer that. They count bytes leaving a
+// release, so a mirror, a crawler or one person re-downloading all read the
+// same as a person installing: Ritual drew 87 downloads a day for a month from
+// something that was never a phone. This counts installs instead, and only ever
+// installs made through BrightMarket -- an app sideloaded with adb or fetched by
+// Obtainium is invisible here, so every number this produces is a floor.
+//
+// Nothing identifying is transmitted, because nothing identifying exists. The
+// client sends TRANSITIONS, not states:
+//
+//   {"e": "<random per event>", "app": "com.x.y", "frm": "",     "dst": "1.2"}  installed
+//   {"e": "...",                "app": "com.x.y", "frm": "?",    "dst": "1.2"}  already had it
+//   {"e": "...",                "app": "com.x.y", "frm": "1.1",  "dst": "1.2"}  updated
+//   {"e": "...",                "app": "com.x.y", "frm": "1.2",  "dst": ""   }  removed
+//
+// There is no install id, no device id, no secret, no hash of anything, and no
+// IP is read anywhere in this file. Two events from the same phone have nothing
+// in common, so no query here can group them -- not by accident and not on
+// purpose. What is stored is a counter per (day, app, from, to) and nothing else.
+//
+// The live figure is then arithmetic, the same trick the download history uses:
+// everyone who arrived at a version minus everyone who left it. Updates cancel
+// (one arrival, one departure), so installs + already-had - removed is exactly
+// the number of copies out there.
+//
+// `frm: "?"` is the one-time census. On first run the client cannot know whether
+// it is looking at a fresh install or at someone who has had the app for months,
+// so it asks the package manager -- firstInstallTime == lastUpdateTime means
+// genuinely new -- and everyone else is counted once as pre-existing. Without
+// that split the day this shipped would have looked like a thousand installs.
+// ---------------------------------------------------------------------------
+
+const PULSE_MAX_BYTES = 16 * 1024;
+const PULSE_MAX_EVENTS = 300;
+const PULSE_DEDUPE_DAYS = 7;
+// Days kept at daily resolution. Older rows are FOLDED, never deleted -- see
+// PulseStore.record().
+const PULSE_DAILY_DAYS = 120;
+
+const RE_EVENT_ID = /^[0-9a-f]{32}$/;
+const RE_PKG = /^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z0-9_]+)+$/;
+const RE_VERSION = /^[A-Za-z0-9._+-]{1,24}$/;
+
+const PULSE_INDEX = "https://brightmarket.gzl.dev/index-v1.json";
+
+/**
+ * The set of packages the catalogue actually lists.
+ *
+ * Anyone can POST here, so without this the table would accept any package name
+ * at all and the numbers would be whatever the last person to find the endpoint
+ * felt like. Cached at the edge for 15 minutes, which is also roughly how long a
+ * newly listed app waits before its first event is accepted.
+ *
+ * A failed read returns null and the guard is skipped rather than rejecting
+ * everything: losing a day of counting is worse than accepting a day of noise,
+ * and the index being down is not the client's fault.
+ */
+async function pulseCatalogue() {
+  try {
+    const res = await fetch(PULSE_INDEX, { cf: { cacheTtl: 900, cacheEverything: true } });
+    if (!res.ok) return null;
+    const doc = await res.json();
+    const apps = Array.isArray(doc) ? doc : doc.apps;
+    if (!Array.isArray(apps)) return null;
+    const set = new Set();
+    for (const a of apps) if (a && typeof a.pkg === "string") set.add(a.pkg);
+    return set.size ? set : null;
+  } catch {
+    return null;
+  }
+}
+
+async function handlePulse(request, env, cors) {
+  const raw = await request.text();
+  if (raw.length > PULSE_MAX_BYTES) return json({ error: "too large" }, 413, cors);
+
+  let doc;
+  try {
+    doc = JSON.parse(raw);
+  } catch {
+    return json({ error: "bad json" }, 400, cors);
+  }
+  const events = Array.isArray(doc && doc.events) ? doc.events : null;
+  if (!events) return json({ error: "missing events" }, 400, cors);
+  if (events.length > PULSE_MAX_EVENTS) return json({ error: "too many events" }, 413, cors);
+
+  const known = await pulseCatalogue();
+
+  // Anything malformed is dropped silently rather than failing the batch. A
+  // client that cannot parse one of its own version strings should still be
+  // able to report the other twenty apps on the phone.
+  const clean = [];
+  for (const ev of events) {
+    if (!ev || typeof ev !== "object") continue;
+    const e = String(ev.e == null ? "" : ev.e);
+    const app = String(ev.app == null ? "" : ev.app);
+    const frm = String(ev.frm == null ? "" : ev.frm);
+    const dst = String(ev.dst == null ? "" : ev.dst);
+
+    if (!RE_EVENT_ID.test(e)) continue;
+    if (app.length > 128 || !RE_PKG.test(app)) continue;
+    if (known && !known.has(app)) continue;
+    if (frm !== "" && frm !== "?" && !RE_VERSION.test(frm)) continue;
+    if (dst !== "" && !RE_VERSION.test(dst)) continue;
+    // Neither a departure nor an arrival is not an event.
+    if (frm === "" && dst === "") continue;
+    clean.push({ e, app, frm, dst });
+  }
+
+  if (clean.length === 0) return new Response(null, { status: 204, headers: cors });
+
+  const stub = env.PULSE.get(env.PULSE.idFromName("v1"));
+  const kept = await stub.record(clean);
+  // 204 either way: the client's job is done once the batch is accepted, and a
+  // duplicate it retried after a dropped connection is a success, not an error.
+  return new Response(null, { status: 204, headers: { ...cors, "X-Pulse-Kept": String(kept) } });
+}
+
+async function handlePulseSummary(request, env, cors) {
+  const stub = env.PULSE.get(env.PULSE.idFromName("v1"));
+  const body = await stub.summary();
+  return new Response(JSON.stringify(body), {
+    status: 200,
+    headers: {
+      ...cors,
+      "Content-Type": "application/json",
+      // The index build reads this once a run; the page reads a copy baked into
+      // the deployment. Five minutes is plenty and keeps a hot reload cheap.
+      "Cache-Control": "public, max-age=300",
+    },
+  });
+}
+
+function pulseDay(ms) {
+  return new Date(ms).toISOString().slice(0, 10);
+}
+
+/**
+ * One Durable Object holds the whole table. Deliberately one: the traffic is a
+ * few hundred rows a day, and a single object makes every write transactional
+ * without a database to provision, an account id to look up, or a second
+ * credential in CI.
+ */
+export class PulseStore extends DurableObject {
+  constructor(ctx, env) {
+    super(ctx, env);
+    this.sql = ctx.storage.sql;
+    this.sql.exec(
+      `CREATE TABLE IF NOT EXISTS moves (
+         day TEXT NOT NULL,
+         app TEXT NOT NULL,
+         frm TEXT NOT NULL,
+         dst TEXT NOT NULL,
+         n   INTEGER NOT NULL DEFAULT 0,
+         PRIMARY KEY (day, app, frm, dst)
+       )`
+    );
+    // Idempotency only. The client keeps an event in its outbox until this
+    // accepts it, so a retry after a dropped connection carries the same id and
+    // must not count twice. Swept weekly -- an id older than that cannot still
+    // be in flight.
+    this.sql.exec(`CREATE TABLE IF NOT EXISTS seen (e TEXT PRIMARY KEY, at INTEGER NOT NULL)`);
+  }
+
+  record(events) {
+    const now = Date.now();
+    const day = pulseDay(now);
+    let kept = 0;
+
+    for (const ev of events) {
+      const dup = [...this.sql.exec("SELECT 1 FROM seen WHERE e = ?", ev.e)].length > 0;
+      if (dup) continue;
+      this.sql.exec("INSERT INTO seen (e, at) VALUES (?, ?)", ev.e, now);
+      this.sql.exec(
+        `INSERT INTO moves (day, app, frm, dst, n) VALUES (?, ?, ?, ?, 1)
+         ON CONFLICT (day, app, frm, dst) DO UPDATE SET n = n + 1`,
+        day,
+        ev.app,
+        ev.frm,
+        ev.dst
+      );
+      kept++;
+    }
+
+    this.sql.exec("DELETE FROM seen WHERE at < ?", now - PULSE_DEDUPE_DAYS * 86400000);
+
+    // Old days are folded into a single '*' bucket, never dropped. The install
+    // count is arithmetic over every event ever recorded, so deleting a row
+    // would silently subtract people who are still there -- the daily chart
+    // loses its tail, the totals stay exact.
+    const cut = pulseDay(now - PULSE_DAILY_DAYS * 86400000);
+    const old = [
+      ...this.sql.exec(
+        `SELECT app, frm, dst, SUM(n) AS n FROM moves
+         WHERE day < ? AND day != '*' GROUP BY app, frm, dst`,
+        cut
+      ),
+    ];
+    if (old.length) {
+      for (const r of old) {
+        this.sql.exec(
+          `INSERT INTO moves (day, app, frm, dst, n) VALUES ('*', ?, ?, ?, ?)
+           ON CONFLICT (day, app, frm, dst) DO UPDATE SET n = n + ?`,
+          r.app,
+          r.frm,
+          r.dst,
+          r.n,
+          r.n
+        );
+      }
+      this.sql.exec("DELETE FROM moves WHERE day < ? AND day != '*'", cut);
+    }
+
+    return kept;
+  }
+
+  summary() {
+    const apps = {};
+    const of = (name) =>
+      (apps[name] ||= { installed: 0, installs: 0, existing: 0, removed: 0, versions: {}, daily: {} });
+
+    for (const r of this.sql.exec("SELECT day, app, frm, dst, n FROM moves")) {
+      const a = of(r.app);
+      const n = Number(r.n) || 0;
+
+      if (r.frm === "") a.installs += n;
+      else if (r.frm === "?") a.existing += n;
+      if (r.dst === "") a.removed += n;
+
+      // Arrivals at a version, minus departures from it.
+      if (r.dst !== "") a.versions[r.dst] = (a.versions[r.dst] || 0) + n;
+      if (r.frm !== "" && r.frm !== "?") a.versions[r.frm] = (a.versions[r.frm] || 0) - n;
+
+      if (r.day !== "*") {
+        const d = (a.daily[r.day] ||= { installs: 0, removed: 0 });
+        if (r.frm === "") d.installs += n;
+        if (r.dst === "") d.removed += n;
+      }
+    }
+
+    for (const a of Object.values(apps)) {
+      // Updates contribute one arrival and one departure, so they cancel and
+      // this is exactly the number of copies still out there.
+      a.installed = a.installs + a.existing - a.removed;
+      for (const [v, n] of Object.entries(a.versions)) if (n <= 0) delete a.versions[v];
+    }
+
+    return {
+      format: 1,
+      generated: new Date().toISOString(),
+      // Said here so it travels with the data and not only on the page that
+      // happens to draw it today.
+      counts: "installs made through BrightMarket only; adb and Obtainium are invisible",
+      apps,
+    };
+  }
 }
