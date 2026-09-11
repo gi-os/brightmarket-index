@@ -134,8 +134,16 @@
   .cell .gets { color:var(--dim); font-size:10px; }
   .cell:hover { background:#0b0b0e; }
   /* Version split. One segment per version, newest first and brightest. */
-  .vbar { display:flex; width:100%; height:4px; margin-top:6px; gap:1px; overflow:hidden; }
-  .vseg { background:var(--fg); min-width:1px; }
+  /* 7px and a padded hit area: the thin version of this bar was unhittable, and
+     the narrow segment -- the one person who hasn't updated -- was the hardest
+     target on the page, which is backwards. */
+  .vbar { display:flex; width:100%; height:7px; margin-top:7px; gap:1px; overflow:hidden; cursor:help; }
+  .vseg { background:var(--fg); min-width:3px; }
+  .vtip { position:fixed; pointer-events:none; background:var(--fg); color:#000; font-family:var(--mono);
+          font-size:10px; letter-spacing:.08em; padding:7px 10px; border-radius:6px; white-space:nowrap;
+          display:none; z-index:50; line-height:1.7; }
+  .vtip .row { display:flex; gap:14px; justify-content:space-between; opacity:.45; }
+  .vtip .row.on { opacity:1; font-weight:600; }
   .foot { margin-top:34px; padding-top:18px; border-top:1px solid var(--line); font-size:12px; line-height:1.6; color:var(--dim); max-width:70ch; }
   .empty { padding:60px 0; text-align:center; font-family:var(--mono); font-size:12px; letter-spacing:.2em; color:var(--dimmer); }
 </style>
@@ -180,6 +188,7 @@
     </div>
     <div class="cards" id="installcards"></div>
     <div class="all-grid" id="installgrid"></div>
+    <div class="vtip" id="vtip"></div>
   </div>
 
   <div class="panel">
@@ -531,9 +540,14 @@
     const vs = splitOf(p);
     if (vs.length < 2) return "";
     const tot = vs.reduce((sum, [, n]) => sum + n, 0) || 1;
-    const seg = vs.map(([v, n], i) => `<span class="vseg" style="width:${(n / tot * 100).toFixed(2)}%;` +
-      ` opacity:${Math.max(0.2, 1 - i * 0.22).toFixed(2)}" title="v${esc(v)} · ${fmt(n)}"></span>`).join("");
-    return `<span class="vbar">${seg}</span>`;
+    // No `title`: the native tooltip waits a second, cannot be styled, and shows
+    // one segment's number when the useful thing is the whole split at once.
+    const seg = vs.map(([v, n], i) => `<span class="vseg" data-v="${esc(v)}"` +
+      ` style="width:${(n / tot * 100).toFixed(2)}%; opacity:${Math.max(0.2, 1 - i * 0.22).toFixed(2)}"></span>`).join("");
+    const rows = vs.map(([v, n]) =>
+      `<span class="row" data-v="${esc(v)}"><span>v${esc(v)}</span><span>${fmt(n)} USER${n === 1 ? "" : "S"}</span></span>`
+    ).join("");
+    return `<span class="vbar" data-rows="${esc(rows)}">${seg}</span>`;
   }
 
   function renderUsers() {
@@ -581,6 +595,38 @@
         </div>
       </a>`;
     }).join("");
+
+    wireVersionTips();
+  }
+
+  /**
+   * Hovering the bar shows the whole split, with the segment under the pointer
+   * picked out. Showing only the hovered version would mean hunting for the 3px
+   * one to learn there even is another.
+   */
+  function wireVersionTips() {
+    const tip = $("vtip");
+    const hide = () => { tip.style.display = "none"; };
+
+    $("installgrid").querySelectorAll(".vbar").forEach((bar) => {
+      const show = (e) => {
+        const on = e.target.classList.contains("vseg") ? e.target.dataset.v : null;
+        tip.innerHTML = bar.dataset.rows;
+        tip.querySelectorAll(".row").forEach((r) => r.classList.toggle("on", r.dataset.v === on));
+        tip.style.display = "block";
+        // Fixed position, clamped to the window so a row at the right edge or the
+        // bottom of the list does not push its own tooltip off screen.
+        const w = tip.offsetWidth, h = tip.offsetHeight;
+        tip.style.left = Math.min(e.clientX + 14, innerWidth - w - 8) + "px";
+        tip.style.top = Math.max(8, e.clientY - h - 10) + "px";
+      };
+      bar.addEventListener("mousemove", show);
+      bar.addEventListener("mouseleave", hide);
+      // A phone has no hover, and the bar sits inside a link. Tapping it reads the
+      // split instead of opening the app.
+      bar.addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); show(e); });
+    });
+    addEventListener("scroll", hide, { passive: true });
   }
 
   /** Users of an app, or null when nobody using it has reported yet. */
