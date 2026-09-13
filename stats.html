@@ -176,7 +176,7 @@
       <div class="label">STATS</div>
       <h1 style="margin-top:10px;">What people are getting</h1>
       <div class="sub">Two numbers, kept apart on purpose. <b>Gets</b> are GitHub's download counters,
-        remembered once a day. <b>Installs</b> are copies that landed on a phone through BrightMarket,
+        remembered once a day. <b>Users</b> are copies that landed on a phone through BrightMarket,
         which is the only one of the two a mirror cannot inflate.</div>
     </div>
     <div class="label" id="span"></div>
@@ -223,12 +223,12 @@
     A "get" is a download of a release asset counted by GitHub — from here, from Obtainium,
     from the releases page, from anywhere. It counts bytes leaving a release, so a mirror or a
     crawler reads exactly like a person: one app in this catalogue drew 87 a day for a month from
-    something that was never a phone. An "install" is a copy that landed on a phone through
+    something that was never a phone. A "user" is a copy that landed on a phone through
     BrightMarket and said so. A mirror cannot inflate that, and it cannot see apps installed any
-    other way either, so the two numbers disagree by design. Nothing on this page comes from
-    tracking anyone: the index writes down where each download counter stood at the end of every
-    day, and the install figures carry no identifier, no device id and no account — by
-    construction, not by policy.
+    other way either, so the two numbers disagree by design — the app at the top of one list is
+    usually not the app at the top of the other. Nothing on this page comes from tracking anyone:
+    the index writes down where each download counter stood at the end of every day, and the user
+    figures carry no identifier, no device id and no account — by construction, not by policy.
   </div>
 </div>
 
@@ -528,7 +528,7 @@
   const vcmp = (a, b) => String(b).localeCompare(String(a), undefined, { numeric: true });
 
   /**
-   * One bar per app, split by the version its installs are actually on. This is
+   * One bar per app, split by the version its users are actually on. This is
    * the thing download counts have never been able to show: a get says someone
    * fetched an APK once, it cannot say what they are running today.
    */
