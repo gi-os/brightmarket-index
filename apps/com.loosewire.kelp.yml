@@ -1,0 +1,6 @@
+pkg: com.loosewire.kelp
+name: Kelp
+repo: gavdevs/kelp
+category: media
+summary: Lighphone III client for Tidal. You must have a paid account for it to work
+icon: https://github.com/gavdevs/kelp/blob/main/docs/assets/icon.png
