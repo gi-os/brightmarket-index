@@ -966,6 +966,15 @@ def main() -> int:
         # dropped here rather than in the worker, which should keep counting either way.
         pulse["apps"] = {k: v for k, v in pulse["apps"].items() if k in listed}
         pulse["feed"] = [e for e in (pulse.get("feed") or []) if e.get("app") in listed]
+        # Carried on the index entry as well, so every client -- the phone, browse,
+        # anything reading the catalogue -- gets the number from the fetch it already
+        # makes. Only when it is above zero: a build that could not reach the worker
+        # would otherwise write 0 onto every app, which reads as "nobody uses these"
+        # rather than as "not measured this run".
+        for a in out:
+            n = (pulse["apps"].get(a["pkg"]) or {}).get("installed") or 0
+            if n > 0:
+                a["users"] = n
         with open(os.path.join(root, "pulse-v1.json"), "w") as f:
             json.dump(pulse, f, separators=(",", ":"))
         total = sum(a.get("installed", 0) for a in pulse["apps"].values())

@@ -293,7 +293,7 @@
   // re-sort -- and a link has to name an app rather than a slot. This is the
   // real selection now; `sel` is derived from it in render().
   let selPkg = "";
-  const SORTS = ["Popular", "Updated", "Name"];
+  const SORTS = ["Users", "Popular", "Updated", "Name"];
 
   /* ---- Deep links ----------------------------------------------------------
      One app, one URL. /app/<applicationId>/ is a generated page (build_index.py)
@@ -370,6 +370,10 @@
       return catOk && qOk;
     });
     return list.slice().sort((a, b) => {
+      // Users first: gets count bytes leaving a release, which a mirror inflates
+      // without a phone ever existing, so this is the closer thing to popularity.
+      // Apps nobody has reported yet fall in behind, ordered by gets among themselves.
+      if (sortBy === "Users") return (b.users || 0) - (a.users || 0) || (b.downloads || 0) - (a.downloads || 0);
       if (sortBy === "Popular") return (b.downloads || 0) - (a.downloads || 0);
       if (sortBy === "Updated") return new Date(b.latest.published) - new Date(a.latest.published);
       return a.name.localeCompare(b.name);
@@ -420,6 +424,7 @@
         <div class="stats">
           <div class="stat"><b>VERSION</b><i>${esc(ver(app.latest.version))}</i></div>
           <div class="stat"><b>SIZE</b><i>${mb(app.latest.size)}</i></div>
+          ${app.users ? `<div class="stat"><b>USERS</b><i>${app.users}</i></div>` : ""}
           <div class="stat"><b>GETS</b><i style="display:flex; align-items:center; gap:8px;">${app.downloads || 0}${today(app)}</i></div>
           <div class="stat"><b>UPDATED</b><i>${day(app.latest.published)}</i></div>
         </div>
@@ -763,7 +768,7 @@
         <div class="tile-sum">${esc(a.summary)}</div>
         <div style="margin-top:9px; display:flex; align-items:center; justify-content:space-between;">
           <div class="tile-meta">${esc((a.category || "").toUpperCase())}</div>
-          <div style="display:flex; align-items:center; gap:6px;">${today(a)}<div class="tile-pill">${a.downloads || 0} GETS</div></div>
+          <div style="display:flex; align-items:center; gap:6px;">${today(a)}${a.users ? `<div class="tile-pill">${a.users} USER${a.users === 1 ? "" : "S"}</div>` : ""}<div class="tile-pill">${a.downloads || 0} GETS</div></div>
         </div>
       </div>`).join("") + `
       <a class="add-tile" href="./submit.html">
