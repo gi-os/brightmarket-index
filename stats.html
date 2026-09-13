@@ -142,6 +142,10 @@
   .vbar { display:flex; width:100%; height:8px; margin-top:7px; gap:1px; padding:1.5px;
           box-shadow:inset 0 0 0 1px var(--line-2); border-radius:2px; overflow:hidden; cursor:help; }
   .vseg { background:var(--fg); min-width:3px; }
+  /* Everybody on the current build: nothing to act on, so the bar recedes to just
+     above the track. The rows worth looking at are the ones with a laggard, and
+     they are the ones that stay bright. */
+  .vbar.solo .vseg { background:var(--line-2); }
   .vtip { position:fixed; pointer-events:none; background:var(--fg); color:#000; font-family:var(--mono);
           font-size:10px; letter-spacing:.08em; padding:6px 9px; border-radius:6px; white-space:nowrap;
           display:none; z-index:50; }
@@ -535,9 +539,10 @@
   const splitOf = (p) => Object.entries(p.versions || {}).filter(([, n]) => n > 0).sort((x, y) => vcmp(x[0], y[0]));
 
   /**
-   * Every app gets one, including the ones where everybody is current: that is a
-   * full bright bar in an outlined track, which is the answer to "is anyone
-   * behind?" at a glance and the same shape as every other row.
+   * Every app gets one, including the ones where everybody is current -- those fill
+   * the track in near-black, present but quiet. The question the row answers is "is
+   * anyone behind?", and the rows where the answer is no should not compete with the
+   * rows where it is yes.
    *
    * Drawn OLDEST first, so the newest build is the right-hand end and the bar fills
    * rightward as people update. splitOf stays newest-first because the row label and
@@ -559,7 +564,7 @@
     const rows = ordered.map(([v, n]) =>
       `<span class="row" data-v="${esc(v)}"><span>v${esc(v)}</span><span>${fmt(n)} USER${n === 1 ? "" : "S"}</span></span>`
     ).join("");
-    return `<span class="vbar" data-rows="${esc(rows)}">${seg}</span>`;
+    return `<span class="vbar${vs.length === 1 ? " solo" : ""}" data-rows="${esc(rows)}">${seg}</span>`;
   }
 
   function renderUsers() {
