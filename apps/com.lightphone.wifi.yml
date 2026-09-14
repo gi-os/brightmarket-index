@@ -1,0 +1,5 @@
+pkg: com.lightphone.wifi
+name: wifi
+repo: fenleon/wifi
+category: hardware
+summary: Advanced Wifi Features for the Light Phone 3
