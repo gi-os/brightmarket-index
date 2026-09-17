@@ -184,6 +184,50 @@
   .note { margin-top:26px; font-family:var(--mono); font-size:10px; letter-spacing:.16em; color:var(--dimmest); }
   @media (max-width: 900px) { .hero { flex-wrap: wrap; } }
 
+  /* Phone.
+     Measured at 375px before any of this existed: the page scrolled sideways by
+     78px, and the sticky stack -- bar, hero, wire -- was 736px of an 812px
+     screen, leaving 76px of catalogue underneath it. Almost all of what follows
+     is subtraction. */
+  @media (max-width: 640px) {
+    /* The hero's max-height was written to guarantee the header always fits
+       above the grid. On a phone it guarantees the opposite, so nothing is
+       pinned here and the hero becomes something you scroll past. */
+    .hero-wrap, .wire { position:static; max-height:none; }
+    /* Nothing is sticky any more, so this clips the stray overflow rather than
+       breaking a pin. */
+    .col { overflow-x:hidden; }
+
+    .bar { padding:0 14px; gap:8px; }
+    .wordmark { display:none; }
+    .pill-link { height:32px; padding:0 12px; gap:6px; font-size:9px; letter-spacing:.1em; }
+
+    .hero { flex-direction:column; gap:16px; padding:18px 14px; }
+    /* The three hero columns carry inline widths, which is why these have to shout. */
+    .hero > div { width:auto !important; }
+    /* Icon and its caption side by side: stacked, they cost 230px of the first
+       screen to say two words. */
+    .hero > div:first-child { flex-direction:row !important; align-items:center !important;
+                              gap:14px !important; justify-content:flex-start; }
+    .hero-icon { width:84px; height:84px; border-radius:14px; font-size:34px; animation:none; }
+
+    /* One row still, scrolled rather than wrapped. Wrapping is what put a grey
+       slab under the stat rail in the first place. */
+    .stats { display:flex; overflow-x:auto; max-width:none; scrollbar-width:none; }
+    .stats::-webkit-scrollbar { display:none; }
+    .stat { flex:0 0 auto; min-width:96px; }
+
+    /* A QR code exists to be scanned BY a phone. On the phone it is a picture of
+       a link you are already holding. */
+    .qr-card { display:none; }
+    .shots img { height:96px; }
+
+    .filters { padding:12px 14px 10px; }
+    .grid { grid-template-columns:1fr; padding:14px 14px 0; }
+    .foot { padding:22px 14px; }
+    .veil { padding:16px 10px; }
+  }
+
   /* README overlay. Fixed rather than inline: the hero is sticky, so an inline
      panel would either be trapped under it or push the whole grid around. */
   .veil { position:fixed; inset:0; background:rgba(0,0,0,.82); z-index:60;

@@ -151,6 +151,25 @@
           display:none; z-index:50; }
   .vtip .row { display:flex; gap:16px; justify-content:space-between; opacity:.45; line-height:1.6; }
   .vtip .row.on { opacity:1; font-weight:600; }
+  /* Phone. The chart is a viewBox SVG so it scales on its own; what does not is
+     the two-column split beside it, and 34px of side padding on a 375px screen. */
+  @media (max-width: 640px) {
+    .bar { padding:0 14px; }
+    .wordmark { display:none; }
+    .pill-link { height:32px; padding:0 12px; gap:6px; font-size:9px; letter-spacing:.1em; }
+    .wrap { padding:18px 14px 28px; }
+    h1 { font-size:24px; }
+    .cards { grid-template-columns:repeat(2,1fr); }
+    /* Chart over leaderboard rather than beside it, and the board's left edge
+       becomes a top edge or it draws a rule down the middle of nothing. */
+    .split { grid-template-columns:1fr; }
+    .board { border-left:none; border-top:1px solid var(--line); max-height:440px; }
+    .chart { min-height:300px; padding:10px 4px 4px 0; }
+    .chart svg { height:300px; }
+    .all-grid { grid-template-columns:1fr; }
+    .note { padding:0 12px 14px; }
+  }
+
   .foot { margin-top:34px; padding-top:18px; border-top:1px solid var(--line); font-size:12px; line-height:1.6; color:var(--dim); max-width:70ch; }
   .empty { padding:60px 0; text-align:center; font-family:var(--mono); font-size:12px; letter-spacing:.2em; color:var(--dimmer); }
 </style>
