@@ -1,9 +1,9 @@
 pkg: app.lightphonekeyboard
-name: LightKeyboard
-repo: gi-os/LightKeyboard
+name: BrightKeyboard
+repo: gi-os/BrightKeyboard
 upstream: adam-weber/light-keyboard
 category: hardware
 summary: >-
-  The Light Phone keyboard, in every app instead of only Light's own. Swipe typing and
-  autocorrect run against a dictionary bundled in the APK, so nothing here touches the
-  network.
+  The Light Phone keyboard, in every app instead of only Light's own. Swipes are read by a
+  neural model bundled in the APK, and autocorrect runs against a dictionary bundled beside
+  it, so nothing here touches the network.
