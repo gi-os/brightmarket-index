@@ -203,8 +203,12 @@
     .pill-link { height:32px; padding:0 12px; gap:6px; font-size:9px; letter-spacing:.1em; }
 
     .hero { flex-direction:column; gap:16px; padding:18px 14px; }
-    /* The three hero columns carry inline widths, which is why these have to shout. */
-    .hero > div { width:auto !important; }
+    /* The three hero columns carry inline widths, which is why these have to shout.
+       min-width:0 is the load-bearing half: a column flex container takes its
+       content width from the widest child's MIN-content, and the stat rail's was
+       525px, so all three columns sized to 525 inside a 390px hero and the last
+       button and the last stat were simply cut off the side. */
+    .hero > div { width:auto !important; min-width:0 !important; max-width:100%; }
     /* Icon and its caption side by side: stacked, they cost 230px of the first
        screen to say two words. */
     .hero > div:first-child { flex-direction:row !important; align-items:center !important;
@@ -213,7 +217,7 @@
 
     /* One row still, scrolled rather than wrapped. Wrapping is what put a grey
        slab under the stat rail in the first place. */
-    .stats { display:flex; overflow-x:auto; max-width:none; scrollbar-width:none; }
+    .stats { display:flex; width:100%; overflow-x:auto; max-width:none; scrollbar-width:none; }
     .stats::-webkit-scrollbar { display:none; }
     .stat { flex:0 0 auto; min-width:96px; }
 
@@ -225,7 +229,9 @@
     .hero > div:last-child { flex-direction:row !important; gap:8px !important; }
     .hero > div:last-child > * { flex:1; min-width:0; }
     .btn { padding:0 6px; font-size:9px; letter-spacing:.1em; }
-    .shots img { height:88px; }
+    /* LP3 screenshots are tall and narrow, so a short strip of them is a row of
+       slivers. Height is what makes them readable; the strip already scrolls. */
+    .shots img { height:118px; }
 
     .filters { padding:12px 14px 10px; }
     .grid { grid-template-columns:1fr; padding:14px 14px 0; }
