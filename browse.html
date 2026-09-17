@@ -220,7 +220,12 @@
     /* A QR code exists to be scanned BY a phone. On the phone it is a picture of
        a link you are already holding. */
     .qr-card { display:none; }
-    .shots img { height:96px; }
+    /* GET / README / SOURCE stacked cost 152px of the first screen for three
+       short words. Side by side they cost 44px and read as a button bar. */
+    .hero > div:last-child { flex-direction:row !important; gap:8px !important; }
+    .hero > div:last-child > * { flex:1; min-width:0; }
+    .btn { padding:0 6px; font-size:9px; letter-spacing:.1em; }
+    .shots img { height:88px; }
 
     .filters { padding:12px 14px 10px; }
     .grid { grid-template-columns:1fr; padding:14px 14px 0; }
