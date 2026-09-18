@@ -65,8 +65,18 @@
 
   /* Cells draw their own right and bottom hairlines instead of a grey gap showing
      through, so a row that doesn't fill leaves black where there is no card. */
-  .cards { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); border:1px solid var(--line-2);
+  /* auto-FIT, not auto-fill. auto-fill lays down every 200px track the width
+     allows and leaves the spare ones empty, so at 1800px this panel drew six
+     tracks for four cards and the row stopped two thirds of the way across
+     with 456px of nothing beside it -- and MOST USERS was ellipsing "BrightMar…"
+     inside a 228px cell at the same time. auto-fit collapses the empty tracks
+     and the four cards share the full width. */
+  .cards { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); border:1px solid var(--line-2);
            border-right:none; border-bottom:none; border-radius:12px; overflow:hidden; margin-top:24px; }
+  /* Inside a panel the head rule already provides the separation, and the app
+     grid below sits at 12px. 24px made the cards look like a third box adrift
+     between the two. */
+  .panel .cards { margin-top:12px; }
   .card { background:#000; border-right:1px solid var(--line-2); border-bottom:1px solid var(--line-2); padding:16px 18px; min-height:104px; display:flex; flex-direction:column; justify-content:space-between; gap:8px; }
   .card b { font-family:var(--mono); font-size:9px; letter-spacing:.2em; color:#6a6a70; font-weight:400; }
   .card i { font-style:normal; font-family:var(--round); font-size:26px; line-height:1; display:flex; align-items:center; gap:10px; min-width:0; }

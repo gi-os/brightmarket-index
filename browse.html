@@ -113,17 +113,35 @@
   .stat { background:#000; padding:9px 12px; }
   .stat b { display:block; font-family:var(--mono); font-size:9px; letter-spacing:.14em; color:#6a6a70; font-weight:400; }
   .stat i { display:block; font-family:var(--mono); font-size:13px; font-style:normal; margin-top:3px; }
+  /* min-height, so an app with no screenshots and an app with six leave the
+     hero exactly as tall. See .hero-sum. */
   .shots { display:flex; gap:10px; flex-wrap:nowrap; overflow-x:auto; overflow-y:hidden;
-    padding-bottom:6px; scrollbar-width:thin; }
-  .shots img { flex:0 0 auto; }
+    padding-bottom:6px; scrollbar-width:thin; min-height:126px; }
   /* Was 158px. Three of these plus the metadata is most of a laptop window,
      which is what pushed the hero past the point where it could stay pinned. */
-  .shots img { height:118px; border-radius:6px; border:1px solid var(--line-2); background:#000;
-    cursor:zoom-in; transition:.15s; }
+  .shots img { flex:0 0 auto; height:118px; border-radius:6px; border:1px solid var(--line-2);
+    background:#0e0e11; cursor:zoom-in; transition:opacity .35s ease, border-color .15s;
+    /* A lazy <img> has no size until its bytes arrive, so the strip laid out at
+       zero width and then snapped open one image at a time. The ratio is a
+       stand-in for a portrait phone screenshot, which is what nearly all of
+       these are; it is dropped on load so the real one wins. Fading in covers
+       the difference between the two. */
+    aspect-ratio:9/19.5; opacity:0; }
+  .shots img.on { opacity:1; aspect-ratio:auto; }
   .shots img:hover { border-color:var(--fg); }
+  /* The hero is sticky, and the wire and the whole grid are positioned off its
+     height, so an app with a one-line summary and an app with a six-line one
+     moved the entire page. Four lines are reserved whatever the text does: long
+     summaries end in an ellipsis with the README a click away, short ones leave
+     the space empty. 90ch rather than 52 because on a wide screen the old
+     measure spent a third of the hero on a column of text and the rest on
+     nothing. */
+  .hero-sum { font-size:15px; line-height:1.55; color:#d8d8dc; max-width:90ch;
+    min-height:calc(4 * 1.55em); display:-webkit-box; -webkit-box-orient:vertical;
+    -webkit-line-clamp:4; overflow:hidden; }
   .lightbox-img { max-width:100%; max-height:calc(100vh - 160px); border-radius:8px;
     border:1px solid var(--line-2); }
-  .noshots { display:flex; align-items:center; padding:0 16px; height:52px; max-width:340px;
+  .noshots { display:flex; align-items:center; padding:0 16px; height:126px; max-width:340px; box-sizing:border-box;
     border:1px dashed var(--edge); border-radius:8px; font-family:var(--mono); font-size:11px;
     letter-spacing:.1em; color:#6a6a70; }
   .qr-card { border-radius:12px; padding:12px; display:flex; flex-direction:column; align-items:center;
@@ -518,7 +536,7 @@
           <a href="https://github.com/${esc(app.upstream)}" target="_blank" rel="noopener"
              style="font-family:var(--mono); font-size:11px; letter-spacing:.08em; border-bottom:1px solid var(--edge);">${esc(app.upstream)}</a>` : ""}
         </div>
-        <div style="font-size:15px; line-height:1.55; color:#d8d8dc; max-width:52ch;">${esc(app.summary)}</div>
+        <div class="hero-sum">${esc(app.summary)}</div>
         <div class="stats">
           <div class="stat"><b>VERSION</b><i>${esc(ver(app.latest.version))}</i></div>
           <div class="stat"><b>SIZE</b><i>${mb(app.latest.size)}</i></div>
@@ -564,9 +582,11 @@
     });
     $("hero").querySelectorAll(".shots img").forEach((n, i) => {
       n.addEventListener("click", () => openShot(app, i));
-      // Images arrive after layout and change the hero's height; without this
-      // the seam reopens on exactly the apps that have screenshots.
-      n.addEventListener("load", syncStickyOffsets);
+      // A cached image can already be complete before this runs, and its load
+      // event has then been and gone -- without the check those never fade in
+      // at all and the strip stays invisible on a second visit.
+      if (n.complete && n.naturalWidth) n.classList.add("on");
+      else n.addEventListener("load", () => n.classList.add("on"));
     });
   }
 
