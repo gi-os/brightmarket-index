@@ -138,11 +138,21 @@
   .wire { position:sticky; top:calc(60px + var(--hero-h, 232px)); z-index:9; background:var(--bg);
     flex-shrink:0; height:34px; display:flex; align-items:center; gap:14px; padding:0 34px;
     border-bottom:1px solid var(--line); }
+  /* Asymmetric padding on purpose: letter-spacing is applied after the last
+     letter too, so 8px both sides draws the E 2.3px further from its edge than
+     the W is from the other one, and the word sits visibly left in its box. */
   .wire-tag { flex-shrink:0; font-family:var(--mono); font-size:9px; letter-spacing:.26em;
-    padding:3px 8px; border-radius:4px; background:#1a1a1e; }
+    padding:3px 6px 3px 8px; border-radius:4px; background:#1a1a1e; }
   .wire-track { flex:1; overflow:hidden; position:relative; height:14px; }
-  .wire-run { position:absolute; display:flex; gap:34px; white-space:nowrap; animation:marquee 150s linear infinite;
+  /* Two identical halves, and the gap between items lives INSIDE a half as a
+     trailing padding rather than between them. The run used to be one flex row
+     of both copies with gap:34px, so it held 2N-1 gaps for 2N items -- and
+     translateX(-50%) therefore landed half a gap short of the copy boundary.
+     Measured: a 17px jump on every loop, which is what the wire "being a bit
+     off" was. With the gap owned by each half, -50% is the boundary exactly. */
+  .wire-run { position:absolute; display:flex; white-space:nowrap; animation:marquee 150s linear infinite;
     font-family:var(--mono); font-size:9.5px; letter-spacing:.2em; color:var(--dimmer); }
+  .wire-half { display:flex; gap:34px; padding-right:34px; }
   .nav { cursor:pointer; width:32px; height:24px; border-radius:6px; box-shadow:inset 0 0 0 1px var(--edge);
     color:#8a8a90; display:flex; align-items:center; justify-content:center; font-size:11px; transition:.15s; }
   .nav:hover { box-shadow:inset 0 0 0 1px var(--fg); color:var(--fg); }
@@ -234,8 +244,9 @@
        525px, so all three columns sized to 525 inside a 390px hero and the last
        button and the last stat were simply cut off the side. */
     .hero > div { width:auto !important; min-width:0 !important; max-width:100%; }
-    /* Icon and its caption side by side: stacked, they cost 230px of the first
-       screen to say two words. */
+    /* The icon column held a caption beside it until the caption was dropped;
+       the row rule stays because the column is what the width rule above
+       targets, and a single child is unaffected by its direction. */
     .hero > div:first-child { flex-direction:row !important; align-items:center !important;
                               gap:14px !important; justify-content:flex-start; }
     .hero-icon { width:84px; height:84px; border-radius:14px; font-size:34px; animation:none; }
@@ -372,6 +383,8 @@
      which -- being a lifetime total -- is the same app for weeks. A link that names
      an app still wins; this is only what you get when you ask for nothing. */
   let featured = "";
+  // False until the visitor chooses an app themselves. See syncUrl.
+  let pinned = false;
   // Recent installs, absent whenever the worker could not be read on the last build.
   let pulse = null;
   // Which app the hero is on, by applicationId. `sel` is a position in the
@@ -485,8 +498,6 @@
     $("hero").innerHTML = `
       <div style="flex-shrink:0; display:flex; flex-direction:column; gap:12px; align-items:center; width:172px;">
         <div class="hero-icon">${mark(app)}<div class="sh"></div></div>
-        <div style="font-family:var(--mono); font-size:9px; letter-spacing:.14em; color:#6a6a70;
-             text-align:center; line-height:1.7;">OPEN SOURCE<br />NO ACCOUNT</div>
       </div>
 
       <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:15px;">
@@ -789,11 +800,18 @@
    * hundred entries of Back. The URL is a description of what is on screen
    * here, not a place you navigated to.
    */
-  function syncUrl(app) {
+  /* `pin` is false while the hero is showing the day's showcase to someone who
+     has not chosen anything yet. That state is the HOME page, so it keeps the
+     home page's URL: ?app=<pick> would make the front door look like an app
+     page, and a link copied or bookmarked from it would hand tomorrow's
+     visitor today's app forever. The moment the visitor picks something --
+     a tile, an arrow key, the filter box -- the URL names it as before. */
+  function syncUrl(app, pin) {
     if (!app || !history.replaceState) return;
-    document.title = app.name + " \u00b7 BrightMarket";
+    document.title = pin ? app.name + " \u00b7 BrightMarket" : "BrightMarket";
     const u = new URL(location.href);
-    u.searchParams.set("app", app.pkg);
+    if (pin) u.searchParams.set("app", app.pkg);
+    else u.searchParams.delete("app");
     // The hash was only ever an input form; leaving it would give two keys in
     // one URL and no rule for which wins on reload.
     u.hash = "";
@@ -833,7 +851,7 @@
     if (sel > list.length - 1) sel = Math.max(0, list.length - 1);
     const app = list[sel];
     selPkg = app ? app.pkg : "";
-    syncUrl(app);
+    syncUrl(app, pinned);
     renderHero(app);
 
     requestAnimationFrame(syncStickyOffsets);
@@ -869,6 +887,7 @@
       n.addEventListener("click", () => {
         sel = +n.dataset.i;
         selPkg = n.dataset.pkg;
+        pinned = true;
         render();
         // No scrollIntoView here. It existed when the hero scrolled away with
         // the page; now that the hero is anchored the panel is always visible,
@@ -896,6 +915,7 @@
     sel = (sel + d + list.length) % list.length;
     // Without this the pkg pin would drag the hero straight back.
     selPkg = list[sel].pkg;
+    pinned = true;
     render();
   }
 
@@ -904,12 +924,12 @@
   // else, and the hero showing the top result is the useful behaviour. Category
   // and sort chips do NOT drop it -- re-sorting is a change of view, not of
   // subject, so the app you were reading about stays.
-  $("q").addEventListener("input", (e) => { query = e.target.value; sel = 0; selPkg = ""; render(); });
+  $("q").addEventListener("input", (e) => { query = e.target.value; sel = 0; selPkg = ""; pinned = true; render(); });
   window.addEventListener("resize", syncStickyOffsets);
   // Back, forward, and a link to ?app=/#app= on the page you are already on.
   const followUrl = () => {
     const i = findApp(askedFor());
-    if (i >= 0) { selPkg = apps[i].pkg; render(); }
+    if (i >= 0) { selPkg = apps[i].pkg; pinned = true; render(); }
   };
   window.addEventListener("popstate", followUrl);
   window.addEventListener("hashchange", followUrl);
@@ -949,10 +969,31 @@
     // Nothing installed yet, or no pulse this build: the wire falls back to what it
     // always showed rather than going blank.
     if (!rows.length) return apps.map((a) => `${esc(a.name.toUpperCase())} ${esc(ver(a.latest.version))}`);
+    // The same app and version landing twice in a row is several people
+    // installing the same release inside one window -- true, and unreadable as
+    // two identical lines a gap apart. The wire is a headline, not the log.
+    const seen = [];
+    for (const r of rows) if (r !== seen[seen.length - 1]) seen.push(r);
     // Short feeds would leave a gap mid-scroll, so the run is repeated to fill it.
     const out = [];
-    while (out.length < 24) out.push(...rows);
+    while (out.length < 24) out.push(...seen);
     return out;
+  }
+
+  /** Fill the wire and set its pace. */
+  function renderWire() {
+    const items = wireItems();
+    const half = `<div class="wire-half"><span>${items.join("</span><span>")}</span></div>`;
+    // The second copy is the same words again, purely so the loop has something
+    // to scroll into; a screen reader should read the feed once.
+    $("wire").innerHTML = half + half.replace("<div ", '<div aria-hidden="true" ');
+    // The duration was a flat 150s for a run whose width depends entirely on how
+    // much the feed has in it -- 148px/s on a busy day, a crawl on a quiet one.
+    // Pinning the SPEED instead keeps the reading pace the same either way.
+    requestAnimationFrame(() => {
+      const one = $("wire").firstElementChild;
+      if (one && one.offsetWidth) $("wire").style.animationDuration = `${(one.offsetWidth / 80).toFixed(1)}s`;
+    });
   }
 
   (async function init() {
@@ -974,14 +1015,13 @@
       const want = askedFor();
       if (want) {
         const i = findApp(want);
+        pinned = true;
         if (i >= 0) selPkg = apps[i].pkg;
         else { query = want; $("q").value = want; }
       } else if (featured) {
         selPkg = featured;
       }
-      $("wire").innerHTML = [0, 1].map(() =>
-        `<span>${wireItems().join("</span><span>")}</span>`
-      ).join("");
+      renderWire();
       renderChips();
       render();
     } catch (err) {
