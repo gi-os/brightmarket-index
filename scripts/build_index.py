@@ -501,6 +501,69 @@ PUBLISHED_HISTORY = f"{SITE}/history-v1.json"
 HISTORY_MARKER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "history_started")
 HISTORY_DAYS = 400
 
+# The showcase. One app on the front of /browse.html per day, instead of whatever
+# happens to top the Popular sort -- which, being a lifetime total, is the same app
+# for weeks at a time.
+SHOWCASE_FLOOR = 5          # gets on the last complete day
+SHOWCASE_TZ = "America/New_York"
+SHOWCASE_SKIP = {"com.gios.brightmarket"}   # the shop does not showcase itself
+
+
+def showcase_day() -> str:
+    """Today in New York, because that is where the day turns over for the person
+    looking at it. The rest of the history is keyed UTC and stays that way: those
+    are download counters, and re-keying them would reprice every snapshot."""
+    try:
+        from zoneinfo import ZoneInfo
+        return datetime.datetime.now(ZoneInfo(SHOWCASE_TZ)).date().isoformat()
+    except Exception as e:  # no tzdata on the runner
+        warn(f"no {SHOWCASE_TZ} zone ({e}); the showcase turns over at UTC midnight")
+        return datetime.datetime.now(datetime.timezone.utc).date().isoformat()
+
+
+def pick_showcase(out: list[dict], gains: dict, featured: dict, today_utc: str) -> str | None:
+    """The day's app: eligible, and whichever of those went longest without a turn.
+
+    Eligible is not deprecated and at least SHOWCASE_FLOOR gets on the last COMPLETE
+    UTC day. Not `downloadsToday`: that resets at UTC midnight, which is 8pm here, so
+    a pick made at New York midnight would be reading five hours of counting and find
+    almost nobody above the floor.
+
+    Least-recently-featured rather than a seeded shuffle through the catalogue. A
+    shuffle needs a fixed pool to deal from and this one is not fixed -- measured over
+    nine days it moved between 7 and 23 apps -- so positions in a deck stop meaning
+    anything. Sorting on "when did this last have a turn" survives a pool that changes
+    under it, and an app that has never been featured sorts first because "" precedes
+    every date.
+    """
+    day = showcase_day()
+    if day in featured:
+        # The index rebuilds every fifteen minutes. Without this the pick would be
+        # recomputed ~96 times a day and jump every time the gains moved.
+        return featured[day]
+    prior = [d for d in sorted(gains) if d < today_utc]
+    yesterday = gains.get(prior[-1]) if prior else {}
+    pool = [a for a in out
+            if not a.get("deprecated")
+            and a["pkg"] not in SHOWCASE_SKIP
+            and (yesterday or {}).get(a["pkg"], 0) >= SHOWCASE_FLOOR]
+    if not pool:
+        # A quiet day, or the first day of a history. Rather than an empty hero,
+        # hold whatever was up yesterday, and fall back to the biggest app only if
+        # there is no yesterday either.
+        keep = featured.get(sorted(featured)[-1]) if featured else None
+        if not keep:
+            live = [a for a in out if not a.get("deprecated") and a["pkg"] not in SHOWCASE_SKIP]
+            keep = max(live, key=lambda a: a.get("downloads") or 0)["pkg"] if live else None
+        if keep:
+            featured[day] = keep
+        return keep
+    last = {pkg: d for d, pkg in sorted(featured.items())}
+    pick = min(pool, key=lambda a: (last.get(a["pkg"], ""), -(yesterday.get(a["pkg"]) or 0)))
+    featured[day] = pick["pkg"]
+    return pick["pkg"]
+
+
 
 def load_history() -> dict:
     """The per-day download snapshots behind /stats.html.
@@ -528,7 +591,7 @@ def load_history() -> dict:
     would publish a history file with one day in it over one with months.
     """
     if os.environ.get("ALLOW_EMPTY_HISTORY") == "1":
-        return {"days": {}, "open": {}, "releases": {}, "gains": {}}
+        return {"days": {}, "open": {}, "releases": {}, "gains": {}, "featured": {}}
     url = f"{PUBLISHED_HISTORY}?t={int(datetime.datetime.now().timestamp())}"
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "brightmarket-index"})
@@ -538,7 +601,8 @@ def load_history() -> dict:
         if not isinstance(days, dict):
             raise ValueError("days is not an object")
         return {"days": days, "open": doc.get("open") or {},
-                "releases": doc.get("releases") or {}, "gains": doc.get("gains") or {}}
+                "releases": doc.get("releases") or {}, "gains": doc.get("gains") or {},
+                "featured": doc.get("featured") or {}}
     except urllib.error.HTTPError as e:
         if e.code == 404:
             # A 404 is indistinguishable, over the wire, from "the deployment lost
@@ -559,7 +623,7 @@ def load_history() -> dict:
                     "the file, or delete the marker to start the history over on purpose."
                 )
             warn("no published history yet; starting the download history today")
-            return {"days": {}, "open": {}, "releases": {}, "gains": {}}
+            return {"days": {}, "open": {}, "releases": {}, "gains": {}, "featured": {}}
         raise SystemExit(f"FATAL: could not read {PUBLISHED_HISTORY} ({e}); refusing to publish "
                          "a history that would overwrite the real one")
     except Exception as e:
@@ -939,10 +1003,14 @@ def main() -> int:
         else:
             a["downloadsToday"] = sum(max(0, n - base.get(tag, 0)) for tag, n in now.items())
     gains[today] = {a["pkg"]: a["downloadsToday"] for a in out}
+    featured = history["featured"]
+    showcased = pick_showcase(out, gains, featured, today)
     for stale in sorted(days)[:-HISTORY_DAYS]:
         del days[stale]
     for stale in sorted(gains)[:-HISTORY_DAYS]:
         del gains[stale]
+    for stale in sorted(featured)[:-HISTORY_DAYS]:
+        del featured[stale]
     # Per-release detail is only needed for the baseline; a few days covers a gap.
     for stale in sorted(rel)[:-4]:
         del rel[stale]
@@ -952,11 +1020,14 @@ def main() -> int:
              "generated": datetime.datetime.now(datetime.timezone.utc).isoformat(),
              "days": {d: days[d] for d in sorted(days)},
              "gains": {d: gains[d] for d in sorted(gains)},
+             "featured": {d: featured[d] for d in sorted(featured)},
              "open": opened,
              "releases": {d: rel[d] for d in sorted(rel)}},
             f, separators=(",", ":"),
         )
     print(f"  /history-v1.json -> {len(days)} day(s), +{sum(a['downloadsToday'] for a in out)} today")
+    name_of = {a["pkg"]: a["name"] for a in out}
+    print(f"  showcase {showcase_day()} -> {name_of.get(showcased, showcased) or 'nothing eligible'}")
 
     pulse = load_pulse()
     if pulse is not None:
@@ -984,6 +1055,11 @@ def main() -> int:
     doc = {
         "format": 1,
         "generated": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        # The app the front page opens on today. Here rather than only in the
+        # history so a client needs one fetch, and so the phone can agree with
+        # the web without recomputing anything.
+        "featured": showcased,
+        "featuredOn": showcase_day(),
         "apps": out,
     }
 
