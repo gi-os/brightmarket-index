@@ -166,17 +166,26 @@
     box-shadow:0 0 0 1px var(--fg); }
   .tile-name { font-family:var(--round); font-size:15px; }
   .tile-meta { font-family:var(--mono); font-size:9px; letter-spacing:.1em; color:#7a7a80; margin-top:3px; }
-  .tile-sum { font-size:11.5px; line-height:1.45; color:var(--dim); margin-top:9px; flex:1; }
+  /* Three lines, then an ellipsis. Summaries run from eight words to sixty, and
+     a tile that grows to fit the longest one drags its whole grid row with it --
+     six lines of BrightControl beside two of Ritual. The hero prints the summary
+     in full, so nothing here is the only copy of anything. */
+  .tile-sum { font-size:11.5px; line-height:1.45; color:var(--dim); margin-top:9px; flex:1;
+    display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:3; overflow:hidden; }
   /* The tile's bottom line: category on the left, counters on the right.
      Three pills and a word like COMMUNICATION need ~300px, and a tile is 272.
      Before this the row simply overflowed: the pills, having no nowrap, broke
      "81 USERS" over two lines, and the category was squeezed underneath the
-     "+N TODAY" pill. So the row wraps on purpose instead -- the counters move
-     down as one block, right-aligned, and every pill keeps one line. */
-  .tile-foot { margin-top:9px; display:flex; align-items:center; justify-content:space-between;
-    flex-wrap:wrap; gap:6px 10px; }
+     "+N TODAY" pill.
+
+     So the counters get a row of their own on every tile, wide or narrow,
+     right-aligned under a category word that never moves. Two rows always: a
+     footer that is sometimes one row and sometimes two puts the category in a
+     different place on every tile down the column. */
+  .tile-foot { margin-top:9px; }
   .tile-foot .tile-meta { margin-top:0; }
-  .tile-stats { display:flex; align-items:center; gap:6px; margin-left:auto; }
+  .tile-stats { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end;
+    gap:6px; margin-top:6px; }
   .tile-pill, .today { display:inline-flex; align-items:center; height:17px; flex:0 0 auto;
     white-space:nowrap; font-family:var(--mono); font-size:9px; letter-spacing:.1em;
     padding:0 8px; border-radius:999px; }
