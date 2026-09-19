@@ -44,7 +44,7 @@ const SESSION_TTL_SECONDS = 10 * 60; // the signed session is only good for 10 m
 // go green until the running worker answers with the string that is in the source -- which is
 // the check that would have caught the ADB, Name and Summary fields shipping to a bundle that
 // was never redeployed.
-const VERSION = "9-ask";
+const VERSION = "10-search";
 
 export default {
   async fetch(request, env) {
@@ -834,10 +834,11 @@ async function handleAsk(request, env, cors) {
   const byName = new Map(apps.map((a) => [a.pkg, a]));
   const ranked = Object.entries(probs)
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 4)
-    // A long tail of near-zero options is not a suggestion, it is the rest of the
-    // catalogue. Only what the model actually put weight on.
-    .filter(([, p]) => p >= 0.04)
+    .slice(0, 8)
+    // A long tail of near-zero options is not a result, it is the rest of the catalogue
+    // sorted by noise. Only what the model actually put weight on -- which is why a
+    // precise query returns one row and a vague one returns six.
+    .filter(([, p]) => p >= 0.015)
     .map(([pkg, p]) => {
       const a = byName.get(pkg) || {};
       return { pkg, name: a.name || pkg, summary: a.summary || "", icon: a.icon || "", p };

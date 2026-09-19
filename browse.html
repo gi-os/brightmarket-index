@@ -185,25 +185,42 @@
      separate results page they would be a different question; here they are the same
      question answered a second way, and the substring matches stay on screen behind
      them. */
-  .sugg { display:flex; gap:8px; flex-wrap:wrap; align-items:stretch; }
-  .sugg-tag { font-family:var(--mono); font-size:9px; letter-spacing:.12em; color:#6a6a70;
-              align-self:center; padding-right:2px; }
-  .sugg-card { display:flex; gap:9px; align-items:center; text-align:left; cursor:pointer;
-               border:1px solid var(--line); border-radius:10px; padding:7px 11px 7px 8px;
-               background:transparent; color:inherit; font:inherit; max-width:290px;
-               transition:border-color .15s ease, background .15s ease; }
-  .sugg-card:hover { border-color:#4a4a52; background:#141418; }
-  .sugg-ico { width:26px; height:26px; border-radius:6px; flex-shrink:0; overflow:hidden;
-              background:#1a1a1f; display:flex; align-items:center; justify-content:center;
-              font-family:var(--mono); font-size:11px; color:#8a8a92; }
-  .sugg-ico img { width:100%; height:100%; object-fit:contain; display:block; }
-  .sugg-name { font-size:12.5px; line-height:1.2; }
-  /* The share of the model's probability this app took. Shown because a suggestion the
-     machine is unsure of should not look like one it is certain of. */
-  .sugg-p { font-family:var(--mono); font-size:8.5px; letter-spacing:.08em; color:#6a6a70;
-            margin-top:2px; }
-  .sugg-busy { font-family:var(--mono); font-size:9px; letter-spacing:.12em; color:#5a5a62;
-               align-self:center; }
+  .go { font-family:var(--mono); font-size:9.5px; letter-spacing:.12em; cursor:pointer;
+        border:1px solid var(--line); border-radius:999px; padding:6px 13px;
+        background:transparent; color:#9a9aa2; flex-shrink:0;
+        transition:border-color .15s ease, color .15s ease, background .15s ease; }
+  .go:hover { border-color:#4a4a52; color:var(--fg); background:#141418; }
+  .go[disabled] { opacity:.45; cursor:default; }
+
+  /* Results sit INSIDE the filter box, under the field that produced them. Not a
+     separate page: the grid behind is still the catalogue, and a result is a way into
+     it rather than a destination of its own. */
+  .res { border-top:1px solid var(--line); margin-top:12px; padding-top:11px; }
+  .res-head { display:flex; align-items:baseline; gap:9px; margin-bottom:8px; }
+  .res-tag { font-family:var(--mono); font-size:8.5px; letter-spacing:.12em; color:#6a6a70; }
+  .res-note { font-size:11px; color:#5a5a62; }
+  .res-x { margin-left:auto; font-family:var(--mono); font-size:8.5px; letter-spacing:.12em;
+           color:#6a6a70; background:none; border:none; cursor:pointer; padding:0; }
+  .res-x:hover { color:var(--fg); }
+  .res-list { display:grid; grid-template-columns:repeat(auto-fit, minmax(270px, 1fr)); gap:7px; }
+  .res-row { display:flex; gap:10px; align-items:center; text-align:left; cursor:pointer;
+             border:1px solid transparent; border-radius:10px; padding:7px 10px;
+             background:transparent; color:inherit; font:inherit; width:100%;
+             transition:border-color .15s ease, background .15s ease; }
+  .res-row:hover { border-color:#3a3a42; background:#141418; }
+  .res-ico { width:30px; height:30px; border-radius:7px; flex-shrink:0; overflow:hidden;
+             background:#1a1a1f; display:flex; align-items:center; justify-content:center;
+             font-family:var(--mono); font-size:12px; color:#8a8a92; }
+  .res-ico img { width:100%; height:100%; object-fit:contain; display:block; }
+  .res-body { min-width:0; }
+  .res-name { font-size:13px; line-height:1.2; }
+  .res-sum { font-size:11px; line-height:1.4; color:var(--dim); margin-top:2px;
+             overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  /* The share of the model's probability this app took. A result the machine is unsure
+     of must not look like one it is certain of. */
+  .res-p { font-family:var(--mono); font-size:8.5px; letter-spacing:.06em; color:#6a6a70;
+           margin-left:auto; flex-shrink:0; padding-left:8px; }
+  .res-busy { font-family:var(--mono); font-size:9px; letter-spacing:.12em; color:#5a5a62; }
 
   /* Neighbours, under the hero summary. A line of names rather than tiles: the grid
      below is already tiles, and this is a sentence about where the app sits. */
@@ -382,11 +399,12 @@
   <div class="filters">
     <div style="display:flex; align-items:center; gap:10px;">
       <div style="font-family:var(--mono); font-size:12px; color:#6a6a70;">⌕</div>
-      <input id="q" type="text" placeholder="Filter apps" autocomplete="off" />
+      <input id="q" type="text" placeholder="Search apps — a name, or what you want one to do" autocomplete="off" />
+      <button id="go" class="go" type="button">SEARCH</button>
       <div style="flex:1"></div>
       <div class="status" id="count"></div>
     </div>
-    <div id="sugg" class="sugg" hidden></div>
+    <div id="res" class="res" hidden></div>
     <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
       <div style="display:flex; gap:6px; flex-wrap:wrap;" id="cats"></div>
       <div style="flex:1"></div>
@@ -542,7 +560,7 @@
       .slice(0, 4);
     if (!near.length) return "";
     return (
-      '<div class="near"><span class="near-tag">NEAR THIS</span>' +
+      '<div class="near"><span class="near-tag">LIKE THIS APP</span>' +
       near
         .map((a) => `<button class="near-link" data-pkg="${esc(a.pkg)}">${esc(a.name)}</button>`)
         .join('<span class="near-dot">·</span>') +
@@ -1008,45 +1026,45 @@
   // subject, so the app you were reading about stays.
   $("q").addEventListener("input", (e) => {
     query = e.target.value; sel = 0; selPkg = ""; pinned = true; render();
-    askSoon(query);
+    // Typing still narrows the grid instantly and offline. The results block below is a
+    // separate answer to a separate question and only moves when a search is asked for.
+    if (!query.trim()) hideResults();
   });
+  $("q").addEventListener("keydown", (e) => { if (e.key === "Enter") search(); });
+  $("go").addEventListener("click", search);
 
-  /* ---------------------------------------------------------------- suggestions
-     The filter above matches substrings, which is the right answer when you know the
-     name and no answer at all when you do not. "something to read books offline" hits
-     nothing, and the page used to say NOTHING MATCHES to a person describing an app it
-     has.
+  /* ------------------------------------------------------------------- search
+     The box used to filter, which answers "I know the name" and nothing else:
+     "something to read books offline" matched no substring and the page said NOTHING
+     MATCHES to somebody describing an app the catalogue has.
 
-     So: typing still filters instantly and offline, and separately a short query is put
-     to the catalogue through the worker, which holds the key. The answer is a ranking
-     over every app, so the top few come back with the share of probability each took.
+     SEARCH puts the query to every app at once, through the worker that holds the key.
+     One Choice over the whole catalogue returns a probability for each, so the answer is
+     a ranking rather than a winner, and what comes back is ordered by how well each app
+     fits -- not by whether its name contains the letters typed.
 
-     Three rules about when NOT to ask, because a suggestion that arrives over a list
-     already showing the right thing is noise:
-       - fewer than three words: that is a name being typed, and the filter has it
-       - the filter already found something: the page has answered
-       - nothing typed for 450 ms: mid-word is not a question */
+     Substring hits are merged in ahead of the ranking, because somebody who typed a name
+     that exists should see it first whatever the model thinks. */
   const ASK_URL = "https://brightmarket-portal.gman6849.workers.dev/ask";
-  let askTimer = null, askSeq = 0, lastAsked = "";
+  let askSeq = 0;
 
-  function askSoon(text) {
-    clearTimeout(askTimer);
-    const q = (text || "").trim();
-    if (q.length < 8 || q.split(/\s+/).length < 3) { showSuggestions([], ""); return; }
-    askTimer = setTimeout(() => ask(q), 450);
+  function hideResults() {
+    const box = $("res");
+    box.hidden = true;
+    box.innerHTML = "";
   }
 
-  async function ask(q) {
-    // Asked after the local filter has had its turn: if a substring match is on screen,
-    // the person is not stuck and does not need a second opinion.
-    if (visible().length > 0) { showSuggestions([], ""); return; }
-    if (q === lastAsked) return;
-    lastAsked = q;
+  async function search() {
+    const q = ($("q").value || "").trim();
+    if (!q) { hideResults(); return; }
 
+    const box = $("res");
     const mine = ++askSeq;
-    const box = $("sugg");
     box.hidden = false;
-    box.innerHTML = '<div class="sugg-busy">LOOKING…</div>';
+    box.innerHTML =
+      '<div class="res-head"><span class="res-tag">RESULTS</span>' +
+      '<span class="res-busy">SEARCHING…</span></div>';
+    $("go").disabled = true;
 
     let data = null;
     try {
@@ -1058,42 +1076,95 @@
       data = res.ok ? await res.json() : null;
     } catch { data = null; }
 
-    // A slower earlier request must never overwrite a newer answer.
+    $("go").disabled = false;
+    // A slower earlier search must never overwrite a newer one.
     if (mine !== askSeq) return;
-    showSuggestions((data && data.suggestions) || [], q);
+    showResults(q, (data && data.suggestions) || []);
   }
 
-  function showSuggestions(list, q) {
-    const box = $("sugg");
-    if (!list.length) { box.hidden = true; box.innerHTML = ""; return; }
-    box.hidden = false;
+  function showResults(q, ranked) {
+    const box = $("res");
+    const t = q.toLowerCase();
+
+    // Anything whose name or summary literally contains the query, in catalogue order.
+    const literal = apps.filter(
+      (a) =>
+        a.name.toLowerCase().includes(t) ||
+        (a.summary || "").toLowerCase().includes(t) ||
+        a.pkg.toLowerCase().includes(t),
+    );
+
+    const seen = new Set();
+    const rows = [];
+    for (const a of literal) {
+      seen.add(a.pkg);
+      rows.push({ app: a, p: null });
+    }
+    for (const r of ranked) {
+      if (seen.has(r.pkg)) continue;
+      const a = apps.find((x) => x.pkg === r.pkg);
+      if (a) { seen.add(a.pkg); rows.push({ app: a, p: r.p }); }
+    }
+
+    if (!rows.length) {
+      box.innerHTML =
+        '<div class="res-head"><span class="res-tag">RESULTS</span>' +
+        '<span class="res-note">Nothing in the catalogue does that yet.</span>' +
+        '<button class="res-x" id="res-clear">CLEAR</button></div>';
+      $("res-clear").addEventListener("click", clearSearch);
+      return;
+    }
+
+    const note = ranked.length
+      ? `${rows.length} app${rows.length === 1 ? "" : "s"} — best fit first`
+      : `${rows.length} app${rows.length === 1 ? "" : "s"} matching “${esc(q)}”`;
+
     box.innerHTML =
-      '<div class="sugg-tag">PERHAPS</div>' +
-      list
-        .map((s) => {
-          const ico = s.icon
-            ? `<img src="${esc(s.icon)}" alt="" />`
-            : esc((s.name || "?").slice(0, 1).toUpperCase());
+      `<div class="res-head"><span class="res-tag">RESULTS</span>` +
+      `<span class="res-note">${note}</span>` +
+      `<button class="res-x" id="res-clear">CLEAR</button></div>` +
+      '<div class="res-list">' +
+      rows
+        .map(({ app, p }) => {
+          const ico = app.icon
+            ? `<img src="${esc(app.icon)}" alt="" loading="lazy" />`
+            : esc((app.name || "?").slice(0, 1).toUpperCase());
+          // A percentage only where one exists: a literal match was not ranked and
+          // printing a number for it would invent a confidence nobody computed.
+          const pct = p == null ? "" : `<div class="res-p">${Math.round(p * 100)}%</div>`;
           return (
-            `<button class="sugg-card" data-pkg="${esc(s.pkg)}">` +
-            `<div class="sugg-ico">${ico}</div>` +
-            `<div><div class="sugg-name">${esc(s.name)}</div>` +
-            `<div class="sugg-p">${Math.round(s.p * 100)}%</div></div>` +
+            `<button class="res-row" data-pkg="${esc(app.pkg)}">` +
+            `<div class="res-ico">${ico}</div>` +
+            `<div class="res-body"><div class="res-name">${esc(app.name)}</div>` +
+            `<div class="res-sum">${esc(app.summary || "")}</div></div>` +
+            pct +
             `</button>`
           );
         })
-        .join("");
-    box.querySelectorAll(".sugg-card").forEach((n) =>
-      n.addEventListener("click", () => {
-        // Clearing the filter is the point: the app is in the grid behind this row, and
-        // leaving a query that matches nothing would hide the thing just chosen.
-        query = ""; $("q").value = "";
-        selPkg = n.dataset.pkg; pinned = true; sel = 0;
-        showSuggestions([], "");
-        render();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }),
+        .join("") +
+      "</div>";
+
+    $("res-clear").addEventListener("click", clearSearch);
+    box.querySelectorAll(".res-row").forEach((n) =>
+      n.addEventListener("click", () => open_(n.dataset.pkg)),
     );
+  }
+
+  /* Opening a result has to actually show the app, which means clearing the filter
+     first: a query that matches no substring would otherwise hide the very app just
+     chosen from the grid underneath. */
+  function open_(pkg) {
+    query = ""; $("q").value = "";
+    selPkg = pkg; pinned = true; sel = 0;
+    render();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function clearSearch() {
+    query = ""; $("q").value = "";
+    hideResults();
+    sel = 0; selPkg = ""; pinned = true;
+    render();
   }
   window.addEventListener("resize", syncStickyOffsets);
   // Back, forward, and a link to ?app=/#app= on the page you are already on.
