@@ -1,0 +1,11 @@
+# Was app.lightphonekeyboard up to v3.11. That id belongs to the project this forks, and went back
+# to it; see apps/app.lightphonekeyboard.yml, which is the frozen build that carries users over.
+pkg: com.gios.brightkeyboard
+name: BrightKeyboard
+repo: gi-os/BrightKeyboard
+upstream: adam-weber/light-keyboard
+category: hardware
+summary: >-
+  The Light Phone keyboard, in every app instead of only Light's own. Swipes are read by a
+  neural model bundled in the APK, and autocorrect runs against a dictionary bundled beside
+  it, so nothing here touches the network.
