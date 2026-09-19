@@ -725,7 +725,12 @@
         fetch(PULSE, { cache: "no-store" }).catch(() => null),
       ]);
       const idx = await ir.json();
-      apps = (idx.apps || []).filter((a) => !a.deprecated);
+      // A retired app with nobody left on it is clutter, and that is what this filter was for.
+      // One that still has users is the opposite: BrightKeyboard 3.x is deprecated BECAUSE it is
+      // being emptied onto a new applicationId, and hiding it made the page claim its 33 users
+      // were nowhere at all -- the one week its row is worth watching. It leaves on its own, the
+      // day the last install does.
+      apps = (idx.apps || []).filter((a) => !a.deprecated || (a.users || 0) > 0);
       if (hr.ok) { const h = await hr.json(); snap = h.days || {}; gains = h.gains || {}; }
       if (pr && pr.ok) pulse = await pr.json().catch(() => null);
       days = Object.keys(snap).sort();
