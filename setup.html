@@ -90,7 +90,8 @@
   h2 { font-family:var(--round); font-weight:400; font-size:19px;
        margin:34px 0 8px; padding-top:22px; border-top:1px solid var(--line); }
   p, li { font-size:14px; line-height:1.68; color:#d8d8dc; }
-  ul { padding-left:20px; }
+  ul, ol { padding-left:20px; }
+  li { margin:5px 0; }
   code { font-family:var(--mono); font-size:12.5px; background:#141418;
          border:1px solid var(--line); border-radius:5px; padding:2px 6px; }
   .aside { font-size:12.5px; line-height:1.6; color:var(--dim); }
@@ -119,15 +120,15 @@
 <div class="wrap">
   <h1>Set up BrightMarket</h1>
   <p class="lede">
-    A catalogue of apps built for the Light Phone III, and a way to install them that
-    does not put a store on the phone. It takes about two minutes.
+    A catalogue of apps for the Light Phone III. It installs them without putting a
+    store on the phone. Setup takes about two minutes.
   </p>
 
   <div class="start">
     <div class="start-side">
-      <p style="margin-top:0;"><b>On the phone.</b> Open this page in the Light Phone's
-        browser and tap the button. The file lands in Downloads and the browser offers to
-        install it. Short link, if you are typing it in:
+      <p style="margin-top:0;"><b>On the phone.</b> Open this page in the Light Phone
+        browser. Tap the button. The file goes to Downloads, and the browser offers to
+        install it. To type the address, use the short link:
         <code>brightmarket.gzl.dev/setup</code></p>
       <p>
         <a class="btn btn-solid" id="direct" href="https://github.com/gi-os/BrightMarket/releases/latest">DOWNLOAD THE APK</a>
@@ -136,90 +137,98 @@
       </p>
     </div>
     <div class="start-side">
-      <p style="margin-top:0;"><b>From a computer.</b> Download the same file, plug the
-        phone in, and push it across:</p>
+      <p style="margin-top:0;"><b>From a computer.</b> Download the same file. Connect
+        the phone. Send the file to it:</p>
       <p><code class="cmd" id="adbcmd">adb install -r BrightMarket.apk</code></p>
-      <p class="aside">Needs USB debugging on the phone — step 1 below has the walk.</p>
+      <p class="aside">This needs USB debugging on the phone. Step 1 gives the steps.</p>
     </div>
   </div>
 
   <h2>1 · Get it onto the phone</h2>
-  <p>Two ways, and they end in the same place. Pick whichever is in front of you.</p>
+  <p>There are two ways. Both end at the same place. Use the one in front of you.</p>
 
-  <h3>In the phone's browser</h3>
+  <h3>In the phone browser</h3>
+  <ol>
+    <li>Open <code>brightmarket.gzl.dev/setup</code> on the Light Phone.</li>
+    <li>Tap <b>Download the APK</b>.</li>
+    <li>When the download stops, open the file from the notification or from Downloads.</li>
+    <li>Android asks for permission the first time. Allow it.</li>
+  </ol>
   <p>
-    Open <code>brightmarket.gzl.dev/setup</code> on the Light Phone and tap
-    <b>Download the APK</b>. When the download finishes, open it from the notification or
-    from Downloads.
+    Android refuses installs from outside a store. You give the permission once, to the app
+    that does the install. Here that app is the browser.
   </p>
   <p>
-    Android refuses installs from outside a store until you allow it, once, for whichever
-    app is doing the installing — here that is the browser. It asks the first time; say
-    yes. If you dismissed the prompt, it is under
-    <b>Settings → Apps → Special access → Install unknown apps</b>, then pick the browser
-    and turn it on.
+    If you closed the prompt, open <b>Settings → Apps → Special access → Install unknown
+    apps</b>. Select the browser. Turn it on.
   </p>
 
   <h3>Over a cable</h3>
-  <p>
-    Download the APK on a computer that has <code>adb</code>, then turn on USB debugging:
-    <b>Settings → About phone</b>, tap <b>Build number</b> seven times, then
-    <b>Settings → System → Developer options → USB debugging</b>.
-  </p>
-  <p>
-    Plug the phone in. It asks whether to trust the computer — say yes, or nothing below
-    will see it.
-  </p>
-  <p><code class="cmd">adb devices</code> — the phone should be listed as
-    <code>device</code>. <code>unauthorized</code> means the trust prompt is still waiting
-    on the screen.</p>
-  <p><code class="cmd" id="adb">adb install -r BrightMarket.apk</code></p>
-  <p class="aside">
-    <code>-r</code> replaces an existing copy instead of failing. If it reports
-    <code>INSTALL_FAILED_UPDATE_INCOMPATIBLE</code>, a build signed by a different key is
-    already installed — uninstall that first, and it takes its settings with it.
-  </p>
+  <ol>
+    <li>Download the APK to a computer that has <code>adb</code>.</li>
+    <li>On the phone, open <b>Settings → About phone</b>. Tap <b>Build number</b> seven times.</li>
+    <li>Open <b>Settings → System → Developer options</b>. Turn on <b>USB debugging</b>.</li>
+    <li>Connect the phone to the computer.</li>
+    <li>The phone asks to trust the computer. Accept it.</li>
+    <li>Run <code class="cmd">adb devices</code>. The phone must show the state <code>device</code>.</li>
+    <li>Run <code class="cmd" id="adb">adb install -r BrightMarket.apk</code>.</li>
+  </ol>
+  <ul class="aside">
+    <li>A state of <code>unauthorized</code> means the trust prompt is still open on the
+        phone.</li>
+    <li>The flag <code>-r</code> replaces a copy that is already there.</li>
+    <li>The error <code>INSTALL_FAILED_UPDATE_INCOMPATIBLE</code> means the phone already
+        has a build with a different signature. Remove that build first. It takes its
+        settings with it.</li>
+  </ul>
 
-  <h2>2 · Open it and pick how you want to use it</h2>
-  <p>First launch asks one question, because the answer changes what the app is:</p>
+  <h2>2 · Open it and choose how to use it</h2>
+  <p>The first launch asks one question. The answer changes what the app is.</p>
   <ul>
-    <li><b>Browse here</b> — search and discover on the phone, like any store.</li>
-    <li><b>Focus mode</b> — no browsing on the phone at all. You browse the catalogue on
-        a computer and send apps over by QR. Everything you have installed still updates.</li>
+    <li><b>Browse here</b>. Search and find apps on the phone, like any store.</li>
+    <li><b>Focus mode</b>. No browsing on the phone. You read the catalogue on a computer
+        and send apps to the phone by code. Everything you installed still updates.</li>
   </ul>
   <p>
-    Focus mode can be turned on later in Settings. Turning it back <i>off</i> is only
-    possible by scanning a code from the catalogue page — which is the point of it. It is
-    a commitment device, not a lock: that code is an ordinary link and anyone determined
-    can make one.
+    You can turn focus mode on later in Settings. To turn it off again, you must scan a
+    code from the catalogue page. That is the point of it.
+  </p>
+  <p>
+    Focus mode is a commitment device, not a lock. The code is an ordinary link, and anyone
+    who wants one can make one.
   </p>
 
   <h2>3 · Install an app</h2>
   <p>
-    Pick anything in the catalogue and scan its code, or browse on the phone if you left
-    focus mode off. Nothing installs until you tap Install there.
+    Open the catalogue and scan the code for the app you want. If you left focus mode off,
+    you can browse on the phone instead. Nothing installs until you tap Install.
   </p>
 
   <h2>4 · Apps that are not in the catalogue</h2>
   <p>
-    Scan <b>any GitHub repo URL</b> that publishes APK releases and BrightMarket tracks it
-    for updates alongside everything else. Those are marked <b>UNLISTED</b>, because their
-    downloads cannot be checked against a published hash the way indexed apps are.
+    Scan the URL of <b>any GitHub repository</b> that publishes APK releases. BrightMarket
+    then tracks it for updates with everything else.
+  </p>
+  <p>
+    These apps carry the mark <b>UNLISTED</b>. BrightMarket cannot check their downloads
+    against a published hash, which it does for apps in the catalogue.
   </p>
 
   <h2>5 · Coming from Obtainium</h2>
   <p>
-    Export from Obtainium, then Settings → Import from Obtainium. Apps in the catalogue
-    become normal entries and the rest are tracked as unlisted. Anything without a GitHub
-    repo behind it is reported rather than dropped, since there is nothing to check for
-    updates against.
+    Export your apps from Obtainium. Then open <b>Settings → Import from Obtainium</b>.
+    Apps in the catalogue become normal entries. BrightMarket tracks the rest as unlisted.
+  </p>
+  <p>
+    An app with no GitHub repository behind it gets reported, not dropped. BrightMarket
+    cannot check it for updates.
   </p>
 
   <h2>Keeping up to date</h2>
   <p>
-    The Updates tab compares what is installed against the newest release and offers
-    Update All. BrightMarket updates itself the same way, and always last in a batch —
-    installing it closes the app, so anything queued behind it would never run.
+    The Updates tab compares what you have against the newest release, and offers Update
+    All. BrightMarket updates itself the same way, and always last in a batch. Installing
+    it closes the app, so anything after it in the queue would never run.
   </p>
 
   <div class="foot">
