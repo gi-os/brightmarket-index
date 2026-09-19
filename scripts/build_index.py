@@ -509,6 +509,18 @@ HISTORY_DAYS = 400
 SHOWCASE_FLOOR = 5          # gets on the last complete day
 SHOWCASE_SKIP = {"com.gios.brightmarket"}   # the shop does not showcase itself
 
+# A pick made by hand, for a day where the rotation would get it wrong.
+#
+# 2026-09-19: the keyboard moved to a new applicationId, so the new listing has no
+# download history of its own and cannot clear SHOWCASE_FLOOR -- every install it has is
+# still counted against the id it left behind. Left to the rotation, the app on the front
+# page was the DEPRECATED listing, which exists only to hand people's settings across.
+#
+# Keyed by date so it expires by itself. An empty map is the normal state.
+SHOWCASE_PIN = {
+    "2026-09-19": "com.gios.brightkeyboard",
+}
+
 # Every date in this file -- the download snapshots, the daily gains, the
 # showcase -- is a date in New York, not in UTC. A "day" here is a thing a person
 # reads off a chart, and theirs ends at midnight where they are. Keyed UTC, the
@@ -544,10 +556,26 @@ def pick_showcase(out: list[dict], gains: dict, featured: dict, today: str) -> s
     under it, and an app that has never been featured sorts first because "" precedes
     every date.
     """
-    if today in featured:
+    pinned = SHOWCASE_PIN.get(today)
+    if pinned and any(a["pkg"] == pinned for a in out):
+        featured[today] = pinned
+        return pinned
+
+    cached = featured.get(today)
+    if cached:
         # The index rebuilds every fifteen minutes. Without this the pick would be
         # recomputed ~96 times a day and jump every time the gains moved.
-        return featured[today]
+        #
+        # But a cached pick has to still be a legal one. It was chosen against the
+        # catalogue as it stood that morning, and the catalogue moves: an app can be
+        # deprecated, superseded or removed between two builds. Until this check existed
+        # the hero kept showing it until midnight -- which is how the deprecated keyboard
+        # listing, whose whole purpose is to hand users over to its replacement, spent a
+        # day as the app of the day.
+        held = next((a for a in out if a["pkg"] == cached), None)
+        if held and not held.get("deprecated") and cached not in SHOWCASE_SKIP:
+            return cached
+        warn(f"showcase: {cached} is no longer eligible, picking again")
     prior = [d for d in sorted(gains) if d < today]
     yesterday = gains.get(prior[-1]) if prior else {}
     pool = [a for a in out
