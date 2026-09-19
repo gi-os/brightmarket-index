@@ -4,7 +4,7 @@
 
   Every figure here is a difference between two snapshots in history-v1.json,
   which scripts/build_index.py writes once per run: for each app, where GitHub's
-  own download_count stood at the end of each UTC day. Nothing is counted in the
+  own download_count stood at the end of each day, Eastern. Nothing is counted in the
   browser and nothing about visitors is recorded -- this is GitHub's counter,
   remembered daily, drawn.
 
@@ -718,7 +718,10 @@
       }
       top20 = [...apps].sort((a, b) => (b.downloads || 0) - (a.downloads || 0)).slice(0, 20);
       const gen = idx.generated ? new Date(idx.generated) : new Date();
-      $("stamp").textContent = "AS OF " + gen.toISOString().slice(0, 16).replace("T", " ") + " UTC";
+      // Eastern, because every day on this page is now an Eastern day. A stamp in
+      // UTC beside them invited reading the last bar as tomorrow's.
+      $("stamp").textContent = "AS OF " + gen.toLocaleString("sv-SE",
+        { timeZone: "America/New_York", dateStyle: "short", timeStyle: "short" }) + " ET";
       $("span").textContent = `${apps.length} APPS · ${days.length} DAY${days.length === 1 ? "" : "S"} OF HISTORY`;
       renderCards(); renderUsers(); renderChips(); renderChart(); renderBoard(); renderAll();
     } catch (err) {

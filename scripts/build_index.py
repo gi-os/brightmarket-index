@@ -505,29 +505,35 @@ HISTORY_DAYS = 400
 # happens to top the Popular sort -- which, being a lifetime total, is the same app
 # for weeks at a time.
 SHOWCASE_FLOOR = 5          # gets on the last complete day
-SHOWCASE_TZ = "America/New_York"
 SHOWCASE_SKIP = {"com.gios.brightmarket"}   # the shop does not showcase itself
 
+# Every date in this file -- the download snapshots, the daily gains, the
+# showcase -- is a date in New York, not in UTC. A "day" here is a thing a person
+# reads off a chart, and theirs ends at midnight where they are. Keyed UTC, the
+# stats page grew a bar for tomorrow at 8pm and "+N today" reset over dinner.
+# Instants stay UTC: `generated` is a moment, not a day.
+SITE_TZ = "America/New_York"
 
-def showcase_day() -> str:
-    """Today in New York, because that is where the day turns over for the person
-    looking at it. The rest of the history is keyed UTC and stays that way: those
-    are download counters, and re-keying them would reprice every snapshot."""
+
+def site_day() -> str:
+    """Today's date in SITE_TZ. Falls back to UTC only if the runner has no tzdata,
+    which would silently shift every key in the history, hence the warning."""
     try:
         from zoneinfo import ZoneInfo
-        return datetime.datetime.now(ZoneInfo(SHOWCASE_TZ)).date().isoformat()
-    except Exception as e:  # no tzdata on the runner
-        warn(f"no {SHOWCASE_TZ} zone ({e}); the showcase turns over at UTC midnight")
+        return datetime.datetime.now(ZoneInfo(SITE_TZ)).date().isoformat()
+    except Exception as e:
+        warn(f"NO {SITE_TZ} ZONE ({e}) -- every date this run is UTC, five hours "
+             "ahead of the rest of the history. Install tzdata on the runner.")
         return datetime.datetime.now(datetime.timezone.utc).date().isoformat()
 
 
-def pick_showcase(out: list[dict], gains: dict, featured: dict, today_utc: str) -> str | None:
+def pick_showcase(out: list[dict], gains: dict, featured: dict, today: str) -> str | None:
     """The day's app: eligible, and whichever of those went longest without a turn.
 
     Eligible is not deprecated and at least SHOWCASE_FLOOR gets on the last COMPLETE
-    UTC day. Not `downloadsToday`: that resets at UTC midnight, which is 8pm here, so
-    a pick made at New York midnight would be reading five hours of counting and find
-    almost nobody above the floor.
+    day. Yesterday rather than `downloadsToday`, because a pick made just after
+    midnight would otherwise be reading a few minutes of counting and find nobody
+    above the floor.
 
     Least-recently-featured rather than a seeded shuffle through the catalogue. A
     shuffle needs a fixed pool to deal from and this one is not fixed -- measured over
@@ -536,12 +542,11 @@ def pick_showcase(out: list[dict], gains: dict, featured: dict, today_utc: str) 
     under it, and an app that has never been featured sorts first because "" precedes
     every date.
     """
-    day = showcase_day()
-    if day in featured:
+    if today in featured:
         # The index rebuilds every fifteen minutes. Without this the pick would be
         # recomputed ~96 times a day and jump every time the gains moved.
-        return featured[day]
-    prior = [d for d in sorted(gains) if d < today_utc]
+        return featured[today]
+    prior = [d for d in sorted(gains) if d < today]
     yesterday = gains.get(prior[-1]) if prior else {}
     pool = [a for a in out
             if not a.get("deprecated")
@@ -556,11 +561,11 @@ def pick_showcase(out: list[dict], gains: dict, featured: dict, today_utc: str) 
             live = [a for a in out if not a.get("deprecated") and a["pkg"] not in SHOWCASE_SKIP]
             keep = max(live, key=lambda a: a.get("downloads") or 0)["pkg"] if live else None
         if keep:
-            featured[day] = keep
+            featured[today] = keep
         return keep
     last = {pkg: d for d, pkg in sorted(featured.items())}
     pick = min(pool, key=lambda a: (last.get(a["pkg"], ""), -(yesterday.get(a["pkg"]) or 0)))
-    featured[day] = pick["pkg"]
+    featured[today] = pick["pkg"]
     return pick["pkg"]
 
 
@@ -569,8 +574,8 @@ def load_history() -> dict:
     """The per-day download snapshots behind /stats.html.
 
     Shape: {"days": {"2026-09-02": {"<pkg>": <lifetime downloads>, ...}, ...}}. One
-    entry per app per UTC day; the last build of the day wins, so a day's number is
-    "where the counter stood at the end of that day". Everything on the stats page
+    entry per app per day in SITE_TZ; the last build of the day wins, so a day's
+    number is "where the counter stood at the end of that day". Everything on the stats page
     -- the top-20 lines, the movers -- is a difference between two of these snapshots.
 
     Two more sections exist only for "+21 today":
@@ -699,8 +704,7 @@ def main() -> int:
     apps = load_catalogue(root)
 
     previous, previous_by_repo = load_previous(index_path)
-    # UTC, so the day boundary is the same one the history snapshots use.
-    today = datetime.datetime.now(datetime.timezone.utc).date().isoformat()
+    today = site_day()
     history = load_history()
     out = []
 
@@ -1003,6 +1007,14 @@ def main() -> int:
         else:
             a["downloadsToday"] = sum(max(0, n - base.get(tag, 0)) for tag, n in now.items())
     gains[today] = {a["pkg"]: a["downloadsToday"] for a in out}
+    # Days keyed UTC ran five hours ahead of days keyed here, so the run that
+    # first moved the clock finds a key for a day that has not started yet --
+    # holding the few hours since UTC midnight, which in New York are still
+    # yesterday evening and are counted into yesterday anyway. Nothing legitimate
+    # is ever dated after today, so dropping them is safe to leave in place.
+    for ahead in sorted(d for d in set(days) | set(gains) | set(rel) if d > today):
+        warn(f"dropping {ahead}: dated after today ({today})")
+        days.pop(ahead, None); gains.pop(ahead, None); rel.pop(ahead, None)
     featured = history["featured"]
     showcased = pick_showcase(out, gains, featured, today)
     for stale in sorted(days)[:-HISTORY_DAYS]:
@@ -1027,7 +1039,7 @@ def main() -> int:
         )
     print(f"  /history-v1.json -> {len(days)} day(s), +{sum(a['downloadsToday'] for a in out)} today")
     name_of = {a["pkg"]: a["name"] for a in out}
-    print(f"  showcase {showcase_day()} -> {name_of.get(showcased, showcased) or 'nothing eligible'}")
+    print(f"  showcase {today} -> {name_of.get(showcased, showcased) or 'nothing eligible'}")
 
     pulse = load_pulse()
     if pulse is not None:
@@ -1059,7 +1071,7 @@ def main() -> int:
         # history so a client needs one fetch, and so the phone can agree with
         # the web without recomputing anything.
         "featured": showcased,
-        "featuredOn": showcase_day(),
+        "featuredOn": today,
         "apps": out,
     }
 
