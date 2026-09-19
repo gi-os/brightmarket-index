@@ -35,6 +35,7 @@ import tempfile
 import yaml
 
 from apk_assets import pick_apk
+from facets import enrich as enrich_facets
 
 try:
     from pyaxmlparser import APK
@@ -961,6 +962,33 @@ def main() -> int:
             # Eighteen of these declare no icon anywhere. Absent, not empty:
             # clients test for the key and draw a lettered tile instead.
             entry.pop("icon", None)
+
+    # What each app IS, as opposed to what its release metadata says.
+    #
+    # A judgment rather than a field: does it need an account, does it need a machine you
+    # run yourself, is it any use with no signal. Asked once per app and cached against the
+    # catalogue entry plus the release tag, so a build where nothing moved asks nothing and
+    # fetches nothing. See scripts/facets.py.
+    #
+    # Deliberately after the carry-forward paths above: a carried entry keeps last run's
+    # facets through the cache, exactly as it keeps its other fields.
+    try:
+        versions = {
+            e["pkg"]: str((e.get("latest") or {}).get("version", ""))
+            for e in out
+        }
+        facets = enrich_facets(apps, previous, HEADERS, warn, versions)
+        for entry in out:
+            found = facets.get(entry["pkg"])
+            if found:
+                entry["facets"] = found
+            else:
+                # Absent rather than empty, like icon above: a client tests for the key.
+                entry.pop("facets", None)
+        print(f"  facets -> {sum(1 for e in out if 'facets' in e)}/{len(out)} apps")
+    except Exception as exc:
+        # An index without facets is a worse index. It is not a failed build.
+        warn(f"facets skipped entirely ({type(exc).__name__}: {exc})")
 
     # Today's snapshot, then "+N today" on every entry.
     #

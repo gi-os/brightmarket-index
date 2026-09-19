@@ -66,6 +66,9 @@ jobs:
       - name: Build index
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Absent is a supported state, not a failure: the build keeps whatever facets
+          # are already cached, warns about any app it could not ask about, and carries on.
+          TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
           # Both empty on every trigger except a hand-run recovery; see the inputs above.
           SEED_INDEX: ${{ inputs.seed_index }}
           ALLOW_SHRINK: ${{ inputs.allow_shrink }}
