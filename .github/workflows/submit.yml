@@ -61,6 +61,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
+          # Advisory only. Absent means the PR simply carries no second opinion; see
+          # scripts/triage.py for why a judgment never refuses a submission.
+          TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
           # Outside the checkout. create-pull-request stages everything it finds
           # in the workspace, so a body file next to apps/ would be committed
           # into the PR it describes.

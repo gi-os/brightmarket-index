@@ -36,6 +36,7 @@ import yaml
 
 from apk_assets import pick_apk
 from facets import enrich as enrich_facets
+from facets import similar as similar_apps
 
 try:
     from pyaxmlparser import APK
@@ -985,7 +986,18 @@ def main() -> int:
             else:
                 # Absent rather than empty, like icon above: a client tests for the key.
                 entry.pop("facets", None)
-        print(f"  facets -> {sum(1 for e in out if 'facets' in e)}/{len(out)} apps")
+        # Neighbours are arithmetic over the facets, not another question. An app split
+        # between two purposes sits near both, which is why the whole distribution is kept.
+        neighbours = similar_apps(facets)
+        live = {e["pkg"] for e in out}
+        for entry in out:
+            near = [p for p in neighbours.get(entry["pkg"], []) if p in live]
+            if near:
+                entry["similar"] = near
+            else:
+                entry.pop("similar", None)
+        print(f"  facets -> {sum(1 for e in out if 'facets' in e)}/{len(out)} apps, "
+              f"{sum(1 for e in out if 'similar' in e)} with neighbours")
     except Exception as exc:
         # An index without facets is a worse index. It is not a failed build.
         warn(f"facets skipped entirely ({type(exc).__name__}: {exc})")

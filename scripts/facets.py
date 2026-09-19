@@ -286,3 +286,72 @@ def enrich(apps: list[dict], previous: dict[str, dict], headers: dict, warn,
 
     kept.update(fresh)
     return kept
+
+
+# ---------------------------------------------------------------------------- similar
+
+# What each facet is worth when deciding that two apps are alike.
+#
+# purposeMix carries the most because it is the only one that says what the app is FOR;
+# the rest say what it costs you to run. needsServer and needsAccount are weighted above
+# worksOffline because they are the two that stop someone installing.
+SIMILAR_WEIGHTS = {
+    "purpose": 3.0,
+    "needsServer": 1.4,
+    "needsAccount": 1.2,
+    "worksOffline": 0.8,
+    "setup": 0.6,
+    "replaces": 0.4,
+}
+
+PURPOSE_KEYS = ("capture", "read", "communicate", "organise", "control", "play", "reference", "other")
+
+
+def _vector(f: dict) -> tuple[list[float], list[float]]:
+    """A facet set as two lists: the purpose distribution, and the scalar facets 0..1."""
+    mix = f.get("purposeMix") or {}
+    purpose = [float(mix.get(k, 0.0)) for k in PURPOSE_KEYS]
+    scalars = [
+        float(f.get("needsServer", 0.0)),
+        float(f.get("needsAccount", 0.0)),
+        float(f.get("worksOffline", 0.0)),
+        float(f.get("setup", 0.0)) / 3.0,      # scores run 0..3
+        float(f.get("replaces", 0.0)) / 3.0,
+    ]
+    return purpose, scalars
+
+
+def similar(facets: dict[str, dict], limit: int = 4) -> dict[str, list[str]]:
+    """Nearest neighbours per app, from the facets alone.
+
+    No model call: the judgments were already made and paid for, and this is arithmetic
+    over them. That is the point of keeping the whole purpose distribution rather than
+    only the winning option -- an app split between `read` and `reference` genuinely sits
+    near both, and an argmax would have thrown that away and called it `read`.
+
+    Distance, not cosine: every component is already 0..1 and a facet being *absent*
+    (needs no server) is as meaningful as it being present, which is exactly the case
+    cosine similarity ignores.
+    """
+    keys = [p for p, f in facets.items() if f.get("purposeMix")]
+    prepared = {p: _vector(facets[p]) for p in keys}
+
+    wp = SIMILAR_WEIGHTS["purpose"]
+    ws = [SIMILAR_WEIGHTS[k] for k in ("needsServer", "needsAccount", "worksOffline", "setup", "replaces")]
+
+    out: dict[str, list[str]] = {}
+    for a in keys:
+        pa, sa = prepared[a]
+        scored = []
+        for b in keys:
+            if b == a:
+                continue
+            pb, sb = prepared[b]
+            # Total-variation distance between the two purpose distributions: half the
+            # sum of absolute differences, so it lands in 0..1 like everything else.
+            d = wp * sum(abs(x - y) for x, y in zip(pa, pb)) / 2.0
+            d += sum(w * abs(x - y) for w, x, y in zip(ws, sa, sb))
+            scored.append((d, b))
+        scored.sort()
+        out[a] = [b for _, b in scored[:limit]]
+    return out

@@ -180,6 +180,39 @@
   .filters input { flex:1; max-width:420px; border:none; outline:none; background:transparent;
     font-size:14px; color:var(--fg); padding:2px 0; border-bottom:2px solid var(--edge); }
   .filters input:focus { border-bottom-color: var(--fg); }
+
+  /* Suggestions sit INSIDE the filter box, under the input that produced them. On a
+     separate results page they would be a different question; here they are the same
+     question answered a second way, and the substring matches stay on screen behind
+     them. */
+  .sugg { display:flex; gap:8px; flex-wrap:wrap; align-items:stretch; }
+  .sugg-tag { font-family:var(--mono); font-size:9px; letter-spacing:.12em; color:#6a6a70;
+              align-self:center; padding-right:2px; }
+  .sugg-card { display:flex; gap:9px; align-items:center; text-align:left; cursor:pointer;
+               border:1px solid var(--line); border-radius:10px; padding:7px 11px 7px 8px;
+               background:transparent; color:inherit; font:inherit; max-width:290px;
+               transition:border-color .15s ease, background .15s ease; }
+  .sugg-card:hover { border-color:#4a4a52; background:#141418; }
+  .sugg-ico { width:26px; height:26px; border-radius:6px; flex-shrink:0; overflow:hidden;
+              background:#1a1a1f; display:flex; align-items:center; justify-content:center;
+              font-family:var(--mono); font-size:11px; color:#8a8a92; }
+  .sugg-ico img { width:100%; height:100%; object-fit:contain; display:block; }
+  .sugg-name { font-size:12.5px; line-height:1.2; }
+  /* The share of the model's probability this app took. Shown because a suggestion the
+     machine is unsure of should not look like one it is certain of. */
+  .sugg-p { font-family:var(--mono); font-size:8.5px; letter-spacing:.08em; color:#6a6a70;
+            margin-top:2px; }
+  .sugg-busy { font-family:var(--mono); font-size:9px; letter-spacing:.12em; color:#5a5a62;
+               align-self:center; }
+
+  /* Neighbours, under the hero summary. A line of names rather than tiles: the grid
+     below is already tiles, and this is a sentence about where the app sits. */
+  .near { margin-top:10px; display:flex; gap:7px; align-items:baseline; flex-wrap:wrap; }
+  .near-tag { font-family:var(--mono); font-size:8.5px; letter-spacing:.12em; color:#6a6a70; }
+  .near-link { border:none; background:none; padding:0; font:inherit; font-size:12.5px;
+               color:#9a9aa2; cursor:pointer; border-bottom:1px solid transparent; }
+  .near-link:hover { color:var(--fg); border-bottom-color:#4a4a52; }
+  .near-dot { color:#4a4a52; font-size:11px; }
   .chip { cursor:pointer; padding:4px 11px; border-radius:999px; font-family:var(--mono); font-size:10px;
     letter-spacing:.12em; color:var(--dim); box-shadow:inset 0 0 0 1px var(--line-2); transition:.15s; }
   .chip:hover { color:var(--fg); box-shadow:inset 0 0 0 1px var(--edge); }
@@ -353,6 +386,7 @@
       <div style="flex:1"></div>
       <div class="status" id="count"></div>
     </div>
+    <div id="sugg" class="sugg" hidden></div>
     <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
       <div style="display:flex; gap:6px; flex-wrap:wrap;" id="cats"></div>
       <div style="flex:1"></div>
@@ -497,6 +531,25 @@
     });
   }
 
+  /* Apps that sit near this one, from the facets in the index.
+     No call is made here: the judgments were paid for once at build time, and a
+     neighbour is arithmetic over them. Absent for an app the index has no facets for,
+     which is why this returns "" rather than an empty heading. */
+  function nearRow(app) {
+    const near = (app.similar || [])
+      .map((pkg) => apps.find((a) => a.pkg === pkg))
+      .filter(Boolean)
+      .slice(0, 4);
+    if (!near.length) return "";
+    return (
+      '<div class="near"><span class="near-tag">NEAR THIS</span>' +
+      near
+        .map((a) => `<button class="near-link" data-pkg="${esc(a.pkg)}">${esc(a.name)}</button>`)
+        .join('<span class="near-dot">·</span>') +
+      "</div>"
+    );
+  }
+
   /** The app's icon, or its first letter. Same rule as the phone client. */
   function mark(a) {
     return a.icon
@@ -537,6 +590,7 @@
              style="font-family:var(--mono); font-size:11px; letter-spacing:.08em; border-bottom:1px solid var(--edge);">${esc(app.upstream)}</a>` : ""}
         </div>
         <div class="hero-sum">${esc(app.summary)}</div>
+        ${nearRow(app)}
         <div class="stats">
           <div class="stat"><b>VERSION</b><i>${esc(ver(app.latest.version))}</i></div>
           <div class="stat"><b>SIZE</b><i>${mb(app.latest.size)}</i></div>
@@ -574,6 +628,14 @@
     // passing on. It hangs off the applicationId rather than a button in the
     // action stack: the hero is height-capped so that it can stay pinned, and a
     // fourth button spent a whole row of that budget on it.
+    $("hero").querySelectorAll(".near-link").forEach((n) =>
+      n.addEventListener("click", () => {
+        query = ""; $("q").value = "";
+        selPkg = n.dataset.pkg; pinned = true; sel = 0;
+        render();
+      }),
+    );
+
     $("share-btn").addEventListener("click", async (e) => {
       const node = e.currentTarget;
       const ok = await copyText(shareUrl(app));
@@ -944,7 +1006,95 @@
   // else, and the hero showing the top result is the useful behaviour. Category
   // and sort chips do NOT drop it -- re-sorting is a change of view, not of
   // subject, so the app you were reading about stays.
-  $("q").addEventListener("input", (e) => { query = e.target.value; sel = 0; selPkg = ""; pinned = true; render(); });
+  $("q").addEventListener("input", (e) => {
+    query = e.target.value; sel = 0; selPkg = ""; pinned = true; render();
+    askSoon(query);
+  });
+
+  /* ---------------------------------------------------------------- suggestions
+     The filter above matches substrings, which is the right answer when you know the
+     name and no answer at all when you do not. "something to read books offline" hits
+     nothing, and the page used to say NOTHING MATCHES to a person describing an app it
+     has.
+
+     So: typing still filters instantly and offline, and separately a short query is put
+     to the catalogue through the worker, which holds the key. The answer is a ranking
+     over every app, so the top few come back with the share of probability each took.
+
+     Three rules about when NOT to ask, because a suggestion that arrives over a list
+     already showing the right thing is noise:
+       - fewer than three words: that is a name being typed, and the filter has it
+       - the filter already found something: the page has answered
+       - nothing typed for 450 ms: mid-word is not a question */
+  const ASK_URL = "https://brightmarket-portal.gman6849.workers.dev/ask";
+  let askTimer = null, askSeq = 0, lastAsked = "";
+
+  function askSoon(text) {
+    clearTimeout(askTimer);
+    const q = (text || "").trim();
+    if (q.length < 8 || q.split(/\s+/).length < 3) { showSuggestions([], ""); return; }
+    askTimer = setTimeout(() => ask(q), 450);
+  }
+
+  async function ask(q) {
+    // Asked after the local filter has had its turn: if a substring match is on screen,
+    // the person is not stuck and does not need a second opinion.
+    if (visible().length > 0) { showSuggestions([], ""); return; }
+    if (q === lastAsked) return;
+    lastAsked = q;
+
+    const mine = ++askSeq;
+    const box = $("sugg");
+    box.hidden = false;
+    box.innerHTML = '<div class="sugg-busy">LOOKING…</div>';
+
+    let data = null;
+    try {
+      const res = await fetch(ASK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ q }),
+      });
+      data = res.ok ? await res.json() : null;
+    } catch { data = null; }
+
+    // A slower earlier request must never overwrite a newer answer.
+    if (mine !== askSeq) return;
+    showSuggestions((data && data.suggestions) || [], q);
+  }
+
+  function showSuggestions(list, q) {
+    const box = $("sugg");
+    if (!list.length) { box.hidden = true; box.innerHTML = ""; return; }
+    box.hidden = false;
+    box.innerHTML =
+      '<div class="sugg-tag">PERHAPS</div>' +
+      list
+        .map((s) => {
+          const ico = s.icon
+            ? `<img src="${esc(s.icon)}" alt="" />`
+            : esc((s.name || "?").slice(0, 1).toUpperCase());
+          return (
+            `<button class="sugg-card" data-pkg="${esc(s.pkg)}">` +
+            `<div class="sugg-ico">${ico}</div>` +
+            `<div><div class="sugg-name">${esc(s.name)}</div>` +
+            `<div class="sugg-p">${Math.round(s.p * 100)}%</div></div>` +
+            `</button>`
+          );
+        })
+        .join("");
+    box.querySelectorAll(".sugg-card").forEach((n) =>
+      n.addEventListener("click", () => {
+        // Clearing the filter is the point: the app is in the grid behind this row, and
+        // leaving a query that matches nothing would hide the thing just chosen.
+        query = ""; $("q").value = "";
+        selPkg = n.dataset.pkg; pinned = true; sel = 0;
+        showSuggestions([], "");
+        render();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }),
+    );
+  }
   window.addEventListener("resize", syncStickyOffsets);
   // Back, forward, and a link to ?app=/#app= on the page you are already on.
   const followUrl = () => {

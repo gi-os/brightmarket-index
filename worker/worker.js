@@ -44,7 +44,7 @@ const SESSION_TTL_SECONDS = 10 * 60; // the signed session is only good for 10 m
 // go green until the running worker answers with the string that is in the source -- which is
 // the check that would have caught the ADB, Name and Summary fields shipping to a bundle that
 // was never redeployed.
-const VERSION = "8-feed";
+const VERSION = "9-ask";
 
 export default {
   async fetch(request, env) {
@@ -78,6 +78,10 @@ export default {
       // file: no identifier of any kind is sent, received or stored.
       if (url.pathname === "/pulse" && request.method === "POST") {
         return await handlePulse(request, env, cors);
+      }
+      // "What am I looking for?" answered against the catalogue. See handleAsk.
+      if (url.pathname === "/ask" && request.method === "POST") {
+        return await handleAsk(request, env, cors);
       }
       if (url.pathname === "/pulse/summary.json" && request.method === "GET") {
         return await handlePulseSummary(request, env, cors);
@@ -708,4 +712,136 @@ export class PulseStore extends DurableObject {
       apps,
     };
   }
+}
+
+
+// ---------------------------------------------------------------------------
+// /ask -- find the app somebody is describing.
+//
+// The browse page filters by substring, which only works when you already know the
+// name. This answers the other question: "something to read books offline". One Choice
+// over the whole catalogue comes back with a probability for EVERY app, so a single
+// call is a ranking rather than a winner, and the page shows the top few.
+//
+// Why this route exists at all rather than calling the model from the page: a key in a
+// static site is a key everyone has. It lives here as a Cloudflare secret instead.
+//
+// This is not a general proxy, and the shape is what stops it being one. The caller
+// supplies a short query and nothing else. The query only ever lands in `state`; the
+// instructions, the criteria and the option list are written here and are not
+// overridable. There is no way to ask this endpoint a question of your own choosing.
+
+const ASK_INDEX = "https://brightmarket.gzl.dev/index-v1.json";
+const ASK_MAX_QUERY = 200;
+// Jev takes up to 255 options in one Choice. The catalogue is well under that; the cap
+// is here so that a catalogue which grows past it degrades to the newest 255 rather
+// than to a 422.
+const ASK_MAX_OPTIONS = 250;
+
+async function askCatalogue() {
+  const res = await fetch(ASK_INDEX, { cf: { cacheTtl: 900, cacheEverything: true } });
+  if (!res.ok) return null;
+  const doc = await res.json();
+  const apps = Array.isArray(doc) ? doc : doc.apps;
+  if (!Array.isArray(apps)) return null;
+  return apps
+    .filter((a) => a && a.pkg && a.name && !a.deprecated)
+    .slice(0, ASK_MAX_OPTIONS);
+}
+
+async function handleAsk(request, env, cors) {
+  if (!env.TYPESAFE_API_KEY) {
+    // Not an error the page should shout about: it falls back to plain filtering.
+    return json({ suggestions: [], reason: "unconfigured" }, 200, cors);
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ error: "bad request" }, 400, cors);
+  }
+  const q = String(body && body.q ? body.q : "").trim().slice(0, ASK_MAX_QUERY);
+  if (q.length < 3) return json({ suggestions: [] }, 200, cors);
+
+  const apps = await askCatalogue();
+  if (!apps) return json({ suggestions: [], reason: "no catalogue" }, 200, cors);
+
+  // Option key is the package id; the rubric is what the catalogue already says about
+  // it. A facet or two is worth including -- "works offline" is exactly the kind of
+  // thing people put in these queries.
+  const criteria = {};
+  for (const a of apps) {
+    const f = a.facets || {};
+    const traits = [];
+    if (f.worksOffline >= 0.7) traits.push("works offline");
+    if (f.needsServer >= 0.7) traits.push("needs a server you run");
+    if (f.needsAccount >= 0.7) traits.push("needs an account or a key");
+    criteria[a.pkg] =
+      `${a.name}. ${a.summary || ""}` + (traits.length ? ` (${traits.join("; ")})` : "");
+  }
+
+  const payload = {
+    state: { looking_for: q },
+    model: "jev-latest",
+    questions: {
+      // Asked separately from the pick, because "no app fits" and "this app fits" are
+      // different judgments and folding them together makes both worse.
+      is_a_request: {
+        type: "noul",
+        instructions:
+          "Is `looking_for` a description of something the person wants an app to do?",
+        criteria: {
+          true: "It describes a need, a task, or a kind of app",
+          false: "It is a name being typed, a fragment, or nothing meaningful",
+        },
+      },
+      best: {
+        type: "choice",
+        instructions:
+          "Which app in the catalogue best does what `looking_for` describes?",
+        criteria,
+      },
+    },
+  };
+
+  let out;
+  try {
+    const res = await fetch("https://api.typesafe.ai/v1/systemone", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.TYPESAFE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      // 429 and 529 are the documented back-off cases. The page retries by typing.
+      return json({ suggestions: [], reason: `upstream ${res.status}` }, 200, cors);
+    }
+    out = await res.json();
+  } catch {
+    return json({ suggestions: [], reason: "upstream unreachable" }, 200, cors);
+  }
+
+  const answers = (out && out.answers) || {};
+  const request_p = answers.is_a_request ? answers.is_a_request.noul : 1;
+  // Below this the query is somebody typing a name, and a suggestion would be noise
+  // over the substring filter that is already doing the right thing.
+  if (request_p < 0.5) return json({ suggestions: [] }, 200, cors);
+
+  const probs = (answers.best && answers.best.probabilities) || {};
+  const byName = new Map(apps.map((a) => [a.pkg, a]));
+  const ranked = Object.entries(probs)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 4)
+    // A long tail of near-zero options is not a suggestion, it is the rest of the
+    // catalogue. Only what the model actually put weight on.
+    .filter(([, p]) => p >= 0.04)
+    .map(([pkg, p]) => {
+      const a = byName.get(pkg) || {};
+      return { pkg, name: a.name || pkg, summary: a.summary || "", icon: a.icon || "", p };
+    });
+
+  return json({ suggestions: ranked, confidence: answers.best ? answers.best.confidence : 0 }, 200, cors);
 }

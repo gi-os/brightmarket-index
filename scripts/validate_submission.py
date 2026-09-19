@@ -612,6 +612,25 @@ def write_entry(path: str, entry: dict) -> None:
         yaml.safe_dump(entry, f, sort_keys=False, default_flow_style=False, allow_unicode=True)
 
 
+def readme_of(repo: str) -> str:
+    """The top of a repo's README, for the triage note. Absent is ordinary."""
+    for branch in ("main", "master"):
+        try:
+            req = urllib.request.Request(
+                f"https://raw.githubusercontent.com/{repo}/{branch}/README.md",
+                headers={"User-Agent": "brightmarket-validator"},
+            )
+            with urllib.request.urlopen(req, timeout=20) as resp:
+                text = resp.read().decode("utf-8", "replace")
+        except Exception:
+            continue
+        text = re.sub(r"```.*?```", " ", text, flags=re.S)
+        text = re.sub(r"!\[[^\]]*\]\([^)]*\)", " ", text)
+        text = re.sub(r"<[^>]+>", " ", text)
+        return re.sub(r"\s+", " ", text).strip()[:2500]
+    return ""
+
+
 def slug(pkg: str) -> str:
     """Filename for an app. The applicationId, which is already unique here."""
     return re.sub(r"[^a-z0-9.]+", "-", pkg.lower()) + ".yml"
@@ -743,6 +762,19 @@ def main() -> int:
                 entry["adb"] = adb
             write_entry(os.path.join(apps_dir, slug(info["pkg"])), entry)
             details = submit_details(req, info, entry, slug(info["pkg"]))
+            # A second opinion for whoever reads the PR. Advisory only -- see triage.py
+            # for why a probability is never allowed to refuse a submission.
+            try:
+                import triage
+
+                details += triage.note(
+                    entry.get("summary", ""),
+                    entry.get("name", ""),
+                    entry.get("category", ""),
+                    readme_of(info["repo"]),
+                )
+            except Exception as exc:  # a missing opinion is not a failed submission
+                print(f"triage skipped ({type(exc).__name__})", file=sys.stderr)
             summary = (
                 f"Validated **{req['name'] or info['name']}** (`{info['pkg']}`) — latest "
                 f"release `{info['version']}`, one asset `{info['apk']}`."

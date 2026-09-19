@@ -45,12 +45,26 @@ jobs:
             echo "have=true" >> "$GITHUB_OUTPUT"
           fi
 
+      # The model key rides along with the deploy rather than being set by hand.
+      #
+      # It belongs to the worker and nowhere else: a key in a static page is a key every
+      # visitor has, and a key in an APK is a key anyone can grep out of the dex. Other
+      # secrets set by `wrangler secret put` are untouched by this -- only the one named
+      # here is written.
+      #
+      # An empty GitHub secret writes an empty string, which /ask already treats as
+      # unconfigured: it answers with no suggestions and the browse page carries on
+      # filtering by substring.
       - name: Deploy
         if: steps.gate.outputs.have == 'true'
         uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3.15.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           workingDirectory: worker
+          secrets: |
+            TYPESAFE_API_KEY
+        env:
+          TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
 
       # A deploy reports success as soon as Cloudflare accepts the upload, which is not the
       # same as the running bundle being the new one. worker.js carries a VERSION string and
