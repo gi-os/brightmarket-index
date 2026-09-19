@@ -150,11 +150,15 @@ jobs:
         env:
           STATUS: ${{ steps.validate.outputs.status }}
           REASON: ${{ steps.validate.outputs.reason }}
+          FAULT: ${{ steps.validate.outputs.fault }}
           ACTION: ${{ steps.validate.outputs.action }}
         with:
           script: |
             const ok = process.env.STATUS === 'pass';
             const broke = process.env.STATUS !== 'pass' && !process.env.REASON;
+            // A refusal whose cause is on our side. The submitter has nothing to
+            // fix, so they are not told to fix anything and the issue stays open.
+            const ours = process.env.FAULT === 'ours';
             await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -169,11 +173,15 @@ jobs:
                     : "Checks passed — a PR is open to add this to the index. Nothing more needed from you.")
                 : broke
                   ? "Something went wrong on our side, not yours — the checks didn't finish. This is being looked at; you don't need to do anything."
-                  : `Can't add this yet:\n\n> ${process.env.REASON}\n\nFix that and reopen this issue to re-run the checks.`
+                  : ours
+                    ? process.env.REASON
+                    : `Can't add this yet:\n\n> ${process.env.REASON}\n\nFix that and reopen this issue to re-run the checks.`
             });
             // A run that broke on our side is not the submitter's fault, so it
-            // stays open rather than being closed under them.
-            if (!ok && !broke) {
+            // stays open rather than being closed under them. Same for a refusal
+            // we caused: closing it would file the problem under the person who
+            // cannot fix it.
+            if (!ok && !broke && !ours) {
               await github.rest.issues.update({
                 issue_number: context.issue.number,
                 owner: context.repo.owner, repo: context.repo.repo, state: 'closed'

@@ -85,6 +85,17 @@ class Reject(Exception):
     pass
 
 
+class OurFault(Reject):
+    """A refusal the submitter cannot act on, because the cause is ours.
+
+    Reported differently, and the issue is left OPEN. Telling someone to go and
+    fix a thing they do not control, then closing the issue under them, is the
+    worst version of this. See the upstream check in the applicationId collision
+    for the case that prompted it.
+    """
+    pass
+
+
 def get(url):
     req = urllib.request.Request(url, headers=HEADERS)
     with urllib.request.urlopen(req, timeout=60) as r:
@@ -726,6 +737,26 @@ def main() -> int:
                     # a fork author nothing about the way forward -- KEZO555/Type
                     # (submission #111) is a LightKeyboard fork and there is a
                     # perfectly good listing available to it, one rename away.
+                    # The one case where the incumbent is the interloper. If the
+                    # listed app names THIS repo as its upstream, the submitter is
+                    # the original author: the id was theirs first, a fork of
+                    # theirs took it, and this check is now locking them out of a
+                    # catalogue that credits them by name.
+                    #
+                    # adam-weber/light-keyboard, the upstream of
+                    # gi-os/BrightKeyboard, was told to rename ITS applicationId
+                    # and to credit the fork as its upstream. The listing had
+                    # `upstream: adam-weber/light-keyboard` on it the whole time.
+                    if (a.get("upstream") or "").lower() == repo.lower():
+                        raise OurFault(
+                            "This one is on us, not you.\n\n"
+                            f"`{info['pkg']}` is your applicationId. **{a['name']}** "
+                            f"(`{a['repo']}`) is a fork of your repo that kept the id "
+                            "instead of taking one of its own -- our listing records "
+                            f"`upstream: {repo}`, so the catalogue knew. The check read "
+                            "the id as taken and asked the wrong person to rename.\n\n"
+                            "Nothing for you to change. Leaving this open."
+                        )
                     same_owner = a["repo"].split("/")[0].lower() == repo.split("/")[0].lower()
                     if same_owner:
                         raise Reject(
@@ -808,6 +839,8 @@ def main() -> int:
     except Reject as e:
         with open(os.environ.get("GITHUB_OUTPUT", "/dev/null"), "a") as f:
             f.write("status=fail\n")
+            if isinstance(e, OurFault):
+                f.write("fault=ours\n")
             # Multi-line safe: GitHub Actions heredoc form.
             f.write(f"reason<<EOF\n{e}\nEOF\n")
         print(str(e), file=sys.stderr)
