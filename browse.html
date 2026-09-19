@@ -1086,13 +1086,29 @@
     const box = $("res");
     const t = q.toLowerCase();
 
-    // Anything whose name or summary literally contains the query, in catalogue order.
-    const literal = apps.filter(
-      (a) =>
-        a.name.toLowerCase().includes(t) ||
-        (a.summary || "").toLowerCase().includes(t) ||
-        a.pkg.toLowerCase().includes(t),
-    );
+    /* Anything the query literally appears in, but NOT in catalogue order: searching
+       "Roll" used to return BrightWay first, because its summary says "the wheel
+       scrolls the trip" and `scrolls` contains `roll`. Somebody typing an app's name
+       must get that app, so the name is ranked over the prose and an exact match over
+       a partial one. */
+    const rank = (a) => {
+      const n = a.name.toLowerCase();
+      if (n === t) return 0;
+      if (n.startsWith(t)) return 1;
+      if (n.includes(t)) return 2;
+      if (a.pkg.toLowerCase().includes(t)) return 3;
+      return 4;                                   // only the summary mentions it
+    };
+    const literal = apps
+      .filter(
+        (a) =>
+          a.name.toLowerCase().includes(t) ||
+          (a.summary || "").toLowerCase().includes(t) ||
+          a.pkg.toLowerCase().includes(t),
+      )
+      .map((a) => [rank(a), a])
+      .sort((x, y) => x[0] - y[0] || x[1].name.localeCompare(y[1].name))
+      .map(([, a]) => a);
 
     const seen = new Set();
     const rows = [];
