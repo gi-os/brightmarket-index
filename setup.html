@@ -25,12 +25,12 @@
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="BrightMarket" />
 <meta property="og:title" content="Set up BrightMarket" />
-<meta property="og:description" content="Apps for the Light Phone III. Scan one code, install one app, and the rest arrive from a screen where browsing is fine." />
+<meta property="og:description" content="Apps for the Light Phone III. Install one app from a link or a cable, and the rest arrive from a screen where browsing is fine." />
 <meta property="og:url" content="https://brightmarket.gzl.dev/setup.html" />
 <meta property="og:image" content="https://brightmarket.gzl.dev/favicon-512.png" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Set up BrightMarket" />
-<meta name="twitter:description" content="Apps for the Light Phone III. Scan one code and you are started." />
+<meta name="twitter:description" content="Apps for the Light Phone III. One download and you are started." />
 <meta name="twitter:image" content="https://brightmarket.gzl.dev/favicon-512.png" />
 <meta name="description" content="How to install BrightMarket on a Light Phone III, and what focus mode changes." />
 
@@ -68,17 +68,20 @@
 
   h1 { font-family:var(--round); font-weight:400; font-size:30px; margin:0 0 10px; }
   .lede { font-size:15px; line-height:1.6; color:#c8c8ce; max-width:62ch; margin:0 0 30px; }
+  h3 { font-family:var(--round); font-size:15px; font-weight:400; margin:26px 0 8px; }
 
-  /* The QR and the download sit together at the top, because for most people the
-     whole page is those two things and everything below is only read when
-     something goes wrong. */
+  /* The two ways in, side by side, because for most people the whole page is this
+     card and everything below is only read when something goes wrong.
+
+     There was a QR here, and it was the first thing anybody saw. The Light Phone III
+     ships without a QR reader, so the one device the code was aimed at could not read
+     it -- and at this point in the story the reader that CAN (BrightMarket's own) is
+     the thing being installed. Codes elsewhere on this site are fine: by then the
+     scanner exists. */
   .start { display:flex; gap:28px; flex-wrap:wrap; align-items:flex-start;
            border:1px solid var(--line); border-radius:16px; padding:22px; margin-bottom:38px; }
-  .qr-card { background:#fff; border-radius:12px; padding:13px; flex-shrink:0; }
-  .qr-box { width:196px; height:196px; display:flex; align-items:center; justify-content:center; }
-  .qr-cap { font-family:var(--mono); font-size:8.5px; letter-spacing:.12em;
-            color:#555; text-align:center; margin-top:9px; line-height:1.5; }
   .start-side { flex:1; min-width:260px; }
+  .cmd { display:inline-block; padding:8px 12px; border-radius:8px; }
   .btn { display:inline-block; font-family:var(--mono); font-size:10px; letter-spacing:.12em;
          border-radius:999px; padding:11px 20px; text-decoration:none; }
   .btn-solid { background:#fff; color:#000; }
@@ -121,34 +124,61 @@
   </p>
 
   <div class="start">
-    <div class="qr-card">
-      <div class="qr-box" id="qr"></div>
-      <div class="qr-cap">SCAN WITH THE PHONE<br /><span id="ver">LATEST</span></div>
-    </div>
     <div class="start-side">
-      <p style="margin-top:0;">
-        Point the Light Phone's camera at that code and the download starts. No typing,
-        no cable.
-      </p>
+      <p style="margin-top:0;"><b>On the phone.</b> Open this page in the Light Phone's
+        browser and tap the button. The file lands in Downloads and the browser offers to
+        install it. Short link, if you are typing it in:
+        <code>brightmarket.gzl.dev/setup</code></p>
       <p>
         <a class="btn btn-solid" id="direct" href="https://github.com/gi-os/BrightMarket/releases/latest">DOWNLOAD THE APK</a>
         <a class="btn btn-ghost" href="./browse.html">SEE THE APPS FIRST</a>
+        <span class="aside" id="ver"></span>
       </p>
-      <p class="aside">
-        Reading this on the phone itself? Use the download button — the code is for
-        when this page is open on something else.
-      </p>
-      <p class="aside">Short link to this page: <code>brightmarket.gzl.dev/setup</code></p>
+    </div>
+    <div class="start-side">
+      <p style="margin-top:0;"><b>From a computer.</b> Download the same file, plug the
+        phone in, and push it across:</p>
+      <p><code class="cmd" id="adbcmd">adb install -r BrightMarket.apk</code></p>
+      <p class="aside">Needs USB debugging on the phone — step 1 below has the walk.</p>
     </div>
   </div>
 
-  <h2>1 · Let the phone install it</h2>
+  <h2>1 · Get it onto the phone</h2>
+  <p>Two ways, and they end in the same place. Pick whichever is in front of you.</p>
+
+  <h3>In the phone's browser</h3>
   <p>
-    Android blocks installs from outside a store until you allow it, once, for whichever
-    app is doing the installing. When the browser asks, allow it — or find it under
-    Settings → Apps → Special access → Install unknown apps.
+    Open <code>brightmarket.gzl.dev/setup</code> on the Light Phone and tap
+    <b>Download the APK</b>. When the download finishes, open it from the notification or
+    from Downloads.
   </p>
-  <p class="aside">Prefer a cable? <code id="adb">adb install -r BrightMarket.apk</code></p>
+  <p>
+    Android refuses installs from outside a store until you allow it, once, for whichever
+    app is doing the installing — here that is the browser. It asks the first time; say
+    yes. If you dismissed the prompt, it is under
+    <b>Settings → Apps → Special access → Install unknown apps</b>, then pick the browser
+    and turn it on.
+  </p>
+
+  <h3>Over a cable</h3>
+  <p>
+    Download the APK on a computer that has <code>adb</code>, then turn on USB debugging:
+    <b>Settings → About phone</b>, tap <b>Build number</b> seven times, then
+    <b>Settings → System → Developer options → USB debugging</b>.
+  </p>
+  <p>
+    Plug the phone in. It asks whether to trust the computer — say yes, or nothing below
+    will see it.
+  </p>
+  <p><code class="cmd">adb devices</code> — the phone should be listed as
+    <code>device</code>. <code>unauthorized</code> means the trust prompt is still waiting
+    on the screen.</p>
+  <p><code class="cmd" id="adb">adb install -r BrightMarket.apk</code></p>
+  <p class="aside">
+    <code>-r</code> replaces an existing copy instead of failing. If it reports
+    <code>INSTALL_FAILED_UPDATE_INCOMPATIBLE</code>, a build signed by a different key is
+    already installed — uninstall that first, and it takes its settings with it.
+  </p>
 
   <h2>2 · Open it and pick how you want to use it</h2>
   <p>First launch asks one question, because the answer changes what the app is:</p>
@@ -200,28 +230,11 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
 <script>
-  /* The short /apk path rather than the release asset: a much smaller code, which
-     matters when the thing reading it is a phone camera pointed at a monitor, and it
-     never goes stale between releases. */
-  const apk = new URL("./apk/", location.href).href;
-
-  const box = document.getElementById("qr");
-  if (typeof qrcode === "function") {
-    const q = qrcode(0, "L");           // lowest error correction keeps it sparse and easy to read
-    q.addData(apk); q.make();
-    box.innerHTML = q.createSvgTag({ cellSize: 5, margin: 1, scalable: false });
-  } else {
-    // The page still works without the CDN: the download button below it is the same thing.
-    box.style.color = "#555";
-    box.style.font = "11px monospace";
-    box.textContent = "Use the download button";
-  }
-
-  /* Version and direct link come from the same index the phone reads, so this page
+  /* Version, link and filename come from the same index the phone reads, so this page
      cannot drift from what is actually published. Failing to load it is not fatal --
-     the button already points at the GitHub latest-release redirect. */
+     the button already points at the GitHub latest-release redirect, and the adb line
+     already names a file that exists. */
   fetch("./index-v1.json", { cache: "no-cache" })
     .then((r) => (r.ok ? r.json() : null))
     .then((doc) => {
@@ -229,9 +242,15 @@
       if (!market || !market.latest) return;
       const v = String(market.latest.version || "").replace(/^v/, "");
       document.getElementById("ver").textContent = "v" + v;
+      document.getElementById("ver").style.marginLeft = "10px";
       document.getElementById("direct").href = market.latest.apk;
-      document.getElementById("adb").textContent =
-        "adb install -r BrightMarket-v" + v + ".apk";
+      const line = "adb install -r BrightMarket-v" + v + ".apk";
+      // Both copies: the card and the walk-through below it, or one of them names a
+      // file that the other one says is called something else.
+      for (const id of ["adb", "adbcmd"]) {
+        const n = document.getElementById(id);
+        if (n) n.textContent = line;
+      }
     })
     .catch(() => {});
 </script>
