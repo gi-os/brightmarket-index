@@ -965,9 +965,15 @@
   // subject, so the app you were reading about stays.
   $("q").addEventListener("input", (e) => {
     query = e.target.value; sel = 0; selPkg = ""; pinned = true; render();
-    // Typing still narrows the grid instantly and offline. The results block below is a
-    // separate answer to a separate question and only moves when a search is asked for.
-    if (!query.trim()) hideResults();
+    // Typing still narrows the grid instantly and offline.
+    const q = query.trim();
+    clearTimeout(idleTimer);
+    if (!q) { hideResults(); lastSearched = ""; return; }
+    /* Two seconds of stillness reads as a finished thought, so the search runs itself.
+       Nobody should have to find a button to be answered, and anything shorter fires
+       mid-word: "back up my s" is a different question from "back up my stuff". The
+       button and Enter are still there for not waiting. */
+    if (q.length >= 3) idleTimer = setTimeout(() => search(), IDLE_MS);
   });
   $("q").addEventListener("keydown", (e) => { if (e.key === "Enter") search(); });
   $("go").addEventListener("click", search);
@@ -1032,7 +1038,8 @@
   });
 
   const ASK_URL = "https://brightmarket-portal.gman6849.workers.dev/ask";
-  let askSeq = 0;
+  const IDLE_MS = 2000;
+  let askSeq = 0, idleTimer = null, lastSearched = "";
 
   function hideResults() {
     const box = $("res");
@@ -1042,7 +1049,12 @@
 
   async function search() {
     const q = ($("q").value || "").trim();
-    if (!q) { hideResults(); return; }
+    clearTimeout(idleTimer);
+    if (!q) { hideResults(); lastSearched = ""; return; }
+    // Asking the same question twice costs a call and answers identically. Pressing the
+    // button after an idle search already ran should do nothing, not repeat it.
+    if (q === lastSearched) return;
+    lastSearched = q;
 
     const box = $("res");
     const mine = ++askSeq;
@@ -1164,6 +1176,8 @@
 
   function clearSearch() {
     query = ""; $("q").value = "";
+    // Without this, typing the same query again after CLEAR is refused as a repeat.
+    clearTimeout(idleTimer); lastSearched = "";
     hideResults();
     sel = 0; selPkg = ""; pinned = true;
     render();
