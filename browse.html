@@ -73,6 +73,27 @@
                letter-spacing:.18em; transition:.15s; }
   .pill-link:hover { background:var(--fg); color:#000; box-shadow:inset 0 0 0 1px var(--fg); }
 
+  /* One filled pill in the bar. Somebody arriving without the app has exactly one thing
+     to do, and it should not look like the other two. */
+  .pill-solid { background:var(--fg); color:#000; box-shadow:inset 0 0 0 1px var(--fg); }
+  .pill-solid:hover { background:#e6e6ea; box-shadow:inset 0 0 0 1px #e6e6ea; }
+
+  /* First visit only, and it never blocks the page: the catalogue is worth looking at
+     whether or not you have the app yet, and a dialog over it on arrival says otherwise.
+     Bottom corner, dismissable, and it remembers. */
+  .hello { position:fixed; right:18px; bottom:18px; z-index:50; width:310px;
+           max-width:calc(100vw - 36px); background:#0c0c0f; border:1px solid var(--edge);
+           border-radius:14px; padding:15px 16px 13px; box-shadow:0 18px 44px rgba(0,0,0,.6); }
+  .hello h4 { font-family:var(--round); font-weight:400; font-size:15px; margin:0 0 6px; }
+  .hello p { font-size:12.5px; line-height:1.55; color:var(--dim); margin:0 0 12px; }
+  .hello-row { display:flex; gap:8px; align-items:center; }
+  .hello-go { font-family:var(--mono); font-size:9.5px; letter-spacing:.12em;
+              background:var(--fg); color:#000; border:none; border-radius:999px;
+              padding:8px 14px; cursor:pointer; text-decoration:none; }
+  .hello-no { font-family:var(--mono); font-size:9px; letter-spacing:.1em; color:var(--dim);
+              background:none; border:none; cursor:pointer; padding:6px 2px; }
+  .hello-no:hover { color:var(--fg); }
+
   .hero-wrap { position:sticky; top:59px; z-index:10; background:var(--bg); flex-shrink:0;
     overflow:hidden; border-bottom:1px solid var(--line);
     /* Capped so the bar, the hero and the ticker always fit in the window
