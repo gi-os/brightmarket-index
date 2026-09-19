@@ -1,9 +1,22 @@
+# The applicationId is going back to adam-weber/light-keyboard, the project BrightKeyboard forks.
+#
+# This listing is temporary and exists for one job: the people already running the old build. The
+# index is keyed on applicationId and the builder lets the APK win over the catalogue, so the moment
+# gi-os/BrightKeyboard released 4.0 under com.gios.brightkeyboard this entry rewrote itself to the
+# new id and the old listing vanished -- taking with it the only way to offer those phones the
+# release that carries their settings across. Hence the separate repo: one frozen APK, its own home,
+# so the two listings do not fight over one `repo`.
+#
+# Remove this entry once the installs have moved, and the id is free for its author.
 pkg: app.lightphonekeyboard
-name: BrightKeyboard
-repo: gi-os/BrightKeyboard
+name: BrightKeyboard 3.x
+repo: gi-os/BrightKeyboard-3x
 upstream: adam-weber/light-keyboard
 category: hardware
+deprecated: true
+supersededBy: BrightKeyboard
 summary: >-
-  The Light Phone keyboard, in every app instead of only Light's own. Swipes are read by a
-  neural model bundled in the APK, and autocorrect runs against a dictionary bundled beside
-  it, so nothing here touches the network.
+  The last build under the old applicationId. It still types; it also says the keyboard has
+  moved, and hands your settings, saved words and learned touch model to the new
+  BrightKeyboard the first time you open that one. Install the new one, open it, then remove
+  this.
