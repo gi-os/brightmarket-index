@@ -489,32 +489,51 @@
     const step = Math.max(1, Math.ceil(vis.length / 8));
     const xax = vis.map((d, i) => (i % step === 0 || i === vis.length - 1) ? `<text class="ax" x="${x(i).toFixed(1)}" y="${H - 12}" text-anchor="middle">${short(d)}</text>` : "").join("");
 
-    const paths = series.map(({ a, v }, k) => {
+    /* Rank is computed against all 81 apps, so an app in today's top twenty can
+       have sat at #47 a fortnight ago -- and `hi` is deliberately capped near 20
+       so one such app cannot stretch the axis for everyone. The values were fed
+       to y() anyway, which put them hundreds of pixels below the plot: one line
+       dived past #20, through the caption, and off the panel.
+
+       A rank worse than the axis is not a point on this chart. It is the app not
+       being on the chart, so the pen lifts, exactly as it does for a day with no
+       snapshot. Clamping to #20 was the other option and it lies: it draws a
+       flat line along the bottom that reads as "held twentieth for a fortnight". */
+    const onAxis = (v) => (v == null || (mode === "RANK" && v > hi) ? null : v);
+    const linePath = (v) => {
       let d = "", pen = false;
-      v.forEach((val, i) => { if (val == null) { pen = false; return; } d += (pen ? "L" : "M") + x(i).toFixed(1) + " " + y(val).toFixed(1) + " "; pen = true; });
+      v.forEach((val, i) => {
+        const p = onAxis(val);
+        if (p == null) { pen = false; return; }
+        d += (pen ? "L" : "M") + x(i).toFixed(1) + " " + y(p).toFixed(1) + " ";
+        pen = true;
+      });
+      return d.trim();
+    };
+
+    const paths = series.map(({ a, v }, k) => {
       const cls = "ln" + (k < 3 ? " top" : "") + (sel ? (sel === a.pkg ? " hot" : " cold") : "");
-      const dot = v.at(-1) != null && vis.length === 1 ? `<circle class="dot" r="3" cx="${x(0)}" cy="${y(v.at(-1))}"/>` : "";
-      return `<path class="${cls}" data-pkg="${esc(a.pkg)}" d="${d.trim()}"/>${dot}`;
+      const last = onAxis(v.at(-1));
+      const dot = last != null && vis.length === 1 ? `<circle class="dot" r="3" cx="${x(0)}" cy="${y(last)}"/>` : "";
+      return `<path class="${cls}" data-pkg="${esc(a.pkg)}" d="${linePath(v)}"/>${dot}`;
     }).join("");
     // Hit areas: a wide invisible stroke over each line so a thin line is hoverable.
-    const hits = series.map(({ a, v }) => {
-      let d = "", pen = false;
-      v.forEach((val, i) => { if (val == null) { pen = false; return; } d += (pen ? "L" : "M") + x(i).toFixed(1) + " " + y(val).toFixed(1) + " "; pen = true; });
-      return `<path class="hit" data-pkg="${esc(a.pkg)}" d="${d.trim()}" fill="none" stroke="transparent" stroke-width="12" style="cursor:pointer"/>`;
-    }).join("");
+    const hits = series.map(({ a, v }) =>
+      `<path class="hit" data-pkg="${esc(a.pkg)}" d="${linePath(v)}" fill="none" stroke="transparent" stroke-width="12" style="cursor:pointer"/>`
+    ).join("");
 
     // The pinned app's trailing average, over its own line. Only in DAILY, only when one
     // app is pinned: twenty dashed lines would be worse than none.
     let avg = "";
     if (mode === "DAILY" && sel) {
-      const tr = trailing(sel).slice(off);
-      let d = "", pen = false;
-      tr.forEach((val, i) => { if (val == null) { pen = false; return; } d += (pen ? "L" : "M") + x(i).toFixed(1) + " " + y(val).toFixed(1) + " "; pen = true; });
-      if (d) avg = `<path class="avg" d="${d.trim()}"/>`;
+      const d = linePath(trailing(sel).slice(off));
+      if (d) avg = `<path class="avg" d="${d}"/>`;
     }
 
     $("chart").innerHTML = `<div class="tip" id="tip"></div>
-      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${grid}${xax}${paths}${avg}${hits}</svg>`;
+      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+        <defs><clipPath id="plot"><rect x="${L}" y="${T - 5}" width="${iw}" height="${ih + 10}"/></clipPath></defs>
+        ${grid}${xax}<g clip-path="url(#plot)">${paths}${avg}${hits}</g></svg>`;
     const chart = $("chart"), tip = $("tip");
     chart.querySelectorAll(".hit").forEach((h) => {
       h.addEventListener("mouseenter", () => highlight(h.dataset.pkg));
