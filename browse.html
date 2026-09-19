@@ -381,7 +381,7 @@
     </div>
     <div style="display:flex; align-items:center; gap:12px;">
       <a class="pill-link" href="./stats.html">STATS</a>
-      <div class="pill-link" id="setup-btn" style="cursor:pointer;">HOW TO SET UP</div>
+      <a class="pill-link pill-solid" id="setup-btn" href="./setup.html">NEW? START HERE</a>
       <a class="pill-link" href="./submit.html"><span style="font-size:14px; line-height:1;">＋</span>ADD YOUR APP</a>
     </div>
   </div>
@@ -726,94 +726,13 @@
    * browser and a QR scanner, so scanning starts the download directly and
    * skips typing a URL on a keyboard nobody wants to use.
    */
+  /* Setup has its own page now. It used to be a modal here, which made it unsendable:
+     there was no address for it, so showing somebody how to start meant telling them to
+     open the catalogue and find a button. */
   function openSetup() {
-    const market = apps.find((a) => a.pkg === "com.gios.brightmarket");
-    // The short URL rather than the release asset: it is a much smaller QR,
-    // which matters when the thing scanning it is a phone camera pointed at a
-    // monitor, and it never goes stale between releases. Served from wherever
-    // this page is, so it works on the Pages path today and on the custom
-    // domain once DNS exists.
-    const apk = new URL("./apk/", location.href).href;
-    const direct = market ? market.latest.apk
-      : "https://github.com/gi-os/BrightMarket/releases/latest";
-    const ver = market ? ver_(market.latest.version) : "latest";
-
-    const veil = document.createElement("div");
-    veil.className = "veil";
-    veil.innerHTML = `
-      <div class="sheet">
-        <div class="sheet-bar">
-          <div style="font-family:var(--round); font-size:16px;">Setting up BrightMarket</div>
-          <div class="chip" data-close="1" style="cursor:pointer;">CLOSE</div>
-        </div>
-        <div class="sheet-body">
-          <div style="display:flex; gap:26px; flex-wrap:wrap; align-items:flex-start;">
-            <div style="background:#fff; border-radius:10px; padding:12px;">
-              <div id="setup-qr" style="width:190px; height:190px; display:flex;
-                   align-items:center; justify-content:center;"></div>
-              <div class="qr-cap" style="margin-top:8px;">SCAN TO DOWNLOAD<br />${esc(ver)}</div>
-            </div>
-            <div style="flex:1; min-width:260px;">
-              <p style="margin-top:0;">Scan that with the phone and the download starts.
-                 No typing, no cable.</p>
-              <p><a href="${esc(direct)}">Or download the APK here</a> and move it across
-                 however you like.</p>
-              <p>Short link: <code>brightmarket.gzl.dev/apk</code></p>
-            </div>
-          </div>
-
-          <h2>1 · Let the phone install it</h2>
-          <p>Android blocks installs from outside a store until you allow it, once, for
-             whichever app is doing the installing. When the browser asks, allow it —
-             Settings → Apps → Special access → Install unknown apps.</p>
-          <p>Prefer a cable? <code>adb install -r BrightMarket-${esc(ver)}.apk</code></p>
-
-          <h2>2 · Open it and pick how you want to use it</h2>
-          <p>First launch asks once, because it changes what the app is:</p>
-          <ul>
-            <li><b>Browse here</b> — search and discover on the phone.</li>
-            <li><b>Focus mode</b> — no browsing on the phone at all. You browse this page
-                instead and send apps over by QR. Your installed apps and their updates
-                stay available.</li>
-          </ul>
-          <p>Focus mode can be turned on later in Settings. Turning it back <i>off</i> is
-             only possible by scanning the code at the bottom of this page — that is the
-             point of it. It is a commitment device, not a lock: the code is an ordinary
-             link and anyone determined can make one.</p>
-
-          <h2>3 · Install an app</h2>
-          <p>Pick anything on this page and scan its code, or browse on the phone if you
-             left focus mode off. Nothing installs until you tap Install there.</p>
-
-          <h2>4 · Apps that aren't listed here</h2>
-          <p>Scan <b>any GitHub repo URL</b> that publishes APK releases and BrightMarket
-             will track it for updates alongside everything else. Those are marked
-             <b>UNLISTED</b>, because their downloads cannot be checked against a
-             published hash the way indexed apps are.</p>
-
-          <h2>5 · Coming from Obtainium</h2>
-          <p>Export from Obtainium, then Settings → Import from Obtainium. Apps listed
-             here become normal entries; the rest are tracked as unlisted. Anything
-             without a GitHub repo behind it is reported rather than dropped, since there
-             is nothing to check for updates against.</p>
-
-          <h2>Keeping up to date</h2>
-          <p>The Updates tab compares what's installed against the newest release and
-             offers Update All. BrightMarket updates itself the same way, and always
-             last in a batch — installing it closes the app, so anything queued behind it
-             would never run.</p>
-        </div>
-      </div>`;
-    document.body.appendChild(veil);
-
-    const close = () => { veil.remove(); window.removeEventListener("keydown", onKey); };
-    const onKey = (e) => { if (e.key === "Escape") close(); };
-    veil.addEventListener("click", (e) => {
-      if (e.target === veil || e.target.dataset.close) close();
-    });
-    window.addEventListener("keydown", onKey);
-    qrInto(veil.querySelector("#setup-qr"), apk, 4);
+    location.href = "./setup.html";
   }
+
 
   // Cached per repo: reopening shouldn't refetch, and READMEs here run to 45KB.
   const readmeCache = new Map();
@@ -1019,7 +938,6 @@
     render();
   }
 
-  $("setup-btn").addEventListener("click", openSetup);
   // Typing drops the pin on purpose: you filter in order to find something
   // else, and the hero showing the top result is the useful behaviour. Category
   // and sort chips do NOT drop it -- re-sorting is a change of view, not of
@@ -1045,6 +963,53 @@
 
      Substring hits are merged in ahead of the ranking, because somebody who typed a name
      that exists should see it first whatever the model thinks. */
+  /* ------------------------------------------------------------------- first visit
+     Somebody who has never seen this before has one thing to do and no obvious sign of
+     it: the catalogue looks like a catalogue, and the app that installs from it is the
+     one thing not on the shelf.
+
+     A card in the corner rather than a dialog over the page. The catalogue is worth
+     reading whether or not you have the app, and a modal on arrival says otherwise.
+     It appears once, it remembers being dismissed, and it takes the hint: clicking GET
+     APK on any app means the point has landed, so it never returns. */
+  const SEEN_KEY = "bm.setup.seen";
+
+  function seenSetup() {
+    try { return localStorage.getItem(SEEN_KEY) === "1"; } catch { return true; }
+  }
+  function markSeen() {
+    try { localStorage.setItem(SEEN_KEY, "1"); } catch {}
+    const card = document.querySelector(".hello");
+    if (card) card.remove();
+  }
+
+  function greet() {
+    if (seenSetup()) return;
+    const card = document.createElement("div");
+    card.className = "hello";
+    card.innerHTML =
+      "<h4>First time here?</h4>" +
+      "<p>These install through BrightMarket, an app on the phone. " +
+      "Two minutes to set up, once.</p>" +
+      '<div class="hello-row">' +
+      '<a class="hello-go" href="./setup.html">SHOW ME HOW</a>' +
+      '<button class="hello-no" type="button">DON\u2019T SHOW AGAIN</button>' +
+      "</div>";
+    card.querySelector(".hello-no").addEventListener("click", markSeen);
+    // Following the link is itself an answer; there is no reason to ask again after it.
+    card.querySelector(".hello-go").addEventListener("click", () => {
+      try { localStorage.setItem(SEEN_KEY, "1"); } catch {}
+    });
+    document.body.appendChild(card);
+  }
+
+  /* Anyone downloading an APK has understood the arrangement, whether or not they read
+     the card. Delegated, because the hero is rebuilt on every selection. */
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest && e.target.closest("a.btn");
+    if (a && /\.apk($|\?)/i.test(a.getAttribute("href") || "")) markSeen();
+  });
+
   const ASK_URL = "https://brightmarket-portal.gman6849.workers.dev/ask";
   let askSeq = 0;
 
@@ -1281,6 +1246,9 @@
       renderWire();
       renderChips();
       render();
+      // After the catalogue is up, never before: a card over an empty page is an
+      // interruption rather than an offer.
+      greet();
     } catch (err) {
       $("empty").style.display = "block";
       $("empty").textContent = "COULDN'T LOAD THE INDEX";

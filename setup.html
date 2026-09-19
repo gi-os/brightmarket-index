@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<!--
+  How to set up BrightMarket — a page, not a dialog.
+
+  This lived inside browse.html as a modal, which made it unsendable: there was no
+  address for it, so the only way to show somebody how to start was to tell them to
+  open the catalogue and find a button. It is a page now, with its own URL, its own
+  preview card, and nothing on it that assumes you arrived from anywhere.
+
+  Deliberately self-contained. Someone reading this has no app yet and possibly a
+  patchy connection; one file, one stylesheet, one script.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Set up BrightMarket</title>
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="alternate icon" href="favicon.ico" sizes="16x16 32x32 48x48">
+<meta name="theme-color" content="#000000" />
+
+<!-- The point of the page is that it gets sent to people, so it has to look like
+     something when it lands in a chat rather than a bare link. -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="BrightMarket" />
+<meta property="og:title" content="Set up BrightMarket" />
+<meta property="og:description" content="Apps for the Light Phone III. Scan one code, install one app, and the rest arrive from a screen where browsing is fine." />
+<meta property="og:url" content="https://brightmarket.gzl.dev/setup.html" />
+<meta property="og:image" content="https://brightmarket.gzl.dev/favicon-512.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Set up BrightMarket" />
+<meta name="twitter:description" content="Apps for the Light Phone III. Scan one code and you are started." />
+<meta name="twitter:image" content="https://brightmarket.gzl.dev/favicon-512.png" />
+<meta name="description" content="How to install BrightMarket on a Light Phone III, and what focus mode changes." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --bg: #000; --fg: #fff;
+    --line: #1c1c21; --edge: #2e2e34;
+    --dim: #7a7a80; --dimmer: #5a5a60;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+    --round: 'Varela Round', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin:0; background:var(--bg); color:var(--fg);
+               font-family:var(--sans); -webkit-font-smoothing:antialiased; }
+  a { color:#fff; }
+
+  .bar { position:sticky; top:0; z-index:20; background:var(--bg); height:60px;
+         display:flex; align-items:center; justify-content:space-between;
+         padding:0 34px; border-bottom:1px solid var(--line); }
+  .logo { width:26px; height:26px; border-radius:7px; background:#fff; color:#000;
+          display:flex; align-items:center; justify-content:center;
+          font-family:var(--round); font-size:15px; }
+  .wordmark { font-family:var(--mono); font-size:12px; letter-spacing:.34em; color:#8a8a8e; }
+  .pill-link { font-family:var(--mono); font-size:9.5px; letter-spacing:.12em;
+               border:1px solid var(--line); border-radius:999px; padding:7px 14px;
+               color:#9a9aa2; text-decoration:none; display:inline-flex; align-items:center; gap:5px; }
+  .pill-link:hover { border-color:#4a4a52; color:var(--fg); }
+
+  .wrap { max-width:880px; margin:0 auto; padding:34px 26px 80px; }
+
+  h1 { font-family:var(--round); font-weight:400; font-size:30px; margin:0 0 10px; }
+  .lede { font-size:15px; line-height:1.6; color:#c8c8ce; max-width:62ch; margin:0 0 30px; }
+
+  /* The QR and the download sit together at the top, because for most people the
+     whole page is those two things and everything below is only read when
+     something goes wrong. */
+  .start { display:flex; gap:28px; flex-wrap:wrap; align-items:flex-start;
+           border:1px solid var(--line); border-radius:16px; padding:22px; margin-bottom:38px; }
+  .qr-card { background:#fff; border-radius:12px; padding:13px; flex-shrink:0; }
+  .qr-box { width:196px; height:196px; display:flex; align-items:center; justify-content:center; }
+  .qr-cap { font-family:var(--mono); font-size:8.5px; letter-spacing:.12em;
+            color:#555; text-align:center; margin-top:9px; line-height:1.5; }
+  .start-side { flex:1; min-width:260px; }
+  .btn { display:inline-block; font-family:var(--mono); font-size:10px; letter-spacing:.12em;
+         border-radius:999px; padding:11px 20px; text-decoration:none; }
+  .btn-solid { background:#fff; color:#000; }
+  .btn-ghost { border:1px solid var(--edge); color:#c8c8ce; }
+
+  h2 { font-family:var(--round); font-weight:400; font-size:19px;
+       margin:34px 0 8px; padding-top:22px; border-top:1px solid var(--line); }
+  p, li { font-size:14px; line-height:1.68; color:#d8d8dc; }
+  ul { padding-left:20px; }
+  code { font-family:var(--mono); font-size:12.5px; background:#141418;
+         border:1px solid var(--line); border-radius:5px; padding:2px 6px; }
+  .aside { font-size:12.5px; line-height:1.6; color:var(--dim); }
+
+  .foot { margin-top:54px; padding-top:20px; border-top:1px solid var(--line);
+          font-size:12.5px; color:var(--dim); display:flex; gap:20px; flex-wrap:wrap; }
+
+  @media (max-width: 640px) {
+    .bar { padding:0 18px; }
+    .wrap { padding:26px 18px 60px; }
+    h1 { font-size:25px; }
+    .start { padding:16px; gap:20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <a href="./browse.html" style="display:flex; align-items:center; gap:13px; text-decoration:none;">
+    <div class="logo">B</div>
+    <div class="wordmark">BRIGHTMARKET</div>
+  </a>
+  <a class="pill-link" href="./browse.html">BROWSE THE APPS</a>
+</div>
+
+<div class="wrap">
+  <h1>Set up BrightMarket</h1>
+  <p class="lede">
+    A catalogue of apps built for the Light Phone III, and a way to install them that
+    does not put a store on the phone. It takes about two minutes.
+  </p>
+
+  <div class="start">
+    <div class="qr-card">
+      <div class="qr-box" id="qr"></div>
+      <div class="qr-cap">SCAN WITH THE PHONE<br /><span id="ver">LATEST</span></div>
+    </div>
+    <div class="start-side">
+      <p style="margin-top:0;">
+        Point the Light Phone's camera at that code and the download starts. No typing,
+        no cable.
+      </p>
+      <p>
+        <a class="btn btn-solid" id="direct" href="https://github.com/gi-os/BrightMarket/releases/latest">DOWNLOAD THE APK</a>
+        <a class="btn btn-ghost" href="./browse.html">SEE THE APPS FIRST</a>
+      </p>
+      <p class="aside">
+        Reading this on the phone itself? Use the download button — the code is for
+        when this page is open on something else.
+      </p>
+      <p class="aside">Short link to this page: <code>brightmarket.gzl.dev/setup</code></p>
+    </div>
+  </div>
+
+  <h2>1 · Let the phone install it</h2>
+  <p>
+    Android blocks installs from outside a store until you allow it, once, for whichever
+    app is doing the installing. When the browser asks, allow it — or find it under
+    Settings → Apps → Special access → Install unknown apps.
+  </p>
+  <p class="aside">Prefer a cable? <code id="adb">adb install -r BrightMarket.apk</code></p>
+
+  <h2>2 · Open it and pick how you want to use it</h2>
+  <p>First launch asks one question, because the answer changes what the app is:</p>
+  <ul>
+    <li><b>Browse here</b> — search and discover on the phone, like any store.</li>
+    <li><b>Focus mode</b> — no browsing on the phone at all. You browse the catalogue on
+        a computer and send apps over by QR. Everything you have installed still updates.</li>
+  </ul>
+  <p>
+    Focus mode can be turned on later in Settings. Turning it back <i>off</i> is only
+    possible by scanning a code from the catalogue page — which is the point of it. It is
+    a commitment device, not a lock: that code is an ordinary link and anyone determined
+    can make one.
+  </p>
+
+  <h2>3 · Install an app</h2>
+  <p>
+    Pick anything in the catalogue and scan its code, or browse on the phone if you left
+    focus mode off. Nothing installs until you tap Install there.
+  </p>
+
+  <h2>4 · Apps that are not in the catalogue</h2>
+  <p>
+    Scan <b>any GitHub repo URL</b> that publishes APK releases and BrightMarket tracks it
+    for updates alongside everything else. Those are marked <b>UNLISTED</b>, because their
+    downloads cannot be checked against a published hash the way indexed apps are.
+  </p>
+
+  <h2>5 · Coming from Obtainium</h2>
+  <p>
+    Export from Obtainium, then Settings → Import from Obtainium. Apps in the catalogue
+    become normal entries and the rest are tracked as unlisted. Anything without a GitHub
+    repo behind it is reported rather than dropped, since there is nothing to check for
+    updates against.
+  </p>
+
+  <h2>Keeping up to date</h2>
+  <p>
+    The Updates tab compares what is installed against the newest release and offers
+    Update All. BrightMarket updates itself the same way, and always last in a batch —
+    installing it closes the app, so anything queued behind it would never run.
+  </p>
+
+  <div class="foot">
+    <a href="./browse.html">Browse the catalogue</a>
+    <a href="./submit.html">Add your app</a>
+    <a href="./stats.html">Stats</a>
+    <a href="https://github.com/gi-os/brightmarket-index">Source</a>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script>
+  /* The short /apk path rather than the release asset: a much smaller code, which
+     matters when the thing reading it is a phone camera pointed at a monitor, and it
+     never goes stale between releases. */
+  const apk = new URL("./apk/", location.href).href;
+
+  const box = document.getElementById("qr");
+  if (typeof qrcode === "function") {
+    const q = qrcode(0, "L");           // lowest error correction keeps it sparse and easy to read
+    q.addData(apk); q.make();
+    box.innerHTML = q.createSvgTag({ cellSize: 5, margin: 1, scalable: false });
+  } else {
+    // The page still works without the CDN: the download button below it is the same thing.
+    box.style.color = "#555";
+    box.style.font = "11px monospace";
+    box.textContent = "Use the download button";
+  }
+
+  /* Version and direct link come from the same index the phone reads, so this page
+     cannot drift from what is actually published. Failing to load it is not fatal --
+     the button already points at the GitHub latest-release redirect. */
+  fetch("./index-v1.json", { cache: "no-cache" })
+    .then((r) => (r.ok ? r.json() : null))
+    .then((doc) => {
+      const market = doc && (doc.apps || []).find((a) => a.pkg === "com.gios.brightmarket");
+      if (!market || !market.latest) return;
+      const v = String(market.latest.version || "").replace(/^v/, "");
+      document.getElementById("ver").textContent = "v" + v;
+      document.getElementById("direct").href = market.latest.apk;
+      document.getElementById("adb").textContent =
+        "adb install -r BrightMarket-v" + v + ".apk";
+    })
+    .catch(() => {});
+</script>
+</body>
+</html>
