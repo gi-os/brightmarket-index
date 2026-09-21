@@ -654,11 +654,20 @@
 
     $("installgrid").innerHTML = rows.map(([a, p]) => {
       const vs = splitOf(p);
+      /* The version people are actually on, not the newest one anybody has.
+         These are the same number for an app where everyone is current, which is most
+         of them, and they came apart the moment one was not: BrightKeyboard 3.x read
+         "33 USERS · v3.11.55" when four were on that build and eleven were three
+         releases back. The bar beside this already shows the newest end of the spread,
+         and the card above counts who reached it -- so the one thing the label can add
+         is where the weight sits. Ties fall to the newer build, because splitOf is
+         newest-first and reduce keeps the first of an equal pair. */
+      const most = vs.length ? vs.reduce((x, y) => (y[1] > x[1] ? y : x)) : null;
       return `
       <a class="cell" href="${link(a)}">
         <div class="ic">${mark(a)}</div>
         <div class="nm">${esc(a.name)}
-          <small>${fmt(p.installed)} USER${p.installed === 1 ? "" : "S"}${vs.length ? " · v" + esc(vs[0][0]) : ""}</small>
+          <small>${fmt(p.installed)} USER${p.installed === 1 ? "" : "S"}${most ? " · v" + esc(most[0]) : ""}</small>
           ${versionBar(p)}
         </div>
       </a>`;
