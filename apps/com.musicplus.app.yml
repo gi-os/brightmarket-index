@@ -1,0 +1,6 @@
+pkg: com.musicplus.app
+name: Music Plus
+repo: queueingqt/musicplus
+category: media
+summary: Full featured offline music player for subsonic services (Bandcamp, Navidrome,
+  etc)
