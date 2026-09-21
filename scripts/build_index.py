@@ -541,6 +541,51 @@ def site_day() -> str:
         return datetime.datetime.now(datetime.timezone.utc).date().isoformat()
 
 
+# BrightKeyboard took a new applicationId on 2026-09-19 and gave the old one back to
+# adam-weber/light-keyboard, the project it forks. The history is keyed on applicationId,
+# so the day that happened one line fell off a cliff -- 337 downloads to 14 -- and an
+# unrelated line appeared near the top at 381. Neither is what happened. The app kept
+# going and only its key changed; the 14 is a brand new listing that happens to hold the
+# old key.
+#
+# So the days BEFORE the split move to the id that inherited them. Written as a table
+# rather than a special case because this will happen again: an app is not its
+# applicationId, and the history belongs to whichever one carried on.
+RENAMES = [
+    # (day of the split, id before, id after)
+    ("2026-09-19", "app.lightphonekeyboard", "com.gios.brightkeyboard"),
+]
+
+
+def carry_history_across_rename(history: dict) -> None:
+    """Move the days before a rename onto the id that inherited them.
+
+    Idempotent, and that is the whole safety argument: a day that already has the new id
+    is left alone, so this can run on every build forever without touching anything twice.
+    """
+    days, gains = history["days"], history["gains"]
+    for split, old, new in RENAMES:
+        moved = 0
+        for bucket in (days, gains):
+            for day, row in bucket.items():
+                if day < split and old in row and new not in row:
+                    row[new] = row.pop(old)
+                    moved += 1
+        # The first day under the new key had no yesterday to difference against, so the
+        # whole lifetime total landed in it as one day's gain -- 381, on a day that really
+        # earned 44. With the history carried across there IS a yesterday now, so the
+        # cold-start reading can be replaced by the real delta.
+        prior = [d for d in sorted(days) if d < split]
+        if prior and split in days and new in days.get(split, {}):
+            before = days[prior[-1]].get(new)
+            total = days[split][new]
+            if before is not None and gains.get(split, {}).get(new) == total:
+                gains[split][new] = max(0, total - before)
+                warn(f"{new}: first-day gain corrected from {total} to {gains[split][new]}")
+        if moved:
+            warn(f"history: carried {moved} day(s) from {old} to {new} across the {split} rename")
+
+
 def pick_showcase(out: list[dict], gains: dict, featured: dict, today: str) -> str | None:
     """The day's app: eligible, and whichever of those went longest without a turn.
 
@@ -736,6 +781,7 @@ def main() -> int:
     previous, previous_by_repo = load_previous(index_path)
     today = site_day()
     history = load_history()
+    carry_history_across_rename(history)
     out = []
 
     for app in apps:
