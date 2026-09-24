@@ -114,6 +114,12 @@
      mistaken for a day's own value. */
   .avg { fill:none; stroke:var(--fg); stroke-width:1.2; stroke-dasharray:3 4; opacity:.55; }
   .ln.cold { opacity:.25; }
+  /* Forecast. Dashed like the average, because it is the same kind of thing: not a day
+     that happened. The band is drawn only for the pinned app. */
+  .ln.fc { stroke-dasharray:4 4; }
+  .band { fill:var(--fg); opacity:.09; }
+  .future { fill:var(--fg); opacity:.025; }
+  .now { stroke:var(--line-2); stroke-width:1; stroke-dasharray:2 3; }
   .dot { fill:var(--fg); }
   .tip { position:absolute; pointer-events:none; background:var(--fg); color:#000; font-family:var(--mono); font-size:10px;
          letter-spacing:.08em; padding:6px 9px; border-radius:6px; white-space:nowrap; display:none; z-index:5; }
@@ -236,6 +242,7 @@
       <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:center;">
         <div class="chips" id="modes"></div>
         <div class="chips" id="ranges"></div>
+        <div class="chips" id="predict"></div>
       </div>
     </div>
     <div class="split">
@@ -285,6 +292,9 @@
   let pulse = null;
   const AVG_WINDOW = 7;
   const MODES = ["RANK", "DAILY", "TOTAL", "USERS"], RANGES = ["7D", "30D", "90D", "ALL"];
+  // Forecast horizon in days; 0 is off. The PREDICT chip turns it on at one month.
+  let ahead = 0;
+  const HORIZONS = [["1M", 30], ["3M", 91], ["6M", 182]];
 
   // Series helpers. `days` is sorted ascending; `snap[day][pkg]` is lifetime downloads.
   const at = (day, pkg) => snap[day]?.[pkg];
@@ -334,6 +344,78 @@
       const row = Object.entries(snap[d] || {}).sort((a, b) => b[1] - a[1]);
       row.forEach(([pkg], k) => { (r[pkg] ||= new Array(days.length).fill(null))[i] = k + 1; });
     });
+    return r;
+  }
+
+  /*
+   * Forecasting.
+   *
+   * The rate is a weighted mean of the last FIT_WINDOW measured days of gains, each
+   * day counting half as much as one HALF_LIFE days newer. A straight line, not a
+   * curve: with a few weeks of history anything cleverer is fitting noise. Release
+   * spikes stay in, because releases recur and they are how most of these apps get
+   * downloaded at all.
+   *
+   * The band is an 80% range. Two things widen it: the day-to-day scatter, which adds
+   * up like a random walk (sqrt h), and not knowing the rate itself, which grows with
+   * h and dominates six months out. That second term is the honest one -- it is why
+   * the band opens up so fast, and it narrows as the history grows.
+   */
+  const FIT_WINDOW = 28, HALF_LIFE = 10, MIN_DAYS = 7, Z80 = 1.2816;
+  const addDays = (d, n) => new Date(Date.parse(d + "T00:00:00Z") + n * 864e5).toISOString().slice(0, 10);
+  function fit(d) {
+    const win = d.slice(-FIT_WINDOW); let sw = 0, sw2 = 0, sx = 0; const pts = [];
+    win.forEach((v, i) => {
+      if (v == null) return;
+      const w = 0.5 ** ((win.length - 1 - i) / HALF_LIFE);
+      pts.push([v, w]); sw += w; sw2 += w * w; sx += w * v;
+    });
+    if (pts.length < MIN_DAYS) return null;
+    const rate = sx / sw;
+    const sd = Math.sqrt(pts.reduce((a, [v, w]) => a + w * (v - rate) ** 2, 0) / sw);
+    return { rate, sd, n: (sw * sw) / sw2, days: pts.length };
+  }
+  // Day-over-day change in users. The first counted day is null, not a gain: it holds
+  // everyone who already had the app, which is a starting point rather than a rate.
+  function userDeltas(pkg) {
+    const u = userSeries(pkg);
+    return u.map((v, i) => (v == null || i === 0 || u[i - 1] == null ? null : v - u[i - 1]));
+  }
+  const lastOf = (v) => { for (let i = v.length - 1; i >= 0; i--) if (v[i] != null) return v[i]; return null; };
+  /* [mid, lo, hi] for each of the next `ahead` days, in the current mode's units.
+     Null when there are not MIN_DAYS measured days to fit. */
+  function forecastOf(pkg, h = ahead, m = mode) {
+    if (!h) return null;
+    const users = m === "USERS";
+    const f = fit(users ? userDeltas(pkg) : deltas(pkg));
+    if (!f) return null;
+    const out = [];
+    if (m === "DAILY") {
+      const b = Z80 * Math.sqrt(f.sd ** 2 + f.sd ** 2 / f.n);
+      for (let k = 1; k <= h; k++) out.push([f.rate, Math.max(0, f.rate - b), f.rate + b]);
+      return out;
+    }
+    const last = lastOf(users ? userSeries(pkg) : totals(pkg));
+    if (last == null) return null;
+    // Gets never go down; users can, but not below zero.
+    const floor = users ? 0 : last;
+    for (let k = 1; k <= h; k++) {
+      const mid = Math.max(floor, last + f.rate * k), b = Z80 * f.sd * Math.sqrt(k + (k * k) / f.n);
+      out.push([mid, Math.max(floor, mid - b), mid + b]);
+    }
+    return out;
+  }
+  /* Rank on future days, against every app in the catalogue as RANK is -- so each app's
+     total is projected and the whole field re-sorted day by day. An app too new to fit
+     holds its total, which is the least-wrong guess for it. */
+  function rankForecast() {
+    const lastDay = days.at(-1), row = Object.entries(snap[lastDay] || {});
+    const rate = {}; row.forEach(([pkg]) => { const f = fit(deltas(pkg)); rate[pkg] = f ? f.rate : 0; });
+    const r = {}; row.forEach(([pkg]) => r[pkg] = []);
+    for (let k = 1; k <= ahead; k++) {
+      row.map(([pkg, v]) => [pkg, v + rate[pkg] * k]).sort((a, b) => b[1] - a[1])
+        .forEach(([pkg], i) => r[pkg].push([i + 1, i + 1, i + 1]));
+    }
     return r;
   }
 
@@ -407,12 +489,20 @@
     return withUsers.sort((x, y) => y[1] - x[1]).slice(0, 20).map(([a]) => a);
   }
 
+  // With a forecast on, the row's second line says where the app is headed instead of who made it.
+  function boardLine(a) {
+    if (!ahead || !days.length) return "BY " + esc(dev(a).toUpperCase());
+    const f = forecastOf(a.pkg, ahead, mode === "USERS" ? "USERS" : "TOTAL");
+    if (!f) return "TOO NEW TO FORECAST";
+    return `~${fmt(Math.round(f.at(-1)[0]))} ${mode === "USERS" ? "USERS" : "GETS"} BY ${short(addDays(days.at(-1), ahead))}`;
+  }
+
   function renderBoard() {
     $("board").innerHTML = leaders().map((a, i) => `
       <div class="row" data-pkg="${esc(a.pkg)}" aria-selected="${sel === a.pkg}">
         <div class="rk">${String(i + 1).padStart(2, "0")}</div>
         <div class="ic">${mark(a)}</div>
-        <div class="nm">${esc(a.name)}<small>BY ${esc(dev(a).toUpperCase())}</small></div>
+        <div class="nm">${esc(a.name)}<small>${boardLine(a)}</small></div>
         <div class="gets">${mode === "USERS" ? fmt(usersOf(a) || 0) : fmt(a.downloads)}<div class="label" style="font-size:8px; letter-spacing:.14em; margin-top:2px;">${mode === "USERS" ? "USERS" : "GETS"}</div></div>
         <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">${up(a.downloadsToday || 0)}${sparkline(a.pkg)}</div>
       </div>`).join("");
@@ -454,18 +544,29 @@
   }
 
   function renderChart() {
-    const vis = visibleDays(), off = days.length - vis.length;
+    const hist = visibleDays(), off = days.length - hist.length;
+    // With a forecast on, the x axis runs past today into the days being predicted.
+    const fut = ahead && days.length ? Array.from({ length: ahead }, (_, k) => addDays(days.at(-1), k + 1)) : [];
+    const vis = hist.concat(fut), now = hist.length - 1;
     const W = 900, H = 440, L = 46, R = 16, T = 18, B = 34;
     const iw = W - L - R, ih = H - T - B;
     const ranks = mode === "RANK" ? rankSeries() : null;
+    const rankF = mode === "RANK" && fut.length ? rankForecast() : {};
     const series = leaders().map((a) => {
       let v = mode === "RANK" ? (ranks[a.pkg] || [])
         : mode === "DAILY" ? deltas(a.pkg)
         : mode === "USERS" ? userSeries(a.pkg)
         : totals(a.pkg);
-      return { a, v: v.slice(off) };
+      v = v.slice(off).concat(fut.map(() => null));
+      const fc = !fut.length ? null : mode === "RANK" ? (rankF[a.pkg] || null) : forecastOf(a.pkg);
+      // The dashed line starts on today's point so it reads as a continuation.
+      let f = null;
+      if (fc && v[now] != null) { f = v.map(() => null); f[now] = v[now]; fc.forEach((p, k) => f[now + 1 + k] = p[0]); }
+      return { a, v, f, fc };
     });
-    const all = series.flatMap((s) => s.v).filter((v) => v != null);
+    const pinned = series.find((s) => s.a.pkg === sel);
+    const all = series.flatMap((s) => s.v.concat(s.f || [])).filter((v) => v != null)
+      .concat(pinned?.fc && mode !== "RANK" ? pinned.fc.flatMap((p) => [p[1], p[2]]) : []);
     let lo, hi, y;
     if (mode === "RANK") {
       lo = 1; hi = Math.max(20, ...all.filter((v) => v <= 24)); y = (v) => T + ((v - lo) / (hi - lo)) * ih;
@@ -511,29 +612,40 @@
       return d.trim();
     };
 
-    const paths = series.map(({ a, v }, k) => {
+    const paths = series.map(({ a, v, f }, k) => {
       const cls = "ln" + (k < 3 ? " top" : "") + (sel ? (sel === a.pkg ? " hot" : " cold") : "");
       const last = onAxis(v.at(-1));
       const dot = last != null && vis.length === 1 ? `<circle class="dot" r="3" cx="${x(0)}" cy="${y(last)}"/>` : "";
-      return `<path class="${cls}" data-pkg="${esc(a.pkg)}" d="${linePath(v)}"/>${dot}`;
+      const fp = f ? `<path class="${cls} fc" data-pkg="${esc(a.pkg)}" d="${linePath(f)}"/>` : "";
+      return `<path class="${cls}" data-pkg="${esc(a.pkg)}" d="${linePath(v)}"/>${fp}${dot}`;
     }).join("");
+    // The pinned app's 80% range, as a band behind its dashed line.
+    let band = "";
+    if (pinned?.fc && mode !== "RANK" && pinned.v[now] != null) {
+      const top = [[now, pinned.v[now]]].concat(pinned.fc.map((p, k) => [now + 1 + k, p[2]]));
+      const bot = [[now, pinned.v[now]]].concat(pinned.fc.map((p, k) => [now + 1 + k, p[1]])).reverse();
+      band = `<path class="band" d="M${top.concat(bot).map(([i, v]) => x(i).toFixed(1) + " " + y(v).toFixed(1)).join(" L")} Z"/>`;
+    }
+    const future = fut.length ? `<rect class="future" x="${x(now).toFixed(1)}" y="${T}" width="${(x(vis.length - 1) - x(now)).toFixed(1)}" height="${ih}"/>
+      <line class="now" x1="${x(now).toFixed(1)}" x2="${x(now).toFixed(1)}" y1="${T}" y2="${T + ih}"/>
+      <text class="ax" x="${(x(now) + 6).toFixed(1)}" y="${T + 10}">FORECAST →</text>` : "";
     // Hit areas: a wide invisible stroke over each line so a thin line is hoverable.
-    const hits = series.map(({ a, v }) =>
-      `<path class="hit" data-pkg="${esc(a.pkg)}" d="${linePath(v)}" fill="none" stroke="transparent" stroke-width="12" style="cursor:pointer"/>`
+    const hits = series.map(({ a, v, f }) =>
+      `<path class="hit" data-pkg="${esc(a.pkg)}" d="${linePath(v)} ${f ? linePath(f) : ""}" fill="none" stroke="transparent" stroke-width="12" style="cursor:pointer"/>`
     ).join("");
 
     // The pinned app's trailing average, over its own line. Only in DAILY, only when one
     // app is pinned: twenty dashed lines would be worse than none.
     let avg = "";
     if (mode === "DAILY" && sel) {
-      const d = linePath(trailing(sel).slice(off));
+      const d = linePath(trailing(sel).slice(off).concat(fut.map(() => null)));
       if (d) avg = `<path class="avg" d="${d}"/>`;
     }
 
     $("chart").innerHTML = `<div class="tip" id="tip"></div>
       <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
         <defs><clipPath id="plot"><rect x="${L}" y="${T - 5}" width="${iw}" height="${ih + 10}"/></clipPath></defs>
-        ${grid}${xax}<g clip-path="url(#plot)">${paths}${avg}${hits}</g></svg>`;
+        ${future}${grid}${xax}<g clip-path="url(#plot)">${band}${paths}${avg}${hits}</g></svg>`;
     const chart = $("chart"), tip = $("tip");
     chart.querySelectorAll(".hit").forEach((h) => {
       h.addEventListener("mouseenter", () => highlight(h.dataset.pkg));
@@ -542,7 +654,16 @@
         const rect = chart.getBoundingClientRect();
         const svg = chart.querySelector("svg").getBoundingClientRect();
         const i = Math.round(((e.clientX - svg.left) / svg.width * W - L) / (iw || 1) * (vis.length - 1));
-        const ci = Math.max(0, Math.min(vis.length - 1, i)); const val = s.v[ci];
+        const ci = Math.max(0, Math.min(vis.length - 1, i));
+        if (ci > now && s.fc) {
+          const [m, lo, hi] = s.fc[ci - now - 1];
+          const r = (n) => fmt(Math.round(n));
+          const shown = mode === "RANK" ? "#" + m : `${mode === "DAILY" ? "+" : ""}~${r(m)} (${r(lo)}–${r(hi)})`;
+          tip.style.display = "block"; tip.style.left = (e.clientX - rect.left + 12) + "px"; tip.style.top = (e.clientY - rect.top - 30) + "px";
+          tip.textContent = `${s.a.name.toUpperCase()} · ${short(vis[ci])} · FORECAST ${shown}`;
+          return;
+        }
+        const val = s.v[ci];
         tip.style.display = "block"; tip.style.left = (e.clientX - rect.left + 12) + "px"; tip.style.top = (e.clientY - rect.top - 30) + "px";
         const shown = val == null ? "—" : mode === "RANK" ? "#" + val : (mode === "DAILY" ? "+" : "") + fmt(val);
         // In DAILY the day alone is not readable -- 89 is enormous or nothing depending on
@@ -569,7 +690,10 @@
     const young = days.length < 3
       ? "THE HISTORY IS " + days.length + " DAY" + (days.length === 1 ? "" : "S") + " OLD — LINES APPEAR AS DAYS ACCUMULATE."
       : "";
-    $("note").textContent = [NOTE[mode], young].filter(Boolean).join("  ·  ");
+    const FC = !fut.length ? ""
+      : days.length <= MIN_DAYS ? `FORECAST NEEDS ${MIN_DAYS} DAYS OF HISTORY.`
+      : `DASHED: WHERE EACH LINE GOES IF THE LAST ${Math.min(FIT_WINDOW, days.length - 1)} DAYS HOLD, RECENT DAYS WEIGHTED MORE.${mode === "RANK" ? "" : " PIN AN APP FOR ITS 80% RANGE."} A STRAIGHT LINE FROM ${days.length} DAYS OF HISTORY — THE FURTHER OUT, THE LESS IT MEANS.`;
+    $("note").textContent = [NOTE[mode], FC, young].filter(Boolean).join("  ·  ");
   }
 
   function renderChips() {
@@ -577,6 +701,9 @@
     $("ranges").innerHTML = RANGES.map((r) => `<div class="chip" data-r="${r}" aria-selected="${r === range}">${r}</div>`).join("");
     $("modes").querySelectorAll(".chip").forEach((c) => c.addEventListener("click", () => { mode = c.dataset.m; renderChips(); renderChart(); }));
     $("ranges").querySelectorAll(".chip").forEach((c) => c.addEventListener("click", () => { range = c.dataset.r; renderChips(); renderChart(); renderBoard(); }));
+    $("predict").innerHTML = `<div class="chip" data-h="${ahead ? 0 : 30}" aria-selected="${ahead > 0}">PREDICT</div>` +
+      (ahead ? HORIZONS.map(([k, n]) => `<div class="chip" data-h="${n}" aria-selected="${n === ahead}">${k}</div>`).join("") : "");
+    $("predict").querySelectorAll(".chip").forEach((c) => c.addEventListener("click", () => { ahead = +c.dataset.h; renderChips(); renderChart(); renderBoard(); }));
   }
 
   /** Newest version first. Numeric compare, so 1.10 sorts above 1.9. */
