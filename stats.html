@@ -494,7 +494,9 @@
     if (!ahead || !days.length) return "BY " + esc(dev(a).toUpperCase());
     const f = forecastOf(a.pkg, ahead, mode === "USERS" ? "USERS" : "TOTAL");
     if (!f) return "TOO NEW TO FORECAST";
-    return `~${fmt(Math.round(f.at(-1)[0]))} ${mode === "USERS" ? "USERS" : "GETS"} BY ${short(addDays(days.at(-1), ahead))}`;
+    // "BY DEC 24" ran past the 360px board and ellipsed; the horizon chip already names the date.
+    const h = HORIZONS.find(([, n]) => n === ahead)?.[0] || ahead + "D";
+    return `→ ~${fmt(Math.round(f.at(-1)[0]))} IN ${h}`;
   }
 
   function renderBoard() {
