@@ -1,0 +1,6 @@
+pkg: com.thelightphone.tool.tesla
+name: Tesla LP
+repo: mindfulpractice/tesla-lightphone
+category: utilities
+summary: 'Tesla remote control for LP3. Info: https://tesla-lightphone.app or GitHub.'
+icon: https://github.com/mindfulpractice/tesla-lightphone/blob/main/docs/screenshots/combined.png
