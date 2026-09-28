@@ -1,0 +1,7 @@
+pkg: com.loosewire.borealis
+name: Borealis
+repo: gavdevs/borealis
+category: utilities
+summary: A focused google play app installer and updater for Light Phone III, with
+  a companion web app..
+icon: https://github.com/gavdevs/borealis/blob/main/docs/icon.png
