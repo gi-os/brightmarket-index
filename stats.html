@@ -277,6 +277,12 @@
 
 <script>
   const INDEX = "./index-v1.json", HISTORY = "./history-v1.json", PULSE = "./pulse-v1.json";
+  // The worker that holds the real install table. Read first, because the copy in the
+  // deployment is only as fresh as the last build, and it went stale twice on one
+  // person's browser (late September) while every other file was current: the USERS
+  // chart then drew every app flat from the copy's day onward, which reads as
+  // "installs stopped" when they had not. The worker allows this origin by CORS.
+  const PULSE_LIVE = "https://brightmarket-portal.gman6849.workers.dev/pulse/summary.json";
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -533,12 +539,17 @@
    */
   function userSeries(pkg) {
     const d = ((pulse && pulse.apps || {})[pkg] || {}).daily || {};
+    // The last day the counts cover (UTC, as the worker keys them). A day after it has
+    // not been measured, so it is null -- carrying the last total forward is exactly
+    // what drew a stale copy as a flat line.
+    const through = String((pulse && pulse.generated) || "").slice(0, 10) || null;
     const seen = Object.keys(d).sort();
     if (!seen.length) return days.map(() => null);
     const from = seen[0];
     let run = 0;
     return days.map((day) => {
       if (day < from) return null;
+      if (through && day > through) return null;
       const e = d[day];
       if (e) run += (e.installs || 0) + (e.existing || 0) - (e.removed || 0);
       return run;
@@ -695,7 +706,11 @@
     const FC = !fut.length ? ""
       : days.length <= MIN_DAYS ? `FORECAST NEEDS ${MIN_DAYS} DAYS OF HISTORY.`
       : `DASHED: WHERE EACH LINE GOES IF THE LAST ${Math.min(FIT_WINDOW, days.length - 1)} DAYS HOLD, RECENT DAYS WEIGHTED MORE.${mode === "RANK" ? "" : " PIN AN APP FOR ITS 80% RANGE."} A STRAIGHT LINE FROM ${days.length} DAYS OF HISTORY — THE FURTHER OUT, THE LESS IT MEANS.`;
-    $("note").textContent = [NOTE[mode], FC, young].filter(Boolean).join("  ·  ");
+    const asOf = mode === "USERS" && pulse && pulse.generated
+      ? "COUNTS AS OF " + new Date(pulse.generated).toLocaleString("sv-SE",
+          { timeZone: "America/New_York", dateStyle: "short", timeStyle: "short" }) + " ET."
+      : "";
+    $("note").textContent = [NOTE[mode], asOf, FC, young].filter(Boolean).join("  ·  ");
   }
 
   function renderChips() {
@@ -857,10 +872,12 @@
     try {
       // The pulse is allowed to be missing: a run that could not reach the worker
       // publishes no copy, and the page simply does not draw the installs panel.
-      const [ir, hr, pr] = await Promise.all([
+      const [ir, hr, pr, lr] = await Promise.all([
         fetch(INDEX, { cache: "no-store" }),
         fetch(HISTORY, { cache: "no-store" }),
-        fetch(PULSE, { cache: "no-store" }).catch(() => null),
+        // A query string so the CDN cannot hand back an older copy under the same key.
+        fetch(PULSE + "?v=" + Date.now(), { cache: "no-store" }).catch(() => null),
+        fetch(PULSE_LIVE, { cache: "no-store" }).catch(() => null),
       ]);
       const idx = await ir.json();
       // A retired app with nobody left on it is clutter, and that is what this filter was for.
@@ -870,7 +887,19 @@
       // day the last install does.
       apps = (idx.apps || []).filter((a) => !a.deprecated || (a.users || 0) > 0);
       if (hr.ok) { const h = await hr.json(); snap = h.days || {}; gains = h.gains || {}; }
-      if (pr && pr.ok) pulse = await pr.json().catch(() => null);
+      // Whichever of the two copies is newer. The worker's is normally live; the
+      // deployment's is the fallback when the worker cannot be reached.
+      const read = async (r) => (r && r.ok ? await r.json().catch(() => null) : null);
+      const [copy, live] = [await read(pr), await read(lr)];
+      const stamp = (p) => (p && p.apps ? Date.parse(p.generated || "") || 0 : -1);
+      pulse = stamp(live) >= stamp(copy) ? live : copy;
+      // The worker answers for every package it has ever heard of; keep the ones listed,
+      // as the build does, so a delisted app cannot reach the chart through it.
+      if (pulse && pulse === live) {
+        const listed = new Set((idx.apps || []).map((a) => a.pkg));
+        pulse.apps = Object.fromEntries(Object.entries(pulse.apps).filter(([k]) => listed.has(k)));
+        pulse.feed = (pulse.feed || []).filter((e) => listed.has(e.app));
+      }
       days = Object.keys(snap).sort();
       // Without a published history yet, stand today's index in for a one-day history so the
       // page still renders and the counters still read.
