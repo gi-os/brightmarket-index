@@ -1,0 +1,7 @@
+pkg: com.tyshi00.livrospeak
+name: Livrospeak
+repo: tyshi00/Livrospeak
+category: reading
+summary: Minimal audiobook tool for the Light Phone III with Libby support and local/on
+  device support.
+icon: https://github.com/tyshi00/Livrospeak/blob/main/app/src/main/res/mipmap-hdpi/ic_launcher.png
