@@ -973,6 +973,10 @@ def main() -> int:
                 # its history but shouldn't be installed fresh.
                 "deprecated": bool(app.get("deprecated", False)),
                 "supersededBy": app.get("supersededBy", ""),
+                # The kill switch for automatic updates: `hold: true` in an app's yml
+                # stops BrightMarket installing it by itself (v1.33+). Installing by
+                # hand still works. Absent unless set.
+                **({"hold": True} if app.get("hold") else {}),
                 # ADB setup this app needs, as its README writes it. Carried
                 # through verbatim: BrightMarket shows the same words to the
                 # person approving them, and BrightControl re-parses every line
