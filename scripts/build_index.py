@@ -557,6 +557,21 @@ RENAMES = [
 ]
 
 
+# A signing-certificate handover, accepted on purpose. The pin below refuses any change of
+# signer for an applicationId, which is right until an id legitimately changes hands. Each row
+# names both certificates exactly, so it accepts that one handover and nothing else: a third
+# signer showing up later is still refused.
+HANDOVERS = [
+    # (pkg, signer before, signer after, why)
+    (
+        "app.lightphonekeyboard",
+        "7844d8cc52fc12b5a2b5879b028605d90391a0a06cc4d87ef92a59350226d203",  # gi-os (BrightKeyboard 3.x)
+        "5d9fbae87732e3364e688cff8a3f872ae0b6f024608e1949214e645f108dc119",  # adam-weber/light-keyboard
+        "2026-10-07: the 3.x bridge listing removed; the id goes back to its author",
+    ),
+]
+
+
 def carry_history_across_rename(history: dict) -> None:
     """Move the days before a rename onto the id that inherited them.
 
@@ -939,6 +954,12 @@ def main() -> int:
         # a stale listing, which is visible, instead of a silent handover, which
         # is not.
         pinned = prev.get("signer", "")
+        if pinned and signer and signer != pinned and any(
+            h[0] == pkg and h[1] == pinned and h[2] == signer for h in HANDOVERS
+        ):
+            warn(f"{pkg}: signing certificate handed over ({pinned[:16]}... -> {signer[:16]}...), "
+                 "as listed in HANDOVERS")
+            pinned = signer
         if pinned and signer and signer != pinned:
             warn(
                 f"{pkg}: SIGNING CERTIFICATE CHANGED "

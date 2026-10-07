@@ -1,5 +1,5 @@
 # Was app.lightphonekeyboard up to v3.11. That id belongs to the project this forks, and went back
-# to it; see apps/app.lightphonekeyboard.yml, which is the frozen build that carries users over.
+# to it; apps/app.lightphonekeyboard.yml is now that project (adam-weber/light-keyboard).
 pkg: com.gios.brightkeyboard
 name: BrightKeyboard
 repo: gi-os/BrightKeyboard
