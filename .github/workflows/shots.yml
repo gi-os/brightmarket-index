@@ -1,0 +1,71 @@
+name: Screenshots
+# Installs each app's latest released APK on an Android 14 AOSP emulator shaped like the
+# Light Phone III panel (1080x1240), launches it, walks a few safe taps, and screencaps.
+on:
+  push:
+    branches: [shots]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  list:
+    runs-on: ubuntu-latest
+    outputs:
+      apps: ${{ steps.l.outputs.apps }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: l
+        run: echo "apps=$(grep -v '^\s*$' apps.txt | python3 -c 'import sys,json;print(json.dumps([l.strip() for l in sys.stdin]))')" >> $GITHUB_OUTPUT
+  shot:
+    needs: list
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        app: ${{ fromJson(needs.list.outputs.apps) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch APK
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p out
+          python3 tools/fetch.py "${{ matrix.app }}" app.apk
+          AAPT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1)/aapt
+          $AAPT dump badging app.apk | grep -E "^package:|launchable" | tee out/badging.txt
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Shoot
+        timeout-minutes: 15
+        continue-on-error: true
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: default
+          arch: x86_64
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -skin 1080x1240
+          script: bash tools/shoot.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shots-${{ matrix.app }}
+          path: out/
+  collect:
+    needs: shot
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: all
+          pattern: shots-*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: all-shots
+          path: all/
