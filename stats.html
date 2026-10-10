@@ -215,6 +215,52 @@
     .note { padding:0 12px 14px; }
   }
 
+  /* Release markers on the top-20 chart: a diamond on the day an app shipped. */
+  .rel { fill:var(--bg); stroke:#8a8a8e; stroke-width:1.2; transition:opacity .15s; pointer-events:none; }
+  .rel.cold { opacity:.15; } .rel.hot { stroke:var(--fg); fill:var(--fg); }
+
+  /* More views. Each is its own small panel in a two-up grid. */
+  .views { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:18px; margin-top:26px; }
+  .views .panel { margin-top:0; display:flex; flex-direction:column; }
+  .views .wide { grid-column:1 / -1; }
+  @media (max-width: 960px) { .views { grid-template-columns:1fr; } }
+  .vbody { padding:14px 18px 16px; flex:1; }
+  .vbody svg { width:100%; height:auto; display:block; overflow:visible; }
+  .vnote { padding:0 18px 14px; font-family:var(--mono); font-size:9.5px; letter-spacing:.1em; color:var(--dimmer); line-height:1.6; }
+  .mv { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .mv h4 { margin:0 0 8px; font-family:var(--mono); font-size:9px; letter-spacing:.24em; font-weight:400; color:#6a6a70; }
+  .mvr { display:grid; grid-template-columns:24px minmax(0,1fr) auto; gap:9px; align-items:center; padding:7px 0; border-bottom:1px solid var(--line); }
+  .mvr:last-child { border-bottom:none; }
+  .mvr .ic { width:24px; height:24px; border-radius:7px; font-size:11px; }
+  .mvr .nm { font-size:12.5px; }
+  .dl { font-family:var(--mono); font-size:10px; letter-spacing:.06em; text-align:right; white-space:nowrap; }
+  .dl small { display:block; font-size:8.5px; color:var(--dimmer); margin-top:2px; }
+  .dl.rise { color:var(--rise); } .dl.fall { color:var(--fall); }
+  .cal rect.d { stroke:var(--line-2); stroke-width:1; }
+  .cal text, .sc text, .st text, .lag text { font-family:var(--mono); font-size:9px; letter-spacing:.06em; fill:#5a5a60; }
+  .sc .pt { fill:var(--fg); opacity:.55; } .sc .pt.out { fill:var(--fall); opacity:.9; }
+  .sc .nm2, .lag .nm2 { font-family:var(--round); font-size:10.5px; fill:#c8c8cc; letter-spacing:0; }
+  .st .bd { stroke:var(--bg); stroke-width:.6; transition:opacity .15s; cursor:pointer; }
+  .st:hover .bd { opacity:.35; } .st .bd:hover { opacity:1; }
+  .st .nm2 { font-family:var(--round); font-size:10.5px; fill:#c8c8cc; letter-spacing:0; }
+  .fn { display:grid; grid-template-columns:minmax(0,150px) minmax(0,1fr) 92px; gap:12px; align-items:center; padding:7px 0; border-bottom:1px solid var(--line); }
+  .fn:last-child { border-bottom:none; }
+  .fbar { display:flex; height:10px; gap:1px; border-radius:2px; overflow:hidden; }
+  .fbar span { min-width:2px; }
+  .fbar .a { background:var(--fg); } .fbar .b { background:#5a5a60; } .fbar .c { background:repeating-linear-gradient(135deg, #3e2224 0 3px, #000 3px 5px); }
+  .key { display:flex; gap:14px; flex-wrap:wrap; font-family:var(--mono); font-size:9px; letter-spacing:.12em; color:var(--dimmer); margin-bottom:10px; }
+  .key i { display:inline-block; width:10px; height:10px; border-radius:2px; vertical-align:-1px; margin-right:5px; }
+  .dv { display:grid; grid-template-columns:minmax(0,1fr) 46px 74px 60px; gap:12px; align-items:center; padding:8px 0; border-bottom:1px solid var(--line); }
+  .dv:last-child { border-bottom:none; }
+  .dv .who { font-family:var(--round); font-size:13px; min-width:0; }
+  .dv .who small { display:block; font-family:var(--mono); font-size:8.5px; letter-spacing:.1em; color:var(--dimmer); margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .dv .n { font-family:var(--mono); font-size:11px; text-align:right; }
+  .dv .n small { display:block; font-size:8px; letter-spacing:.14em; color:var(--dimmer); margin-top:2px; }
+  .dv .share { height:3px; background:var(--line-2); border-radius:2px; margin-top:6px; }
+  .dv .share span { display:block; height:100%; background:var(--fg); border-radius:2px; }
+  .lag .stuck { fill:var(--fall); opacity:.05; }
+  @media (max-width: 640px) { .mv { grid-template-columns:1fr; } .fn { grid-template-columns:minmax(0,96px) minmax(0,1fr) 70px; } .vbody { padding:12px; } }
+
   .foot { margin-top:34px; padding-top:18px; border-top:1px solid var(--line); font-size:12px; line-height:1.6; color:var(--dim); max-width:70ch; }
   .empty { padding:60px 0; text-align:center; font-family:var(--mono); font-size:12px; letter-spacing:.2em; color:var(--dimmer); }
 </style>
@@ -280,6 +326,23 @@
     </div>
   </div>
 
+  <div class="views">
+    <div class="panel"><div class="panel-head"><div class="panel-title">Movers this week</div><div class="label">LAST 7 DAYS VS THE 7 BEFORE</div></div>
+      <div class="vbody" id="v-movers"></div></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">Every day</div><div class="label" id="v-cal-who">WHOLE CATALOGUE</div></div>
+      <div class="vbody" id="v-cal"></div><div class="vnote">GETS PER DAY. PIN AN APP ABOVE TO SEE ONLY ITS DAYS. ◆ A DAY IT SHIPPED.</div></div>
+    <div class="panel wide"><div class="panel-head"><div class="panel-title">Share of the day</div><div class="chips" id="v-st-chips"></div></div>
+      <div class="vbody" id="v-st"></div><div class="vnote">WHO EACH DAY'S GETS WENT TO. THE EIGHT BIGGEST OVER THE PERIOD BY NAME, EVERYONE ELSE AS ONE BAND.</div></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">Gets vs users</div><div class="label">LOG / LOG</div></div>
+      <div class="vbody" id="v-sc"></div><div class="vnote">ONE DOT PER APP. THE LINE IS THE CATALOGUE'S TYPICAL GETS PER USER. RED: FAR MORE GETS THAN USERS, MOSTLY OBTAINIUM, ADB AND MIRRORS.</div></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">Update lag</div><div class="label">USERS ON THE NEWEST BUILD</div></div>
+      <div class="vbody" id="v-lag"></div><div class="vnote">ACROSS: DAYS SINCE THE LATEST RELEASE. UP: SHARE OF USERS ON THE NEWEST BUILD. DOT SIZE: USERS. LOW AND TO THE RIGHT MEANS PEOPLE ARE NOT UPDATING.</div></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">Keeping people</div><div class="label">TOP 10 BY USERS</div></div>
+      <div class="vbody" id="v-fn"></div></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">Developers</div><div class="label" id="v-dv-count"></div></div>
+      <div class="vbody" id="v-dv"></div></div>
+  </div>
+
   <div class="all">
     <div class="panel-head" style="border:none; padding:0 0 4px;">
       <div class="panel-title">Everyone, by today</div>
@@ -322,6 +385,10 @@
   let apps = [], days = [], snap = {}, gains = {}, top20 = [], mode = "RANK", range = "30D", sel = null;
   // Install counts, absent on any run the worker could not be read.
   let pulse = null;
+  // Days each app shipped: { pkg: Set of YYYY-MM-DD }. From history.shipped (every stable
+  // release in the window), plus the index's newest and preview dates and any version that
+  // first appears in the rolling release table, so a history from before `shipped` still marks.
+  let rels = {};
   const AVG_WINDOW = 7;
   const MODES = ["RANK", "DAILY", "TOTAL", "USERS"], RANGES = ["7D", "30D", "90D", "ALL"];
   // Forecast horizon in days; 0 is off. The PREDICT chip turns it on at one month.
@@ -549,7 +616,7 @@
   }
 
   function highlight(pkg) {
-    document.querySelectorAll(".ln, .lbl, .edge, .stub").forEach((p) => {
+    document.querySelectorAll(".ln, .lbl, .edge, .stub, .rel").forEach((p) => {
       p.classList.toggle("hot", !!pkg && p.dataset.pkg === pkg);
       p.classList.toggle("cold", !!pkg && p.dataset.pkg !== pkg);
     });
@@ -632,7 +699,7 @@
     const grid = ticks.map((v) => `<line class="gl" x1="${L}" x2="${W - R}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}"/>
       <text class="ax" x="${L - 8}" y="${(y(v) + 3).toFixed(1)}" text-anchor="end">${mode === "RANK" ? "#" + v : v >= 1000 ? (v / 1000) + "k" : v}</text>`).join("");
     const step = Math.max(1, Math.ceil(vis.length / 8));
-    const xax = vis.map((d, i) => ((i % step === 0 && vis.length - 1 - i >= step / 2) || i === vis.length - 1) ? `<line class="vg" x1="${x(i).toFixed(1)}" x2="${x(i).toFixed(1)}" y1="${T}" y2="${T + ih}"/><text class="ax" x="${x(i).toFixed(1)}" y="${H - 12}" text-anchor="middle">${short(d)}</text>` : "").join("");
+    const xax = vis.map((d, i) => ((i % step === 0 && vis.length - 1 - i >= step * 0.75) || i === vis.length - 1) ? `<line class="vg" x1="${x(i).toFixed(1)}" x2="${x(i).toFixed(1)}" y1="${T}" y2="${T + ih}"/><text class="ax" x="${x(i).toFixed(1)}" y="${H - 12}" text-anchor="middle">${short(d)}</text>` : "").join("");
 
     /* Rank is computed against all 81 apps, so an app in today's top twenty can
        have sat at #47 a fortnight ago -- and `hi` is deliberately capped near 20
@@ -684,6 +751,17 @@
       const fp = f ? `<path class="${cls} fc" data-pkg="${esc(a.pkg)}" d="${linePath(f)}"/>` : "";
       return `<path class="${cls}" data-pkg="${esc(a.pkg)}" d="${linePath(v)}"/>${fp}${dot}`;
     }).join("");
+    // Release markers: a diamond on the line on each day the app shipped.
+    let marks = "";
+    series.forEach(({ a, v }) => {
+      const RS = rels[a.pkg]; if (!RS) return;
+      for (let i = 0; i <= now; i++) {
+        if (!RS.has(vis[i])) continue;
+        const p = onAxis(v[i]); if (p == null) continue;
+        const cx = x(i), cy = y(p);
+        marks += `<path class="rel${sel ? (sel === a.pkg ? " hot" : " cold") : ""}" data-pkg="${esc(a.pkg)}" d="M${cx.toFixed(1)} ${(cy - 4.5).toFixed(1)} l4 4.5 -4 4.5 -4 -4.5z"><title>${esc(a.name)} shipped</title></path>`;
+      }
+    });
     // Arrivals and departures. A day with no snapshot before it is an arrival too (a new listing).
     let edges = "", labels = "";
     if (mode === "RANK") {
@@ -744,7 +822,7 @@
     $("chart").innerHTML = `<div class="tip" id="tip"></div>
       <svg class="${mode === "RANK" ? "rank" : ""}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="height:${H}px">
         <defs><clipPath id="plot"><rect x="${L - 4}" y="${T - 5}" width="${iw + 8}" height="${ih + 12}"/></clipPath></defs>
-        ${future}${grid}${xax}<g clip-path="url(#plot)">${band}${paths}${edges}${avg}${hits}</g>${labels}</svg>`;
+        ${future}${grid}${xax}<g clip-path="url(#plot)">${band}${paths}${edges}${marks}${avg}${hits}</g>${labels}</svg>`;
     const chart = $("chart"), tip = $("tip");
     chart.querySelectorAll(".hit, .lbl").forEach((h) => {
       h.addEventListener("mouseenter", () => highlight(h.dataset.pkg));
@@ -782,7 +860,7 @@
     // used to sit here described a first blank day that stopped being blank once the
     // opening snapshot became a baseline.
     const NOTE = {
-      RANK: "POSITION IN THE CATALOGUE BY ALL-TIME GETS, DAY BY DAY. GREEN: THE BIGGEST CLIMBERS IN THE RANGE. RED: THE BIGGEST FALLERS. ○ A LINE ENTERING OR LEAVING THE TOP 20. HOVER A LINE, NAME OR ROW; CLICK TO PIN; DOUBLE-CLICK A ROW TO OPEN THE APP.",
+      RANK: "POSITION IN THE CATALOGUE BY ALL-TIME GETS, DAY BY DAY. GREEN: THE BIGGEST CLIMBERS IN THE RANGE. RED: THE BIGGEST FALLERS. ○ A LINE ENTERING OR LEAVING THE TOP 20. ◆ A RELEASE. HOVER A LINE, NAME OR ROW; CLICK TO PIN; DOUBLE-CLICK A ROW TO OPEN THE APP.",
       TOTAL: "ALL-TIME GETS ON A LOG SCALE, SO ONE RUNAWAY APP DOESN'T FLATTEN THE OTHER NINETEEN.",
       USERS: "PEOPLE WHO HAVE THE APP, THROUGH BRIGHTMARKET, DAY BY DAY. RANKED BY USERS RATHER THAN GETS, WHICH IS A DIFFERENT ORDER.",
     };
@@ -797,6 +875,7 @@
           { timeZone: "America/New_York", dateStyle: "short", timeStyle: "short" }) + " ET."
       : "";
     $("note").textContent = [NOTE[mode], asOf, FC, young].filter(Boolean).join("  ·  ");
+    try { renderViews(); } catch (e) { console.error(e); }
   }
 
   function renderChips() {
@@ -954,6 +1033,196 @@
       </a>`).join("");
   }
 
+  /* ------------------------------------------------------------------------------------
+   * More views. Each draws from what the page already loaded: daily gains, the release
+   * days, the install table. Redrawn with the chart, so a pinned app carries through.
+   * ---------------------------------------------------------------------------------- */
+  let stMode = "GETS";
+  const rowOf = (a) => `<div class="ic">${mark(a)}</div><div class="nm">${esc(a.name)}<small>BY ${esc(dev(a).toUpperCase())}</small></div>`;
+  const sum = (xs) => xs.reduce((t, v) => t + (v || 0), 0);
+
+  // Spread labels that want the same height: sorted by y, each at least `gap` below the last,
+  // then the whole stack nudged back up if it ran off the bottom.
+  function spread(items, gap, top, bottom) {
+    const s = [...items].sort((p, q) => p.y - q.y);
+    s.forEach((it, i) => { it.ly = Math.max(it.y, i ? s[i - 1].ly + gap : top); });
+    const over = s.length ? s.at(-1).ly - bottom : 0;
+    if (over > 0) s.forEach((it) => it.ly -= over);
+    return s;
+  }
+  // Drop a label that would sit on one already placed.
+  function placeable(placed, x, y, w) {
+    if (placed.some((p) => Math.abs(p.y - y) < 11 && x < p.x + p.w && p.x < x + w)) return false;
+    placed.push({ x, y, w }); return true;
+  }
+
+  function renderViews() {
+    if (!days.length) return;
+    const D = {}; apps.forEach((a) => D[a.pkg] = deltas(a.pkg));
+    vMovers(D); vCal(D); vStack(D); vScatter(); vLag(); vFunnel(); vDevs();
+  }
+
+  // 3. Movers: gets in the last 7 days against the 7 before.
+  function vMovers(D) {
+    const n = days.length;
+    const rows = apps.map((a) => {
+      const d = D[a.pkg], now7 = sum(d.slice(Math.max(0, n - 7))), was7 = sum(d.slice(Math.max(0, n - 14), Math.max(0, n - 7)));
+      return { a, now7, was7, ch: now7 - was7 };
+    });
+    const line = (r) => `<div class="mvr">${rowOf(r.a)}<div class="dl ${r.ch > 0 ? "rise" : r.ch < 0 ? "fall" : ""}">${r.ch > 0 ? "▲" : r.ch < 0 ? "▼" : ""}${fmt(Math.abs(r.ch))}<small>+${fmt(r.now7)} THIS WK</small></div></div>`;
+    const up = rows.filter((r) => r.ch > 0).sort((p, q) => q.ch - p.ch).slice(0, 5);
+    const dn = rows.filter((r) => r.ch < 0).sort((p, q) => p.ch - q.ch).slice(0, 5);
+    $("v-movers").innerHTML = `<div class="mv"><div><h4>HEATING UP</h4>${up.map(line).join("") || '<div class="vnote">NOTHING YET</div>'}</div>
+      <div><h4>COOLING OFF</h4>${dn.map(line).join("") || '<div class="vnote">NOTHING YET</div>'}</div></div>`;
+  }
+
+  // 2. Calendar: one square a day, Monday-first weeks, shaded by gets.
+  function vCal(D) {
+    const pin = sel && apps.find((a) => a.pkg === sel);
+    const val = days.map((_, i) => pin ? (D[pin.pkg][i] || 0) : sum(apps.map((a) => D[a.pkg][i])));
+    $("v-cal-who").textContent = pin ? pin.name.toUpperCase() : "WHOLE CATALOGUE";
+    const dow = (d) => (new Date(d + "T00:00:00Z").getUTCDay() + 6) % 7;
+    const c = 16, g = 3, L = 22, T = 18;
+    const first = dow(days[0]);
+    const cols = Math.ceil((first + days.length) / 7);
+    const max = Math.max(1, ...val);
+    let cells = "", months = "";
+    days.forEach((d, i) => {
+      const k = first + i, cx = L + Math.floor(k / 7) * (c + g), cy = T + (k % 7) * (c + g);
+      const o = val[i] ? 0.12 + 0.88 * Math.sqrt(val[i] / max) : 0;
+      const shipped = pin && rels[pin.pkg]?.has(d);
+      cells += `<rect class="d" x="${cx}" y="${cy}" width="${c}" height="${c}" rx="3" fill="${o ? `rgba(255,255,255,${o.toFixed(2)})` : "none"}"><title>${short(d)} · +${fmt(val[i])}</title></rect>`;
+      if (shipped) cells += `<path d="M${cx + c / 2} ${cy + 3} l5 5 -5 5 -5 -5z" fill="none" stroke="${o > .5 ? "#000" : "#fff"}" stroke-width="1.3" pointer-events="none"/>`;
+      if (i === 0 || d.endsWith("-01")) months += `<text x="${cx}" y="${T - 6}">${short(d).split(" ")[0]}</text>`;
+    });
+    const wd = ["M", "", "W", "", "F", "", "S"].map((t, r) => t ? `<text x="0" y="${T + r * (c + g) + 12}">${t}</text>` : "").join("");
+    const W = L + cols * (c + g), H = T + 7 * (c + g);
+    const best = val.indexOf(Math.max(...val));
+    $("v-cal").innerHTML = `<svg class="cal" viewBox="0 0 ${Math.max(W, 260)} ${H + 26}" style="width:${Math.max(W, 260) * 1.25}px; max-width:100%">${months}${wd}${cells}
+      <text x="0" y="${H + 18}">BEST DAY ${short(days[best])} +${fmt(val[best])} · TOTAL +${fmt(sum(val))} · ${days.length} DAYS</text></svg>`;
+  }
+
+  // 5. Share of the day: stacked bands, top 8 over the window plus everyone else.
+  function vStack(D) {
+    $("v-st-chips").innerHTML = ["GETS", "%"].map((m) => `<div class="chip" data-m="${m}" aria-selected="${stMode === m}">${m}</div>`).join("");
+    $("v-st-chips").querySelectorAll(".chip").forEach((c) => c.addEventListener("click", () => { stMode = c.dataset.m; vStack(D); }));
+    const n = Math.min(days.length, 30), i0 = days.length - n, ds = days.slice(i0);
+    const tot = (pkg) => sum(D[pkg].slice(i0));
+    const top = [...apps].sort((p, q) => tot(q.pkg) - tot(p.pkg)).slice(0, 8);
+    const keep = new Set(top.map((a) => a.pkg));
+    const bands = top.map((a) => ({ name: a.name, pkg: a.pkg, v: ds.map((_, j) => D[a.pkg][i0 + j] || 0) }))
+      .concat([{ name: "Everyone else", pkg: "", v: ds.map((_, j) => sum(apps.filter((a) => !keep.has(a.pkg)).map((a) => D[a.pkg][i0 + j]))) }]);
+    const dayTot = ds.map((_, j) => sum(bands.map((b) => b.v[j])) || 1);
+    const W = 720, H = 260, L = 40, R = 120, T = 10, B = 26, iw = W - L - R, ih = H - T - B;
+    const hi = stMode === "%" ? 1 : Math.max(...dayTot);
+    const x = (j) => L + (n === 1 ? iw / 2 : j / (n - 1) * iw), y = (v) => T + ih - v / hi * ih;
+    const base = ds.map(() => 0);
+    const shade = (k) => k === bands.length - 1 ? "#26262b" : `hsl(0 0% ${92 - k * 8}%)`;
+    let paths = "", labels = "";
+    const want = [];
+    bands.forEach((b, k) => {
+      const lo = base.slice(), up = b.v.map((v, j) => base[j] + (stMode === "%" ? v / dayTot[j] : v));
+      up.forEach((v, j) => base[j] = v);
+      const pts = up.map((v, j) => `${x(j).toFixed(1)} ${y(v).toFixed(1)}`).concat(lo.map((v, j) => `${x(j).toFixed(1)} ${y(v).toFixed(1)}`).reverse());
+      paths += `<path class="bd" fill="${shade(k)}" d="M${pts.join(" L")} Z"><title>${esc(b.name)} · +${fmt(sum(b.v))} over ${n} days</title></path>`;
+      want.push({ y: y((up.at(-1) + lo.at(-1)) / 2), name: b.name, k });
+    });
+    spread(want, 12, T + 4, T + ih).forEach((it) => {
+      labels += `<path d="M${x(n - 1) + 2} ${it.y.toFixed(1)} C${x(n - 1) + 10} ${it.y.toFixed(1)} ${x(n - 1) + 8} ${it.ly.toFixed(1)} ${x(n - 1) + 16} ${it.ly.toFixed(1)}" stroke="#3e3e44" fill="none"/>` +
+        `<text class="nm2" x="${x(n - 1) + 19}" y="${(it.ly + 3.5).toFixed(1)}"${it.k === bands.length - 1 ? ' style="fill:#7a7a80"' : ""}>${esc(it.name.length > 15 ? it.name.slice(0, 14) + "…" : it.name)}</text>`;
+    });
+    const ticks = [0, .5, 1].map((f) => `<text x="${L - 6}" y="${(y(hi * f) + 3).toFixed(1)}" text-anchor="end">${stMode === "%" ? Math.round(f * 100) + "%" : fmt(Math.round(hi * f))}</text>`).join("");
+    const step = Math.max(1, Math.ceil(n / 7));
+    const xax = ds.map((d, j) => (j % step === 0 && n - 1 - j >= step * 0.75) || j === n - 1 ? `<text x="${x(j).toFixed(1)}" y="${H - 8}" text-anchor="middle">${short(d)}</text>` : "").join("");
+    $("v-st").innerHTML = `<svg class="st" viewBox="0 0 ${W} ${H}">${ticks}${xax}${paths}${labels}</svg>`;
+  }
+
+  // 4. Gets against users, log on both axes.
+  function vScatter() {
+    const pts = apps.map((a) => ({ a, g: a.downloads || 0, u: usersOf(a) || 0 })).filter((p) => p.g > 0 && p.u > 0);
+    if (!pts.length) { $("v-sc").innerHTML = '<div class="vnote">NO USER COUNTS YET</div>'; return; }
+    const W = 520, H = 330, L = 40, R = 14, T = 12, B = 30, iw = W - L - R, ih = H - T - B;
+    const gx = [1, Math.max(...pts.map((p) => p.g)) * 1.2], uy = [1, Math.max(...pts.map((p) => p.u)) * 1.3];
+    const lg = Math.log10;
+    const x = (g) => L + (lg(g) - lg(gx[0])) / (lg(gx[1]) - lg(gx[0])) * iw;
+    const y = (u) => T + ih - (lg(u) - lg(uy[0])) / (lg(uy[1]) - lg(uy[0])) * ih;
+    const ratio = pts.map((p) => p.g / p.u).sort((p, q) => p - q), med = ratio[Math.floor(ratio.length / 2)];
+    const out = new Set(pts.filter((p) => p.g / p.u > med * 4 && p.g > 100).sort((p, q) => q.g / q.u - p.g / p.u).slice(0, 4).map((p) => p.a.pkg));
+    const named = new Set([...out, ...[...pts].sort((p, q) => q.u - p.u).slice(0, 4).map((p) => p.a.pkg)]);
+    const ticksX = [1, 10, 100, 1000, 10000].filter((v) => v <= gx[1]).map((v) => `<line class="gl" x1="${x(v)}" x2="${x(v)}" y1="${T}" y2="${T + ih}"/><text x="${x(v)}" y="${H - 10}" text-anchor="middle">${v >= 1000 ? v / 1000 + "k" : v}</text>`).join("");
+    const ticksY = [1, 10, 100, 1000].filter((v) => v <= uy[1]).map((v) => `<line class="gl" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text x="${L - 6}" y="${y(v) + 3}" text-anchor="end">${v}</text>`).join("");
+    const g0 = Math.max(gx[0], med * uy[0]), g1 = Math.min(gx[1], med * uy[1]);
+    const diag = `<line x1="${x(g0)}" y1="${y(g0 / med)}" x2="${x(g1)}" y2="${y(g1 / med)}" stroke="#5a5a60" stroke-dasharray="3 4"/>`;
+    const dots = pts.map((p) => `<circle class="pt${out.has(p.a.pkg) ? " out" : ""}" r="${out.has(p.a.pkg) ? 4 : 3}" cx="${x(p.g).toFixed(1)}" cy="${y(p.u).toFixed(1)}"><title>${esc(p.a.name)} · ${fmt(p.g)} gets · ${fmt(p.u)} users · ${Math.round(p.g / p.u)} per user</title></circle>`).join("");
+    const placed = [];
+    const names = pts.filter((p) => named.has(p.a.pkg)).sort((p, q) => q.u - p.u).map((p) => {
+      const w = p.a.name.length * 6, right = x(p.g) > W - 110, lx = right ? x(p.g) - 7 - w : x(p.g) + 7;
+      if (!placeable(placed, lx, y(p.u), w)) return "";
+      return `<text class="nm2" x="${lx.toFixed(1)}" y="${(y(p.u) + 3.5).toFixed(1)}">${esc(p.a.name)}</text>`; }).join("");
+    $("v-sc").innerHTML = `<svg class="sc" viewBox="0 0 ${W} ${H}">${ticksX}${ticksY}${diag}${dots}${names}
+      <text x="${W - R}" y="${H - 22}" text-anchor="end">GETS →</text><text x="${L + 4}" y="${T + 8}">↑ USERS</text></svg>`;
+  }
+
+  // 8. Update lag: share of users on the newest build against how old that build is.
+  function vLag() {
+    const P = (pulse && pulse.apps) || {}, now = Date.now();
+    const pts = apps.map((a) => {
+      const p = P[a.pkg]; if (!p || !(p.installed >= 3) || !a.latest?.published) return null;
+      const vs = splitOf(p); if (!vs.length) return null;
+      const tot = sum(vs.map(([, n]) => n)) || 1;
+      return { a, u: p.installed, age: Math.max(0, (now - Date.parse(a.latest.published)) / 864e5), share: vs[0][1] / tot };
+    }).filter(Boolean);
+    if (!pts.length) { $("v-lag").innerHTML = '<div class="vnote">NO USER COUNTS YET</div>'; return; }
+    const W = 520, H = 330, L = 40, R = 14, T = 12, B = 30, iw = W - L - R, ih = H - T - B;
+    const amax = Math.min(60, Math.max(14, ...pts.map((p) => p.age)));
+    const x = (d) => L + Math.min(d, amax) / amax * iw, y = (s) => T + ih - s * ih;
+    const stuck = `<rect class="stuck" x="${x(7)}" y="${y(.5)}" width="${x(amax) - x(7)}" height="${y(0) - y(.5)}"/><text x="${x(amax) - 4}" y="${y(0) - 6}" text-anchor="end" fill="#ff6b6b">STUCK</text>`;
+    const tx = [0, 7, 14, 30, 60].filter((d) => d <= amax).map((d) => `<line class="gl" x1="${x(d)}" x2="${x(d)}" y1="${T}" y2="${T + ih}"/><text x="${x(d)}" y="${H - 10}" text-anchor="middle">${d}D</text>`).join("");
+    const ty = [0, .5, 1].map((s) => `<line class="gl" x1="${L}" x2="${W - R}" y1="${y(s)}" y2="${y(s)}"/><text x="${L - 6}" y="${y(s) + 3}" text-anchor="end">${s * 100}%</text>`).join("");
+    const bad = (p) => p.age > 7 && p.share < .5;
+    const dots = pts.map((p) => `<circle cx="${x(p.age).toFixed(1)}" cy="${y(p.share).toFixed(1)}" r="${(2.5 + Math.sqrt(p.u) * .7).toFixed(1)}" fill="${bad(p) ? "#ff6b6b" : "#fff"}" fill-opacity="${bad(p) ? .8 : .45}"><title>${esc(p.a.name)} · ${Math.round(p.share * 100)}% on newest · released ${Math.round(p.age)}d ago · ${fmt(p.u)} users</title></circle>`).join("");
+    const named = [...pts].sort((p, q) => q.u - p.u).slice(0, 4).concat(pts.filter(bad).sort((p, q) => q.u - p.u).slice(0, 3));
+    const placed = [];
+    const names = [...new Set(named)].map((p) => {
+      const r = 2.5 + Math.sqrt(p.u) * .7, w = p.a.name.length * 6, right = x(p.age) > W - 120;
+      const lx = right ? x(p.age) - r - 5 - w : x(p.age) + r + 5;
+      if (!placeable(placed, lx, y(p.share), w)) return "";
+      return `<text class="nm2" x="${lx.toFixed(1)}" y="${(y(p.share) + 3.5).toFixed(1)}">${esc(p.a.name)}</text>`; }).join("");
+    $("v-lag").innerHTML = `<svg class="lag" viewBox="0 0 ${W} ${H}">${stuck}${tx}${ty}${dots}${names}</svg>`;
+  }
+
+  // 6. Keeping people: of everyone who ever had it, who is current, behind, or gone.
+  function vFunnel() {
+    const P = (pulse && pulse.apps) || {};
+    const rows = apps.map((a) => [a, P[a.pkg]]).filter(([, p]) => p && p.installed > 0).sort((x, y) => y[1].installed - x[1].installed).slice(0, 10);
+    if (!rows.length) { $("v-fn").innerHTML = '<div class="vnote">NO USER COUNTS YET</div>'; return; }
+    const most = Math.max(...rows.map(([, p]) => p.installed + (p.removed || 0)));
+    $("v-fn").innerHTML = `<div class="key"><span><i style="background:#fff"></i>NEWEST BUILD</span><span><i style="background:#5a5a60"></i>OLDER BUILD</span><span><i style="background:repeating-linear-gradient(135deg,#3e2224 0 3px,#000 3px 5px)"></i>REMOVED</span></div>` +
+      rows.map(([a, p]) => {
+        const vs = splitOf(p), cur = vs.length ? vs[0][1] : 0, tot = sum(vs.map(([, n]) => n)) || 1;
+        const onNew = Math.round(p.installed * cur / tot), older = p.installed - onNew, gone = p.removed || 0, ever = p.installed + gone;
+        const w = (n) => (n / most * 100).toFixed(2) + "%";
+        return `<div class="fn"><div class="nm">${esc(a.name)}<small>${ever ? Math.round(p.installed / ever * 100) : 0}% KEPT IT</small></div>
+          <div class="fbar" title="${onNew} newest · ${older} older · ${gone} removed"><span class="a" style="width:${w(onNew)}"></span><span class="b" style="width:${w(older)}"></span><span class="c" style="width:${w(gone)}"></span></div>
+          <div class="dl">${fmt(p.installed)}<small>OF ${fmt(ever)} EVER</small></div></div>`;
+      }).join("");
+  }
+
+  // 7. Developers: everyone who has an app listed, by all-time gets.
+  function vDevs() {
+    const by = {};
+    apps.forEach((a) => { const d = (by[dev(a)] ||= { who: dev(a), apps: [], gets: 0, users: 0, today: 0 });
+      d.apps.push(a); d.gets += a.downloads || 0; d.users += usersOf(a) || 0; d.today += a.downloadsToday || 0; });
+    const list = Object.values(by).sort((p, q) => q.gets - p.gets);
+    const all = sum(list.map((d) => d.gets)) || 1;
+    $("v-dv-count").textContent = `${list.length} DEVELOPERS`;
+    $("v-dv").innerHTML = `<div style="max-height:420px; overflow-y:auto;">` + list.map((d) => {
+      const best = [...d.apps].sort((p, q) => (q.downloads || 0) - (p.downloads || 0))[0];
+      return `<div class="dv"><div class="who">${esc(d.who)}<small>BEST: ${esc(best.name.toUpperCase())}${d.apps.length > 1 ? " · +" + (d.apps.length - 1) + " MORE" : ""}</small><div class="share"><span style="width:${(d.gets / all * 100).toFixed(1)}%"></span></div></div>
+        <div class="n">${d.apps.length}<small>APPS</small></div><div class="n">${fmt(d.gets)}<small>GETS</small></div><div class="n">${fmt(d.users)}<small>USERS</small></div></div>`;
+    }).join("") + `</div>`;
+  }
+
   let resizeT = 0;
   addEventListener("resize", () => { clearTimeout(resizeT); resizeT = setTimeout(() => { if (days.length) renderChart(); }, 120); });
 
@@ -975,7 +1244,15 @@
       // were nowhere at all -- the one week its row is worth watching. It leaves on its own, the
       // day the last install does.
       apps = (idx.apps || []).filter((a) => !a.deprecated || (a.users || 0) > 0);
-      if (hr.ok) { const h = await hr.json(); snap = h.days || {}; gains = h.gains || {}; }
+      if (hr.ok) { const h = await hr.json(); snap = h.days || {}; gains = h.gains || {};
+        const rd = Object.keys(h.releases || {}).sort();
+        // Every stable release day in the history's window, written by the build.
+        Object.entries(h.shipped || {}).forEach(([pkg, ds]) => ds.forEach((d) => (rels[pkg] ||= new Set()).add(d)));
+        rd.forEach((d, i) => { if (!i) return; Object.entries(h.releases[d]).forEach(([pkg, vs]) => {
+          const prev = h.releases[rd[i - 1]][pkg] || {};
+          if (Object.keys(vs).some((v) => !(v in prev))) (rels[pkg] ||= new Set()).add(d); }); }); }
+      (idx.apps || []).forEach((a) => [a.latest, a.preview].forEach((r) => {
+        if (r && r.published) (rels[a.pkg] ||= new Set()).add(r.published.slice(0, 10)); }));
       // Whichever of the two copies is newer. The worker's is normally live; the
       // deployment's is the fallback when the worker cannot be reached.
       const read = async (r) => (r && r.ok ? await r.json().catch(() => null) : null);

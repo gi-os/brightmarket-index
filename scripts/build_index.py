@@ -529,6 +529,17 @@ SHOWCASE_PIN = {
 SITE_TZ = "America/New_York"
 
 
+def site_day_of(instant: str) -> str:
+    """The SITE_TZ date of a GitHub timestamp ("2026-09-10T20:48:01Z"), so a release
+    lands on the same day the stats page draws it on. UTC date if the zone is missing."""
+    t = datetime.datetime.fromisoformat(instant.replace("Z", "+00:00"))
+    try:
+        from zoneinfo import ZoneInfo
+        return t.astimezone(ZoneInfo(SITE_TZ)).date().isoformat()
+    except Exception:
+        return t.date().isoformat()
+
+
 def site_day() -> str:
     """Today's date in SITE_TZ. Falls back to UTC only if the runner has no tzdata,
     which would silently shift every key in the history, hence the warning."""
@@ -686,7 +697,7 @@ def load_history() -> dict:
     would publish a history file with one day in it over one with months.
     """
     if os.environ.get("ALLOW_EMPTY_HISTORY") == "1":
-        return {"days": {}, "open": {}, "releases": {}, "gains": {}, "featured": {}}
+        return {"days": {}, "open": {}, "releases": {}, "gains": {}, "featured": {}, "shipped": {}}
     url = f"{PUBLISHED_HISTORY}?t={int(datetime.datetime.now().timestamp())}"
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "brightmarket-index"})
@@ -697,7 +708,7 @@ def load_history() -> dict:
             raise ValueError("days is not an object")
         return {"days": days, "open": doc.get("open") or {},
                 "releases": doc.get("releases") or {}, "gains": doc.get("gains") or {},
-                "featured": doc.get("featured") or {}}
+                "featured": doc.get("featured") or {}, "shipped": doc.get("shipped") or {}}
     except urllib.error.HTTPError as e:
         if e.code == 404:
             # A 404 is indistinguishable, over the wire, from "the deployment lost
@@ -718,7 +729,7 @@ def load_history() -> dict:
                     "the file, or delete the marker to start the history over on purpose."
                 )
             warn("no published history yet; starting the download history today")
-            return {"days": {}, "open": {}, "releases": {}, "gains": {}, "featured": {}}
+            return {"days": {}, "open": {}, "releases": {}, "gains": {}, "featured": {}, "shipped": {}}
         raise SystemExit(f"FATAL: could not read {PUBLISHED_HISTORY} ({e}); refusing to publish "
                          "a history that would overwrite the real one")
     except Exception as e:
@@ -1012,6 +1023,9 @@ def main() -> int:
                 "downloads": downloads,
                 # Per release, for the history baseline. Popped before the index is written.
                 "_perRelease": {r["tag_name"]: asset["download_count"] for r, asset in apk_releases},
+                # Days this app shipped a stable release, for the stats page's release
+                # markers. Popped into the history, like _perRelease.
+                "_shipped": sorted({site_day_of(r["published_at"]) for r, _ in apk_releases if r.get("published_at")}),
                 # Carried forward, never recomputed -- see module docstring.
                 "firstSeen": prev.get("firstSeen") or today,
                 "signer": signer,
@@ -1137,6 +1151,17 @@ def main() -> int:
     # read 0. Recording the gain here leaves one definition of "today" in the whole system.
     gains = history["gains"]
     per_release = {a["pkg"]: a.pop("_perRelease", None) for a in out}
+    # Release days, recomputed from GitHub every run and cut to the history's window. A
+    # carried entry (releases unreadable) keeps the days the last history had for it.
+    window_start = sorted(set(history["days"]) | {today})[-HISTORY_DAYS:][0]
+    shipped = {}
+    for a in out:
+        got = a.pop("_shipped", None)
+        if got is None:
+            got = history.get("shipped", {}).get(a["pkg"], [])
+        got = [d for d in got if window_start <= d <= today]
+        if got:
+            shipped[a["pkg"]] = got
     # A carried entry (releases unreadable this run) keeps whatever it had.
     for pkg in list(per_release):
         if per_release[pkg] is None:
@@ -1195,7 +1220,8 @@ def main() -> int:
              "gains": {d: gains[d] for d in sorted(gains)},
              "featured": {d: featured[d] for d in sorted(featured)},
              "open": opened,
-             "releases": {d: rel[d] for d in sorted(rel)}},
+             "releases": {d: rel[d] for d in sorted(rel)},
+             "shipped": {p: shipped[p] for p in sorted(shipped)}},
             f, separators=(",", ":"),
         )
     print(f"  /history-v1.json -> {len(days)} day(s), +{sum(a['downloadsToday'] for a in out)} today")
