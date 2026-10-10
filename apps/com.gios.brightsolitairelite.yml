@@ -1,0 +1,8 @@
+pkg: com.gios.brightsolitairelite
+name: BrightSolitaire Lite
+repo: gi-os/BrightSolitaireLite
+category: games
+summary: >-
+  Lite build of BrightSolitaire, made with Light's SDK for the Light Tool Library. For
+  everything, get BrightSolitaire. Klondike, draw one, unlimited redeals. Saves when you put the
+  phone down and never touches the internet.

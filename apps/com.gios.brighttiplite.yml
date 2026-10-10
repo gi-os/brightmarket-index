@@ -1,0 +1,8 @@
+pkg: com.gios.brighttiplite
+name: BrightTip Lite
+repo: gi-os/BrightTipLite
+category: productivity
+summary: >-
+  Lite build of BrightTip, made with Light's SDK for the Light Tool Library. For everything, get
+  BrightTip. A tip calculator and nothing else. Type the bill, pick a percent or turn the wheel,
+  and see the tip and the total.

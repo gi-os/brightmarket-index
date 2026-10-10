@@ -1,0 +1,8 @@
+pkg: com.gios.brightfantasylite
+name: BrightFantasy Lite
+repo: gi-os/BrightFantasyLite
+category: entertainment
+summary: >-
+  Lite build of BrightFantasy, made with Light's SDK for the Light Tool Library. For everything,
+  get BrightFantasy. ESPN fantasy football: matchup, lineup, standings and the waiver wire.
+  Illegal swaps are refused before anything is sent.

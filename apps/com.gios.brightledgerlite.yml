@@ -1,0 +1,8 @@
+pkg: com.gios.brightledgerlite
+name: BrightLedger Lite
+repo: gi-os/BrightLedgerLite
+category: productivity
+summary: >-
+  Lite build of BrightLedger, made with Light's SDK for the Light Tool Library. For everything,
+  get BrightLedger. Bank balances and transactions over SimpleFIN with no server in the middle.
+  Spent today, spent this month, and what repeats.

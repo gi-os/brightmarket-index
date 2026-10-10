@@ -1,0 +1,8 @@
+pkg: com.gios.brightnoiselite
+name: BrightNoise Lite
+repo: gi-os/BrightNoiseLite
+category: media
+summary: >-
+  Lite build of BrightNoise, made with Light's SDK for the Light Tool Library. For everything,
+  get BrightNoise. Twelve sounds made on the phone, from pink noise to ocean waves. Layer two
+  and set a sleep timer that fades out.

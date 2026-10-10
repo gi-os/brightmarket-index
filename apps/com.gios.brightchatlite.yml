@@ -1,0 +1,8 @@
+pkg: com.gios.brightchatlite
+name: BrightChat Lite
+repo: gi-os/BrightChatLite
+category: communication
+summary: >-
+  Lite build of BrightChat, made with Light's SDK for the Light Tool Library. For everything,
+  get BrightChat. iMessage through your own BlueBubbles server: threads, photos, tapbacks and
+  read receipts. iMessage only; the full app also does Beeper.

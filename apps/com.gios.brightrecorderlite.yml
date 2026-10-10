@@ -1,0 +1,8 @@
+pkg: com.gios.brightrecorderlite
+name: BrightRecorder Lite
+repo: gi-os/BrightRecorderLite
+category: media
+summary: >-
+  Lite build of BrightRecorder, made with Light's SDK for the Light Tool Library. For
+  everything, get BrightRecorder. A tape recorder for the moments worth keeping. Each clip is
+  stamped with when and where, and the wheel winds the tape back and forth.

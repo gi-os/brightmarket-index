@@ -1,0 +1,8 @@
+pkg: com.gios.brightremotelite
+name: BrightRemote Lite
+repo: gi-os/BrightRemoteLite
+category: utilities
+summary: >-
+  Lite build of BrightRemote, made with Light's SDK for the Light Tool Library. For everything,
+  get BrightRemote. An Apple TV remote speaking the Companion protocol. Touchpad, buttons, app
+  list and typing from the phone.

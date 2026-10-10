@@ -1,0 +1,8 @@
+pkg: com.gios.brightsportslite
+name: BrightSports Lite
+repo: gi-os/BrightSportsLite
+category: entertainment
+summary: >-
+  Lite build of BrightSports, made with Light's SDK for the Light Tool Library. For everything,
+  get BrightSports. Scores for the teams you follow and nothing else. Live games first, then the
+  week ahead, then recent results. 22 leagues.

@@ -1,0 +1,8 @@
+pkg: com.gios.brightnycsubwaylite
+name: BrightNYCSubway Lite
+repo: gi-os/BrightNYCSubwayLite
+category: travel
+summary: >-
+  Lite build of BrightTransit, made with Light's SDK for the Light Tool Library. For everything,
+  get BrightTransit. Live NYC subway arrivals straight from the MTA, Uptown and Downtown side by
+  side. The only server it talks to is the MTA's.

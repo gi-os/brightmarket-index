@@ -1,0 +1,9 @@
+pkg: com.gios.brightnotebooklite
+name: BrightNotebook Lite
+repo: gi-os/BrightNotebookLite
+category: productivity
+summary: >-
+  Lite build of BrightNotebook, made with Light's SDK for the Light Tool Library. For
+  everything, get BrightNotebook. A notebook and a calendar in one. Jot notes, tick off
+  checklists, or type 9:30 dentist and it lands on the right day. Follow your work calendar with
+  a QR code.
