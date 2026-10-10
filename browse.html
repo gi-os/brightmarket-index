@@ -129,7 +129,10 @@
     display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
   .lite-box .lite-tag { font-family:var(--mono); font-size:10px; font-weight:600; letter-spacing:.16em; }
   .lite-box .lite-txt { flex:1; min-width:200px; font-size:12.5px; line-height:1.45; color:var(--dim); margin-top:4px; }
-  .lite-box .btn { flex-shrink:0; }
+  /* .btn has no side padding of its own -- every other one sits in a fixed-width
+     column. This one sizes to its label, so it needs room on both sides, plus the
+     trailing letter-spacing given back on the right. */
+  .lite-box .btn { flex-shrink:0; padding:0 calc(22px - .16em) 0 22px; white-space:nowrap; }
   .lite-line { font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:var(--dimmer); }
   .lite-line a { color:var(--fg); border-bottom:1px solid var(--edge); }
   .cat-pill { padding:3px 10px; border-radius:999px; background:var(--fg); color:#000;

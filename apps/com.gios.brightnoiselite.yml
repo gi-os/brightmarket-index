@@ -2,6 +2,7 @@ pkg: com.gios.brightnoiselite
 name: BrightNoise Lite
 repo: gi-os/BrightNoiseLite
 fullVersion: com.gios.lightnoise
+icon: https://raw.githubusercontent.com/gi-os/brightmarket-index/main/icons/com.gios.lightnoise.png
 category: media
 summary: >-
   Lite build of BrightNoise, made with Light's SDK for the Light Tool Library. For everything,

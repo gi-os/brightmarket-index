@@ -2,6 +2,7 @@ pkg: com.gios.brightfantasylite
 name: BrightFantasy Lite
 repo: gi-os/BrightFantasyLite
 fullVersion: com.gios.brightfantasy
+icon: https://raw.githubusercontent.com/gi-os/brightmarket-index/main/icons/com.gios.brightfantasy.png
 category: entertainment
 summary: >-
   Lite build of BrightFantasy, made with Light's SDK for the Light Tool Library. For everything,

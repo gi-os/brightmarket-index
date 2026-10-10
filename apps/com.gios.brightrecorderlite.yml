@@ -2,6 +2,7 @@ pkg: com.gios.brightrecorderlite
 name: BrightRecorder Lite
 repo: gi-os/BrightRecorderLite
 fullVersion: com.gios.brightrecorder
+icon: https://raw.githubusercontent.com/gi-os/brightmarket-index/main/icons/com.gios.brightrecorder.png
 category: media
 summary: >-
   Lite build of BrightRecorder, made with Light's SDK for the Light Tool Library. For

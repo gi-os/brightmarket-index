@@ -2,6 +2,7 @@ pkg: com.gios.brighttiplite
 name: BrightTip Lite
 repo: gi-os/BrightTipLite
 fullVersion: com.gios.lighttip
+icon: https://raw.githubusercontent.com/gi-os/brightmarket-index/main/icons/com.gios.lighttip.png
 category: productivity
 summary: >-
   Lite build of BrightTip, made with Light's SDK for the Light Tool Library. For everything, get

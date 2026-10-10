@@ -2,6 +2,7 @@ pkg: com.gios.brightchatlite
 name: BrightChat Lite
 repo: gi-os/BrightChatLite
 fullVersion: com.gios.lightchat
+icon: https://raw.githubusercontent.com/gi-os/brightmarket-index/main/icons/com.gios.lightchat.png
 category: communication
 summary: >-
   Lite build of BrightChat, made with Light's SDK for the Light Tool Library. For everything,

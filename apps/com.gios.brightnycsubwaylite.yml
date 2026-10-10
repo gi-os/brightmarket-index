@@ -2,6 +2,7 @@ pkg: com.gios.brightnycsubwaylite
 name: BrightNYCSubway Lite
 repo: gi-os/BrightNYCSubwayLite
 fullVersion: com.thelightphone.lightnycsubway
+icon: https://raw.githubusercontent.com/gi-os/brightmarket-index/main/icons/com.thelightphone.lightnycsubway.png
 category: travel
 summary: >-
   Lite build of BrightTransit, made with Light's SDK for the Light Tool Library. For everything,
