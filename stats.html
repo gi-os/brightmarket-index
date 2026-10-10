@@ -261,6 +261,14 @@
   .lag .stuck { fill:var(--fall); opacity:.05; }
   @media (max-width: 640px) { .mv { grid-template-columns:1fr; } .fn { grid-template-columns:minmax(0,96px) minmax(0,1fr) 70px; } .vbody { padding:12px; } }
 
+  /* Long grids show two rows and a button for the rest. */
+  .clip > .cut { display:none !important; }
+  .more { display:flex; justify-content:center; margin-top:10px; }
+  .more button { cursor:pointer; background:none; border:none; color:#8a8a8e; font-family:var(--mono); font-size:10px;
+                 letter-spacing:.16em; padding:7px 16px; border-radius:999px; box-shadow:inset 0 0 0 1px var(--line-2); }
+  .more button:hover { color:var(--fg); box-shadow:inset 0 0 0 1px var(--edge); }
+  .panel .more { margin:10px 0 12px; }
+
   .foot { margin-top:34px; padding-top:18px; border-top:1px solid var(--line); font-size:12px; line-height:1.6; color:var(--dim); max-width:70ch; }
   .empty { padding:60px 0; text-align:center; font-family:var(--mono); font-size:12px; letter-spacing:.2em; color:var(--dimmer); }
 </style>
@@ -305,6 +313,7 @@
     </div>
     <div class="cards" id="installcards"></div>
     <div class="all-grid" id="installgrid"></div>
+    <div class="more" id="installmore"></div>
     <div class="vtip" id="vtip"></div>
   </div>
 
@@ -349,6 +358,7 @@
       <div class="label" id="allcount"></div>
     </div>
     <div class="all-grid" id="all"></div>
+    <div class="more" id="allmore"></div>
   </div>
 
   <div class="foot">
@@ -983,6 +993,7 @@
     }).join("");
 
     wireVersionTips();
+    clip("installgrid", "installmore", "APPS");
   }
 
   /**
@@ -1021,9 +1032,28 @@
     return p && p.installed > 0 ? p.installed : null;
   };
 
+  /* Two rows, then a button. Rows depend on how many columns the grid has at this width,
+     so the cut is counted from the live grid and redone on resize. */
+  const opened = {};
+  function clip(gridId, moreId, noun) {
+    const g = $(gridId), m = $(moreId); if (!g || !m) return;
+    const kids = [...g.children];
+    const cols = getComputedStyle(g).gridTemplateColumns.split(" ").filter(Boolean).length || 1;
+    const keep = cols * 2, open = !!opened[gridId];
+    g.classList.toggle("clip", !open);
+    kids.forEach((k, i) => k.classList.toggle("cut", i >= keep));
+    // The last kept row also loses its bottom hairline under the outer border; a short
+    // grid needs no button at all.
+    if (kids.length <= keep) { m.innerHTML = ""; return; }
+    m.innerHTML = `<button>${open ? "SHOW LESS" : `SHOW ALL ${kids.length} ${noun}`}</button>`;
+    m.firstChild.addEventListener("click", () => { opened[gridId] = !open; clip(gridId, moreId, noun); });
+  }
+
   function renderAll() {
     const list = [...apps].sort((a, b) => (b.downloadsToday || 0) - (a.downloadsToday || 0) || (b.downloads || 0) - (a.downloads || 0));
-    $("allcount").textContent = `${apps.length} APPS`;
+    // An app with nothing today is not news on a list headed "by today".
+    list.splice(0, list.length, ...list.filter((a) => (a.downloadsToday || 0) > 0));
+    $("allcount").textContent = `${list.length} OF ${apps.length} APPS GOT SOMETHING TODAY`;
     $("all").innerHTML = list.map((a) => `
       <a class="cell" href="${link(a)}">
         <div class="ic">${mark(a)}</div>
@@ -1031,6 +1061,8 @@
           usersOf(a) == null ? "" : " · " + fmt(usersOf(a)) + " USER" + (usersOf(a) === 1 ? "" : "S")}</small></div>
         ${up(a.downloadsToday || 0)}
       </a>`).join("");
+    if (!list.length) $("all").innerHTML = `<div class="cell" style="grid-column:1/-1"><div class="nm" style="color:var(--dimmer)">NOTHING YET TODAY</div></div>`;
+    clip("all", "allmore", "APPS");
   }
 
   /* ------------------------------------------------------------------------------------
@@ -1224,7 +1256,7 @@
   }
 
   let resizeT = 0;
-  addEventListener("resize", () => { clearTimeout(resizeT); resizeT = setTimeout(() => { if (days.length) renderChart(); }, 120); });
+  addEventListener("resize", () => { clearTimeout(resizeT); resizeT = setTimeout(() => { if (days.length) renderChart(); clip("installgrid", "installmore", "APPS"); clip("all", "allmore", "APPS"); }, 120); });
 
   (async function init() {
     try {
