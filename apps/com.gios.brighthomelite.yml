@@ -1,0 +1,10 @@
+pkg: com.gios.brighthomelite
+name: BrightHome Lite
+repo: gi-os/BrightHomeLite
+fullVersion: com.thelightphone.brighthome
+icon: https://raw.githubusercontent.com/gi-os/brightmarket-index/main/icons/com.thelightphone.brighthome.png
+category: utilities
+summary: >-
+  Lite build of BrightHome, made with Light's SDK for the Light Tool Library. Same tool, packaged
+  so Light can build and sign it. Home Assistant on the phone: favorites first, rooms, scenes, and
+  live state from your own server.

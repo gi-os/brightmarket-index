@@ -1,0 +1,10 @@
+pkg: com.gios.brightlibrarylite
+name: BrightLibrary Lite
+repo: gi-os/BrightLibraryLite
+fullVersion: com.lightfastread
+icon: https://raw.githubusercontent.com/gi-os/brightmarket-index/main/icons/com.lightfastread.png
+category: reading
+summary: >-
+  Lite build of BrightLibrary, made with Light's SDK for the Light Tool Library. For everything,
+  get BrightLibrary. FastRead's word-at-a-time reader plus a page view, EPUB, MOBI and comics,
+  on a cover shelf that stacks series. Books go on through Light's Tool Manager.
