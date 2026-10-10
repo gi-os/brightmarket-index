@@ -1,10 +1,10 @@
 pkg: com.gios.brightmailboxlite
-name: BrightMailbox Lite
+name: Mailbox Lite
 repo: gi-os/BrightMailboxLite
 fullVersion: com.gios.brightmailbox
 icon: https://raw.githubusercontent.com/gi-os/brightmarket-index/main/icons/com.gios.brightmailbox.png
 category: communication
 summary: >-
-  Lite build of BrightMailbox, made with Light's SDK for the Light Tool Library. For everything,
-  get BrightMailbox. Email sorted into Letters from people and Notices from machines, with a
+  Lite build of Mailbox, made with Light's SDK for the Light Tool Library. For everything,
+  get Mailbox. Email sorted into Letters from people and Notices from machines, with a
   daily limit on letters. Gmail app passwords and any IMAP account.
