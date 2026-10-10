@@ -1,6 +1,7 @@
 pkg: com.gios.brightmailboxlite
 name: BrightMailbox Lite
 repo: gi-os/BrightMailboxLite
+fullVersion: com.gios.brightmailbox
 category: communication
 summary: >-
   Lite build of BrightMailbox, made with Light's SDK for the Light Tool Library. For everything,

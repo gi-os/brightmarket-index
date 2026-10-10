@@ -1,6 +1,7 @@
 pkg: com.gios.brightsolitairelite
 name: BrightSolitaire Lite
 repo: gi-os/BrightSolitaireLite
+fullVersion: com.thelightphone.solitaire
 category: games
 summary: >-
   Lite build of BrightSolitaire, made with Light's SDK for the Light Tool Library. For

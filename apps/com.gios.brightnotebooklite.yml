@@ -1,6 +1,7 @@
 pkg: com.gios.brightnotebooklite
 name: BrightNotebook Lite
 repo: gi-os/BrightNotebookLite
+fullVersion: com.gios.lightnotebook
 category: productivity
 summary: >-
   Lite build of BrightNotebook, made with Light's SDK for the Light Tool Library. For

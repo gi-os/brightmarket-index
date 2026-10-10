@@ -1,6 +1,7 @@
 pkg: com.gios.brightsportslite
 name: BrightSports Lite
 repo: gi-os/BrightSportsLite
+fullVersion: com.gios.lightsports
 category: entertainment
 summary: >-
   Lite build of BrightSports, made with Light's SDK for the Light Tool Library. For everything,

@@ -1,6 +1,7 @@
 pkg: com.gios.brightledgerlite
 name: BrightLedger Lite
 repo: gi-os/BrightLedgerLite
+fullVersion: com.gios.brightledger
 category: productivity
 summary: >-
   Lite build of BrightLedger, made with Light's SDK for the Light Tool Library. For everything,

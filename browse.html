@@ -122,6 +122,16 @@
   .hero-icon img, .tile-icon img { width:100%; height:100%; object-fit:contain; display:block; }
   .hero-icon .sh { position:absolute; inset:0; animation:sheen 5s ease-in-out infinite;
     background:linear-gradient(115deg,rgba(255,255,255,0) 42%,rgba(255,255,255,.22) 50%,rgba(255,255,255,0) 58%); }
+  /* Lite <-> full. A Lite app is the Light-SDK build of a bigger app; its page says so
+     before anything else and offers the full one. The full app gets a quieter line
+     pointing the other way. */
+  .lite-box { border:1px solid var(--fg); border-radius:12px; padding:12px 14px;
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .lite-box .lite-tag { font-family:var(--mono); font-size:10px; font-weight:600; letter-spacing:.16em; }
+  .lite-box .lite-txt { flex:1; min-width:200px; font-size:12.5px; line-height:1.45; color:var(--dim); margin-top:4px; }
+  .lite-box .btn { flex-shrink:0; }
+  .lite-line { font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:var(--dimmer); }
+  .lite-line a { color:var(--fg); border-bottom:1px solid var(--edge); }
   .cat-pill { padding:3px 10px; border-radius:999px; background:var(--fg); color:#000;
     font-family:var(--mono); font-size:10px; font-weight:600; letter-spacing:.12em; }
   /* The showcase tag. Outlined rather than solid because the category pill beside
@@ -597,6 +607,30 @@
   }
   const today = (a) => (a.downloadsToday > 0 ? `<span class="today">+${a.downloadsToday} TODAY</span>` : "");
 
+  // A Lite app names its full app (`fullVersion`); the full app names its Lite build
+  // (`liteVersion`). Both are pkgs, resolved here so a rename shows the new name.
+  // ./app/<pkg>/ is the share page, which opens the catalogue on that app whatever
+  // filter happens to be active.
+  const appByPkg = (pkg) => apps.find((a) => a.pkg === pkg);
+  function liteBox(app) {
+    const full = app.fullVersion && appByPkg(app.fullVersion);
+    if (!full) return "";
+    return `<div class="lite-box">
+        <div style="flex:1; min-width:200px;">
+          <div class="lite-tag">LITE · LIGHT TOOL LIBRARY BUILD</div>
+          <div class="lite-txt">Built only with Light's official SDK, so it can run as an approved tool.
+            It does less than ${esc(full.name)}. Want everything? Get the full app.</div>
+        </div>
+        <a class="btn" href="./app/${esc(full.pkg)}/">GET ${esc(full.name.toUpperCase())} →</a>
+      </div>`;
+  }
+  function fullLine(app) {
+    const lite = app.liteVersion && appByPkg(app.liteVersion);
+    if (!lite) return "";
+    return `<div class="lite-line">ALSO AS A LIGHT TOOL LIBRARY BUILD ·
+      <a href="./app/${esc(lite.pkg)}/">${esc(lite.name.toUpperCase())}</a></div>`;
+  }
+
   function renderHero(app) {
     if (!app) { $("hero").innerHTML = ""; return; }
     const self_ = app.pkg === "com.gios.brightmarket";
@@ -628,7 +662,9 @@
           <a href="https://github.com/${esc(app.upstream)}" target="_blank" rel="noopener"
              style="font-family:var(--mono); font-size:11px; letter-spacing:.08em; border-bottom:1px solid var(--edge);">${esc(app.upstream)}</a>` : ""}
         </div>
+        ${liteBox(app)}
         <div class="hero-sum">${esc(app.summary)}</div>
+        ${fullLine(app)}
         ${nearRow(app)}
         <div class="stats">
           <div class="stat"><b>VERSION</b><i>${esc(ver(app.latest.version))}</i></div>
@@ -913,7 +949,7 @@
         <div class="tile-sum">${esc(a.summary)}</div>
         <div class="tile-foot">
           <div class="tile-meta">${esc((a.category || "").toUpperCase())}</div>
-          <div class="tile-stats">${today(a)}${a.users ? `<div class="tile-pill">${a.users} USER${a.users === 1 ? "" : "S"}</div>` : ""}<div class="tile-pill">${a.downloads || 0} GETS</div></div>
+          <div class="tile-stats">${a.fullVersion ? `<div class="tile-pill">LITE</div>` : ""}${today(a)}${a.users ? `<div class="tile-pill">${a.users} USER${a.users === 1 ? "" : "S"}</div>` : ""}<div class="tile-pill">${a.downloads || 0} GETS</div></div>
         </div>
       </div>`).join("") + `
       <a class="add-tile" href="./submit.html">

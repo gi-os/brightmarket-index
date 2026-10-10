@@ -1063,6 +1063,28 @@ def main() -> int:
             # clients test for the key and draw a lettered tile instead.
             entry.pop("icon", None)
 
+    # Lite and full versions of the same app, linked both ways.
+    #
+    # A Lite app's yml names the app it is cut down from with `fullVersion: <pkg>`.
+    # The full app gets the reverse link, `liteVersion`, so its page can say a Tool
+    # Library build exists. Stamped here, after the carry-forward paths, for the same
+    # reason the icon is: a carried entry must not lose the link. A pointer to a pkg
+    # that is not in this build is dropped rather than published as a dead link.
+    present = {e["pkg"] for e in out}
+    full_of = {
+        a["pkg"]: a["fullVersion"]
+        for a in apps
+        if a.get("fullVersion") and a["fullVersion"] in present
+    }
+    lite_of = {full: lite for lite, full in full_of.items()}
+    for entry in out:
+        entry.pop("fullVersion", None)
+        entry.pop("liteVersion", None)
+        if entry["pkg"] in full_of:
+            entry["fullVersion"] = full_of[entry["pkg"]]
+        if entry["pkg"] in lite_of:
+            entry["liteVersion"] = lite_of[entry["pkg"]]
+
     # What each app IS, as opposed to what its release metadata says.
     #
     # A judgment rather than a field: does it need an account, does it need a machine you
