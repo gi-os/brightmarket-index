@@ -503,6 +503,11 @@ PUBLISHED_HISTORY = f"{SITE}/history-v1.json"
 HISTORY_MARKER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "history_started")
 HISTORY_DAYS = 400
 
+# Day gains recorded before the repo-move rule existed. Light Keyboard's listing moved repos
+# on 2026-10-07 and its new repo's whole 406 landed as one day's gets. 3 is the app's run
+# on the days either side (2, 3, 3, 2).
+GAIN_CORRECTIONS = {"2026-10-07": {"app.lightphonekeyboard": 3}}
+
 # The showcase. One app on the front of /browse.html per day, instead of whatever
 # happens to top the Popular sort -- which, being a lifetime total, is the same app
 # for weeks at a time.
@@ -807,6 +812,10 @@ def main() -> int:
     previous, previous_by_repo = load_previous(index_path)
     today = site_day()
     history = load_history()
+    # Recorded days known to be wrong, overwritten on every run until they age out.
+    for day, fix in GAIN_CORRECTIONS.items():
+        if day in history["gains"]:
+            history["gains"][day].update(fix)
     carry_history_across_rename(history)
     out = []
 
@@ -1190,6 +1199,14 @@ def main() -> int:
         base = (rel[base_day].get(pkg) if base_day else None) or opened["counts"].get(pkg) or {}
         if "*total*" in base:
             a["downloadsToday"] = max(0, a["downloads"] - base["*total*"])
+        elif base and now and not (set(base) & set(now)):
+            # Not one tag in common with yesterday: the listing moved to another repo (Light
+            # Keyboard, 2026-10-07, 54 -> 406). Every tag would count in full and the app's
+            # whole history would land on one day. Today is the move, not downloads; it reads
+            # 0 and tomorrow's baseline is the new repo's.
+            warn(f"{pkg}: no release tag in common with {base_day or 'the opening snapshot'} "
+                 f"-- treated as a repo move, +0 today")
+            a["downloadsToday"] = 0
         else:
             a["downloadsToday"] = sum(max(0, n - base.get(tag, 0)) for tag, n in now.items())
     gains[today] = {a["pkg"]: a["downloadsToday"] for a in out}
