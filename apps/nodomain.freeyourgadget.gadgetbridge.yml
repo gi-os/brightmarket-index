@@ -1,0 +1,5 @@
+pkg: nodomain.freeyourgadget.gadgetbridge
+name: Gadget Bridge
+repo: jbriones95/GadgetbridgeLight
+category: utilities
+summary: Light UI-focused Gadgetbridge distribution for LightOS devices
