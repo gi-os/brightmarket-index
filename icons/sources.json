@@ -68,5 +68,6 @@
  "com.zacksimpson.composer": "apk:icon",
  "com.zacksimpson.nourish": "apk:icon",
  "im.mollylight.app": "apk:icon",
+ "nodomain.freeyourgadget.gadgetbridge": "apk:icon",
  "org.woheller69.whobird.chirp": "fastlane/metadata/android/en-US/images/icon.png"
 }
