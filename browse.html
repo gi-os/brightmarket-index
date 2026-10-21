@@ -450,6 +450,20 @@
   <div class="empty" id="empty" style="display:none;">NOTHING MATCHES — TRY ANOTHER WORD</div>
 
   <div class="foot">
+    <!-- Sponsors: the list lives in gi-os/gi-os/sponsors.json, refreshed daily
+         by that repo's sponsors workflow, so this page never needs editing. -->
+    <div style="padding:18px 0 22px; border-top:1px solid var(--line); display:flex; gap:26px;
+                align-items:center; flex-wrap:wrap;">
+      <div style="flex:1; min-width:300px;">
+        <div style="font-family:var(--round); font-size:15px;">Thank you</div>
+        <div style="font-size:12px; line-height:1.55; color:var(--dim); margin-top:6px; max-width:52ch;">
+          BrightMarket and every app in it are free. The people below are the
+          reason it stays that way, along with everyone who sponsors quietly.
+        </div>
+        <div id="sponsors" style="display:flex; gap:14px; flex-wrap:wrap; align-items:center; margin-top:14px;"></div>
+      </div>
+      <a class="go" href="https://github.com/sponsors/gi-os" target="_blank" rel="noopener">SPONSOR →</a>
+    </div>
     <div style="padding-top:18px; border-top:1px solid var(--line); display:flex; gap:26px;
                 align-items:flex-start; flex-wrap:wrap;">
       <div style="flex:1; min-width:300px;">
@@ -1327,6 +1341,31 @@
       $("empty").style.display = "block";
       $("empty").textContent = "COULDN'T LOAD THE INDEX";
     }
+  })();
+</script>
+<script>
+  // Sponsor chips. Fails quietly: the thank-you text stands on its own.
+  (async () => {
+    const box = document.getElementById("sponsors");
+    try {
+      const r = await fetch("https://raw.githubusercontent.com/gi-os/gi-os/main/sponsors.json", { cache: "no-cache" });
+      const { sponsors } = await r.json();
+      for (const login of sponsors) {
+        const a = document.createElement("a");
+        a.href = "https://github.com/" + encodeURIComponent(login);
+        a.target = "_blank"; a.rel = "noopener";
+        a.style.cssText = "display:flex; align-items:center; gap:8px;";
+        const img = document.createElement("img");
+        img.src = "https://github.com/" + encodeURIComponent(login) + ".png?size=56";
+        img.alt = ""; img.width = 28; img.height = 28;
+        img.style.cssText = "border-radius:999px; filter:grayscale(1); border:1px solid var(--edge);";
+        const name = document.createElement("span");
+        name.textContent = login;
+        name.style.cssText = "font-family:var(--mono); font-size:11px; color:#c8c8cc;";
+        a.append(img, name);
+        box.append(a);
+      }
+    } catch (_) {}
   })();
 </script>
 </body>
