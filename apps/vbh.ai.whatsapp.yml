@@ -1,0 +1,6 @@
+pkg: vbh.ai.whatsapp
+name: WhatsApp Light
+repo: vbbot/whatsapp-light
+category: communication
+summary: WhatsApp client with calling support built using hypermeow and meowcaller
+icon: art/icon.png
