@@ -68,6 +68,10 @@
  "com.zacksimpson.composer": "apk:icon",
  "com.zacksimpson.nourish": "apk:icon",
  "im.mollylight.app": "apk:icon",
+ "io.github.foxskat": "docs/icon.png",
+ "io.github.lightbahn": "docs/icon.png",
+ "io.github.lightsongbook": "docs/icon.png",
  "nodomain.freeyourgadget.gadgetbridge": "apk:icon",
- "org.woheller69.whobird.chirp": "fastlane/metadata/android/en-US/images/icon.png"
+ "org.woheller69.whobird.chirp": "fastlane/metadata/android/en-US/images/icon.png",
+ "vbh.ai.whatsapp": "art/icon.png"
 }
