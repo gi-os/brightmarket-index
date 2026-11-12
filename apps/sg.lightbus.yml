@@ -1,0 +1,6 @@
+pkg: sg.lightbus
+name: SG Bus
+repo: Toruk-Machto/sg-bus-light
+category: travel
+summary: Find Singapore bus stops, save favorites, and check live LTA DataMall arrivals
+  on Light Phone III.
