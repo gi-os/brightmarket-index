@@ -1,0 +1,6 @@
+pkg: sg.lightalarm
+name: Light Alarm
+repo: Toruk-Machto/light-alarm
+category: utilities
+summary: Offline alarms and reminders for Light Phone III, with custom schedules,
+  snooze, backup alarms, and lock-screen controls.
