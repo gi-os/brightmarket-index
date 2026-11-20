@@ -26,6 +26,7 @@ import gzip
 import html
 import hashlib
 import datetime
+import subprocess
 import urllib.request
 import urllib.error
 import urllib.parse
@@ -115,8 +116,8 @@ def signer_of(apk) -> str:
     return ""
 
 
-def read_apk(blob: bytes) -> tuple[int, str] | None:
-    """Read the real (versionCode, applicationId) out of an APK.
+def read_apk(blob: bytes) -> tuple[int, str, str] | None:
+    """Read the real (versionCode, applicationId, signer) out of an APK.
 
     This is the authoritative source and the tag is not. The client compares
     the index's versionCode against PackageManager's longVersionCode, so it has
@@ -578,14 +579,180 @@ RENAMES = [
 # names both certificates exactly, so it accepts that one handover and nothing else: a third
 # signer showing up later is still refused.
 HANDOVERS = [
-    # (pkg, signer before, signer after, why)
+    # (pkg, signer before, signer after, why[, original signer for v3 rotation])
     (
         "app.lightphonekeyboard",
         "7844d8cc52fc12b5a2b5879b028605d90391a0a06cc4d87ef92a59350226d203",  # gi-os (BrightKeyboard 3.x)
         "5d9fbae87732e3364e688cff8a3f872ae0b6f024608e1949214e645f108dc119",  # adam-weber/light-keyboard
         "2026-10-07: the 3.x bridge listing removed; the id goes back to its author",
     ),
+    (
+        "com.gios.lightauth",
+        "4662590c434c98e8642244cbb1ebe5818ca63ae692eff8f3cab2f8407cf4d386",
+        "22751a7f7838bce5cbf28745883860f2638e64b51d8332873cbe791b1aa922ec",
+        "v3 key rotation",  # BrightAuthenticator
+        "4662590c434c98e8642244cbb1ebe5818ca63ae692eff8f3cab2f8407cf4d386",
+    ),
+    (
+        "com.gios.brightfantasy",
+        "822b1e391635943586b81e3526cf95d9fc1a307f32dc16b2803053dfc0483027",
+        "9bcc38c8c4b2dfd6b0ab687970387c0894b0bb05fec38fb14ee6c2eb178d523d",
+        "v3 key rotation",  # BrightFantasy
+        "822b1e391635943586b81e3526cf95d9fc1a307f32dc16b2803053dfc0483027",
+    ),
+    (
+        "com.gios.brighthotspot",
+        "fa0b678e4be352e2db7b52916d74b7dbf505e5057ba328ed7e85d2f3fd9b45e2",
+        "08ebc7680c3e0dd48f651d11a5030b7c257717fc6d16dd562b65a6f949498fa7",
+        "v3 key rotation",  # BrightHotspot
+        "fa0b678e4be352e2db7b52916d74b7dbf505e5057ba328ed7e85d2f3fd9b45e2",
+    ),
+    (
+        "com.gios.brightledger",
+        "66cef253eb62b045f4848646882409ccc6445d2e58079f82c7f4c060b1a0ff7a",
+        "3ecddc162cd59edab99ef3f4f9b05245aa0d4dc78f116a0e5d47c9ab4b74a25d",
+        "v3 key rotation",  # BrightLedger
+        "66cef253eb62b045f4848646882409ccc6445d2e58079f82c7f4c060b1a0ff7a",
+    ),
+    (
+        "com.gios.lightnoise",
+        "4d2a3bb63292bc7cdfec383a3b041da3b4a483058cfa0575a33d06fb88c9973a",
+        "2d25e54e1be61312253c2531dd7651a0bc5f15452ba7ee83460aa0f7f6305282",
+        "v3 key rotation",  # BrightNoise
+        "4d2a3bb63292bc7cdfec383a3b041da3b4a483058cfa0575a33d06fb88c9973a",
+    ),
+    (
+        "com.gios.lightnotebook",
+        "ceca3d378bf9709bc0d0b3eea84cc8bf7994777a628e5df8079a619cf7a7bda8",
+        "92caf12ee317b0a5fa35f578ad94db8d5abe9815998b114a59d7b90819aa0b72",
+        "v3 key rotation",  # BrightNotebook
+        "ceca3d378bf9709bc0d0b3eea84cc8bf7994777a628e5df8079a619cf7a7bda8",
+    ),
+    (
+        "com.gios.lightpass",
+        "f32ea67db48b7d40573ce88f03b3da33e0f3e814e1f08e9f5f4007ff7bea6e9f",
+        "e8df22b055da83e060ed176740363ec37850e3271a63bf9891a160209e92fe04",
+        "v3 key rotation",  # BrightPasses
+        "f32ea67db48b7d40573ce88f03b3da33e0f3e814e1f08e9f5f4007ff7bea6e9f",
+    ),
+    (
+        "com.gios.brightrecorder",
+        "10ef78dea16c2cd0e45bd0b0d2f5649087a26dc37e1cd493e94b7f8b6f27b513",
+        "3a269dbe93d82b250db20ce3760b0ad099305b7c4d0c571783fcd56370c9c601",
+        "v3 key rotation",  # BrightRecorder
+        "10ef78dea16c2cd0e45bd0b0d2f5649087a26dc37e1cd493e94b7f8b6f27b513",
+    ),
+    (
+        "com.gios.lightremote",
+        "88fa9df840f139a9079aaf8ab8a54f64022a9da276bacac99227a464c0b1eeda",
+        "6731dbfc1a468c4d38a94110ff15f3c5383ff6b3b250f76fdf66f972f4bd0b27",
+        "v3 key rotation",  # BrightRemote
+        "88fa9df840f139a9079aaf8ab8a54f64022a9da276bacac99227a464c0b1eeda",
+    ),
+    (
+        "com.gios.brightrolodex",
+        "352327e840c71de131d171ead3aea7e035c70342b67bec111298877aa0537879",
+        "9695b3f4021f5118df5cba4d3be2eef4a08bc72c31f58341610dd886627e1ba9",
+        "v3 key rotation",  # BrightRolodex
+        "352327e840c71de131d171ead3aea7e035c70342b67bec111298877aa0537879",
+    ),
+    (
+        "com.gios.brightsteps",
+        "4b6436071aaea664e857ad44ba090b77c34afc99ed764361f22d9d07c2516964",
+        "fd6e76f404e7ebaec3bebf3b53f1159ee093e1e4b15b15ba47873990362b1941",
+        "v3 key rotation",  # BrightSteps
+        "4b6436071aaea664e857ad44ba090b77c34afc99ed764361f22d9d07c2516964",
+    ),
+    (
+        "com.gios.lightsync",
+        "bd7da1be119bc3b801523994c3da43556689db4547feaeaadb484b9ace83890e",
+        "6e1c627ffd0275f4055043b2bb4cab5300c407ea46808952250163689fe8d60f",
+        "v3 key rotation",  # BrightSync
+        "bd7da1be119bc3b801523994c3da43556689db4547feaeaadb484b9ace83890e",
+    ),
+    (
+        "com.gios.lighttip",
+        "eece33e8486e95a327518bb7798df9ae99c683a2a80c4439fe0b7bf30ae1a5d7",
+        "64079a05a6f1f247f3de8d3d0ef107c3fd28db83b353b52e532287e1b2f54f30",
+        "v3 key rotation",  # BrightTip
+        "eece33e8486e95a327518bb7798df9ae99c683a2a80c4439fe0b7bf30ae1a5d7",
+    ),
+    (
+        "com.gios.lightcontrol",
+        "a38858d990bb61057ef53d1f8aa3c5854d01f68585b34f115793b06298b593e8",
+        "569ff9008674561529cfb0c53b1ac243ab92284726747f494e075f82e07850aa",
+        "v3 key rotation",  # BrightControl
+        "a38858d990bb61057ef53d1f8aa3c5854d01f68585b34f115793b06298b593e8",
+    ),
+    (
+        "com.gios.brightmailbox",
+        "ab866f2a03fcd4d8e88d2da1bb3e295d080ac28f46ae6c5bb8c9b9d9cc9e23c9",
+        "a21014fcbc0fa772cdcd2d0346322f5109f44807957ad95d78d1dc834080f393",
+        "v3 key rotation",  # BrightMailbox
+        "ab866f2a03fcd4d8e88d2da1bb3e295d080ac28f46ae6c5bb8c9b9d9cc9e23c9",
+    ),
+    (
+        "com.gios.lightsports",
+        "4ea28ba461cfa1d5d8cee38e71ce8eacfab570afee83f248c5fec8c5cca4cb5f",
+        "33c49ffd9e19abf8eaebc50398eadeb3f0925877103b3239b31246c385583862",
+        "v3 key rotation",  # BrightSports
+        "4ea28ba461cfa1d5d8cee38e71ce8eacfab570afee83f248c5fec8c5cca4cb5f",
+    ),
+    (
+        "com.gios.brightway",
+        "72350ce9cacb200d0cb9d36b7fbc5aaebe89263a281ebe666db456b538c0177e",
+        "f223fae79a7ab9f61e39d35b5d956e7e0afca594afdf2e2d32682a00d7faf004",
+        "v3 key rotation",  # BrightWay
+        "72350ce9cacb200d0cb9d36b7fbc5aaebe89263a281ebe666db456b538c0177e",
+    ),
 ]
+
+READ_SIGNING_LINEAGE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ReadSigningLineage.java")
+
+
+def verify_rotation(blob: bytes, signer: str, prior: list[str]) -> list[str] | None:
+    """Verify the APK and its lineage on the Light Phone III's Android API level."""
+    apksig = os.environ.get("APKSIG_JAR") or os.path.join(
+        os.environ.get("ANDROID_HOME", ""), "build-tools", "35.0.0", "lib", "apksigner.jar"
+    )
+    try:
+        with tempfile.NamedTemporaryFile(suffix=".apk") as f:
+            f.write(blob)
+            f.flush()
+            lineage = subprocess.check_output(
+                ["java", "--class-path", apksig, READ_SIGNING_LINEAGE, f.name],
+                text=True, timeout=60, stderr=subprocess.DEVNULL,
+            )
+    except (OSError, subprocess.SubprocessError) as exc:
+        warn(f"could not verify rotation lineage ({type(exc).__name__})")
+        return None
+    history = lineage.splitlines()
+    if len(history) < 2 or history[-1] != signer or history[:len(prior)] != prior:
+        return None
+    return history
+
+
+def resolve_signing_pin(pkg: str, signer: str, prev: dict, blob: bytes | None) -> tuple[str, list[str]] | None:
+    pinned = prev.get("signer", "")
+    history = prev.get("signerHistory") or []
+    handovers = [h for h in HANDOVERS if h[:2] == (pkg, pinned)] if pinned else []
+    if not signer and blob is not None and (history or any(len(h) == 5 for h in handovers)):
+        return None
+    if pinned and signer and signer != pinned:
+        handover = next((h for h in handovers if h[2] == signer), None)
+        if handover is None:
+            return None
+        if len(handover) == 5:
+            if handover[4] != (history[0] if history else pinned) or blob is None:
+                return None
+            history = history or [pinned]
+        elif history:
+            return None
+    if history and blob is not None:
+        history = verify_rotation(blob, signer, history)
+        if history is None:
+            return None
+    return signer or pinned, history
 
 
 def carry_history_across_rename(history: dict) -> None:
@@ -912,6 +1079,7 @@ def main() -> int:
         # Nothing to learn from bytes that haven't moved. Keyed on repo because
         # the pkg in the catalogue may be wrong and the APK is what settles it -- and
         # that is the thing we are trying not to download.
+        blob = None
         if unchanged(carried, asset):
             prev_latest = carried["latest"]
             sha256 = prev_latest["sha256"]
@@ -973,23 +1141,17 @@ def main() -> int:
         # same app. Refusing to update is the safe direction: the worst case is
         # a stale listing, which is visible, instead of a silent handover, which
         # is not.
-        pinned = prev.get("signer", "")
-        if pinned and signer and signer != pinned and any(
-            h[0] == pkg and h[1] == pinned and h[2] == signer for h in HANDOVERS
-        ):
-            warn(f"{pkg}: signing certificate handed over ({pinned[:16]}... -> {signer[:16]}...), "
-                 "as listed in HANDOVERS")
-            pinned = signer
-        if pinned and signer and signer != pinned:
+        pin = resolve_signing_pin(pkg, signer, prev, blob)
+        if pin is None:
             warn(
-                f"{pkg}: SIGNING CERTIFICATE CHANGED "
-                f"({pinned[:16]}... -> {signer[:16]}...) -- keeping the previous "
-                f"entry. If this is intentional, clear `signer` for {pkg} in the "
-                f"published index."
+                f"{pkg}: APK does not match the signing pin or required rotation lineage "
+                "-- keeping the previous entry."
             )
             out.append(prev)
             continue
-        signer = signer or pinned
+        signer, signer_history = pin
+        if prev.get("signer") and signer != prev["signer"]:
+            warn(f"{pkg}: signing certificate handed over as listed in HANDOVERS")
 
         out.append(
             {
@@ -1038,6 +1200,7 @@ def main() -> int:
                 # Carried forward, never recomputed -- see module docstring.
                 "firstSeen": prev.get("firstSeen") or today,
                 "signer": signer,
+                **({"signerRoot": signer_history[0], "signerHistory": signer_history} if signer_history else {}),
                 # Absent for every app that publishes no prereleases, which is
                 # most of them. Clients treat a missing preview as "no nightly".
                 **({"preview": preview} if preview else {}),
