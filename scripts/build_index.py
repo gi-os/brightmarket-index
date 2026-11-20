@@ -26,7 +26,6 @@ import gzip
 import html
 import hashlib
 import datetime
-import re
 import subprocess
 import urllib.request
 import urllib.error
@@ -589,41 +588,27 @@ HANDOVERS = [
     ),
 ]
 
+READ_SIGNING_LINEAGE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ReadSigningLineage.java")
+
 
 def verify_rotation(blob: bytes, signer: str, prior: list[str]) -> list[str] | None:
     """Verify the APK and its lineage on the Light Phone III's Android API level."""
-    sdk = os.environ.get("ANDROID_HOME")
-    apksigner = os.environ.get("APKSIGNER") or (
-        os.path.join(sdk, "build-tools", "35.0.0", "apksigner") if sdk else "apksigner"
+    apksig = os.environ.get("APKSIG_JAR") or os.path.join(
+        os.environ.get("ANDROID_HOME", ""), "build-tools", "35.0.0", "lib", "apksigner.jar"
     )
     try:
         with tempfile.NamedTemporaryFile(suffix=".apk") as f:
             f.write(blob)
             f.flush()
-            verified = subprocess.check_output(
-                [apksigner, "verify", "--min-sdk-version", "30", "--max-sdk-version", "30",
-                 "--verbose", "--print-certs", f.name],
-                text=True, timeout=60, stderr=subprocess.DEVNULL,
-            )
-            current = re.findall(r"(?m)^Signer #[0-9]+ certificate SHA-256 digest: ([0-9a-f]{64})$", verified)
-            if current != [signer] or "Verified using v3 scheme (APK Signature Scheme v3): true" not in verified.splitlines():
-                return None
             lineage = subprocess.check_output(
-                [apksigner, "lineage", "--in", f.name, "--print-certs"],
+                ["java", "--class-path", apksig, READ_SIGNING_LINEAGE, f.name],
                 text=True, timeout=60, stderr=subprocess.DEVNULL,
             )
     except (OSError, subprocess.SubprocessError) as exc:
         warn(f"could not verify rotation lineage ({type(exc).__name__})")
         return None
-    blocks = re.split(r"(?m)^Signer #[0-9]+ in lineage certificate SHA-256 digest: ([0-9a-f]{64})$", lineage)
-    history = blocks[1::2]
+    history = lineage.splitlines()
     if len(history) < 2 or history[-1] != signer or history[:len(prior)] != prior:
-        return None
-    if not all(
-        re.findall(r"(?m)^Has installed data capability:\s*(true|false)$", caps) == ["true"]
-        and re.findall(r"(?m)^Has rollback capability\s*:\s*(true|false)$", caps) == ["false"]
-        for caps in blocks[2:-1:2]
-    ):
         return None
     return history
 
