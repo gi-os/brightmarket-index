@@ -26,6 +26,8 @@ import gzip
 import html
 import hashlib
 import datetime
+import re
+import subprocess
 import urllib.request
 import urllib.error
 import urllib.parse
@@ -115,8 +117,8 @@ def signer_of(apk) -> str:
     return ""
 
 
-def read_apk(blob: bytes) -> tuple[int, str] | None:
-    """Read the real (versionCode, applicationId) out of an APK.
+def read_apk(blob: bytes) -> tuple[int, str, str] | None:
+    """Read the real (versionCode, applicationId, signer) out of an APK.
 
     This is the authoritative source and the tag is not. The client compares
     the index's versionCode against PackageManager's longVersionCode, so it has
@@ -578,7 +580,7 @@ RENAMES = [
 # names both certificates exactly, so it accepts that one handover and nothing else: a third
 # signer showing up later is still refused.
 HANDOVERS = [
-    # (pkg, signer before, signer after, why)
+    # (pkg, signer before, signer after, why[, original signer for v3 rotation])
     (
         "app.lightphonekeyboard",
         "7844d8cc52fc12b5a2b5879b028605d90391a0a06cc4d87ef92a59350226d203",  # gi-os (BrightKeyboard 3.x)
@@ -586,6 +588,56 @@ HANDOVERS = [
         "2026-10-07: the 3.x bridge listing removed; the id goes back to its author",
     ),
 ]
+
+
+def verify_rotation(blob: bytes, signer: str, root: str, prior: str) -> bool:
+    """Verify the APK and its lineage on the Light Phone III's Android API level."""
+    sdk = os.environ.get("ANDROID_HOME")
+    apksigner = os.environ.get("APKSIGNER") or (
+        os.path.join(sdk, "build-tools", "35.0.0", "apksigner") if sdk else "apksigner"
+    )
+    try:
+        with tempfile.NamedTemporaryFile(suffix=".apk") as f:
+            f.write(blob)
+            f.flush()
+            verified = subprocess.check_output(
+                [apksigner, "verify", "--min-sdk-version", "30", "--max-sdk-version", "30",
+                 "--verbose", "--print-certs", f.name],
+                text=True, timeout=60, stderr=subprocess.DEVNULL,
+            )
+            current = re.findall(r"(?m)^Signer #[0-9]+ certificate SHA-256 digest: ([0-9a-f]{64})$", verified)
+            if current != [signer] or "Verified using v3 scheme (APK Signature Scheme v3): true" not in verified.splitlines():
+                return False
+            lineage = subprocess.check_output(
+                [apksigner, "lineage", "--in", f.name, "--print-certs"],
+                text=True, timeout=60, stderr=subprocess.DEVNULL,
+            )
+    except (OSError, subprocess.SubprocessError) as exc:
+        warn(f"could not verify rotation lineage ({type(exc).__name__})")
+        return False
+    history = re.findall(r"(?m)^Signer #[0-9]+ in lineage certificate SHA-256 digest: ([0-9a-f]{64})$", lineage)
+    return len(history) >= 2 and history[0] == root and history[-1] == signer and prior in history
+
+
+def resolve_signing_pin(pkg: str, signer: str, prev: dict, blob: bytes | None) -> tuple[str, str] | None:
+    pinned = prev.get("signer", "")
+    root = prev.get("signerRoot", "")
+    handovers = [h for h in HANDOVERS if h[:2] == (pkg, pinned)] if pinned else []
+    if not signer and blob is not None and (root or any(len(h) == 5 for h in handovers)):
+        return None
+    if pinned and signer and signer != pinned:
+        handover = next((h for h in handovers if h[2] == signer), None)
+        if handover is None:
+            return None
+        if len(handover) == 5:
+            if handover[4] != (root or pinned) or blob is None:
+                return None
+            root = handover[4]
+        elif root:
+            return None
+    if root and blob is not None and not verify_rotation(blob, signer, root, pinned):
+        return None
+    return signer or pinned, root
 
 
 def carry_history_across_rename(history: dict) -> None:
@@ -912,6 +964,7 @@ def main() -> int:
         # Nothing to learn from bytes that haven't moved. Keyed on repo because
         # the pkg in the catalogue may be wrong and the APK is what settles it -- and
         # that is the thing we are trying not to download.
+        blob = None
         if unchanged(carried, asset):
             prev_latest = carried["latest"]
             sha256 = prev_latest["sha256"]
@@ -973,23 +1026,17 @@ def main() -> int:
         # same app. Refusing to update is the safe direction: the worst case is
         # a stale listing, which is visible, instead of a silent handover, which
         # is not.
-        pinned = prev.get("signer", "")
-        if pinned and signer and signer != pinned and any(
-            h[0] == pkg and h[1] == pinned and h[2] == signer for h in HANDOVERS
-        ):
-            warn(f"{pkg}: signing certificate handed over ({pinned[:16]}... -> {signer[:16]}...), "
-                 "as listed in HANDOVERS")
-            pinned = signer
-        if pinned and signer and signer != pinned:
+        pin = resolve_signing_pin(pkg, signer, prev, blob)
+        if pin is None:
             warn(
-                f"{pkg}: SIGNING CERTIFICATE CHANGED "
-                f"({pinned[:16]}... -> {signer[:16]}...) -- keeping the previous "
-                f"entry. If this is intentional, clear `signer` for {pkg} in the "
-                f"published index."
+                f"{pkg}: APK does not match the signing pin or required rotation lineage "
+                "-- keeping the previous entry."
             )
             out.append(prev)
             continue
-        signer = signer or pinned
+        signer, signer_root = pin
+        if prev.get("signer") and signer != prev["signer"]:
+            warn(f"{pkg}: signing certificate handed over as listed in HANDOVERS")
 
         out.append(
             {
@@ -1038,6 +1085,7 @@ def main() -> int:
                 # Carried forward, never recomputed -- see module docstring.
                 "firstSeen": prev.get("firstSeen") or today,
                 "signer": signer,
+                **({"signerRoot": signer_root} if signer_root else {}),
                 # Absent for every app that publishes no prereleases, which is
                 # most of them. Clients treat a missing preview as "no nightly".
                 **({"preview": preview} if preview else {}),

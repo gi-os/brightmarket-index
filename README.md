@@ -113,6 +113,27 @@ see and is free to differ.
 never recomputed.** Recomputing would reset the New sort every hour, and would make
 the signer pin meaningless — anyone able to push one release could clear it.
 
+### Signing key rotation
+
+Ship and confirm the rotation-aware BrightMarket client on phones before changing
+any app's catalog pin. Add a `HANDOVERS` row in `scripts/build_index.py` for each
+listed app whose key is changing:
+
+```python
+("application.id", previous_sha256, replacement_sha256, "v3 key rotation", original_sha256)
+```
+
+Use lowercase SHA-256 certificate fingerprints from the existing pin and the
+exact verified release APK. On the first rotation, the previous and original
+fingerprints are the same. For a later rotation, use the current pin as previous
+and keep the same original. The builder verifies the APK and lineage on Android
+API 30 with Android Build Tools 35.0.0 (`APKSIGNER` can override the tool path
+locally). A failed check keeps the previous entry; a verified handover writes
+the replacement `signer` and records `signerRoot` for later builds. Test the
+in-place update on a phone before enabling the handover, and verify that any
+nightly APK you intend to keep offering uses the same new signer and lineage.
+Don't clear the pin or edit the generated JSON.
+
 ## An app is never dropped for an answer the API failed to give
 
 Learned the hard way on 2026-08-17. The Releases API spent part of the afternoon returning
