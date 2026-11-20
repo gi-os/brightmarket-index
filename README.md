@@ -128,8 +128,10 @@ exact verified release APK. On the first rotation, the previous and original
 fingerprints are the same. For a later rotation, use the current pin as previous
 and keep the same original. The builder verifies the APK and lineage on Android
 API 30 with Android Build Tools 35.0.0 (`APKSIGNER` can override the tool path
-locally). A failed check keeps the previous entry; a verified handover writes
-the replacement `signer` and records `signerRoot` for later builds. Test the
+locally). Every retired signer must allow in-place updates without allowing
+rollback. A failed check keeps the previous entry; a verified handover writes
+the replacement `signer`, `signerRoot`, and the verified history, which later
+releases must preserve in order. Test the
 in-place update on a phone before enabling the handover, and verify that any
 nightly APK you intend to keep offering uses the same new signer and lineage.
 Don't clear the pin or edit the generated JSON.

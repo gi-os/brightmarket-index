@@ -590,7 +590,7 @@ HANDOVERS = [
 ]
 
 
-def verify_rotation(blob: bytes, signer: str, root: str, prior: str) -> bool:
+def verify_rotation(blob: bytes, signer: str, prior: list[str]) -> list[str] | None:
     """Verify the APK and its lineage on the Light Phone III's Android API level."""
     sdk = os.environ.get("ANDROID_HOME")
     apksigner = os.environ.get("APKSIGNER") or (
@@ -607,44 +607,48 @@ def verify_rotation(blob: bytes, signer: str, root: str, prior: str) -> bool:
             )
             current = re.findall(r"(?m)^Signer #[0-9]+ certificate SHA-256 digest: ([0-9a-f]{64})$", verified)
             if current != [signer] or "Verified using v3 scheme (APK Signature Scheme v3): true" not in verified.splitlines():
-                return False
+                return None
             lineage = subprocess.check_output(
                 [apksigner, "lineage", "--in", f.name, "--print-certs"],
                 text=True, timeout=60, stderr=subprocess.DEVNULL,
             )
     except (OSError, subprocess.SubprocessError) as exc:
         warn(f"could not verify rotation lineage ({type(exc).__name__})")
-        return False
+        return None
     blocks = re.split(r"(?m)^Signer #[0-9]+ in lineage certificate SHA-256 digest: ([0-9a-f]{64})$", lineage)
     history = blocks[1::2]
-    if not (len(history) >= 2 and history[0] == root and history[-1] == signer and prior in history):
-        return False
-    return all(
+    if len(history) < 2 or history[-1] != signer or history[:len(prior)] != prior:
+        return None
+    if not all(
         re.findall(r"(?m)^Has installed data capability:\s*(true|false)$", caps) == ["true"]
         and re.findall(r"(?m)^Has rollback capability\s*:\s*(true|false)$", caps) == ["false"]
         for caps in blocks[2:-1:2]
-    )
+    ):
+        return None
+    return history
 
 
-def resolve_signing_pin(pkg: str, signer: str, prev: dict, blob: bytes | None) -> tuple[str, str] | None:
+def resolve_signing_pin(pkg: str, signer: str, prev: dict, blob: bytes | None) -> tuple[str, list[str]] | None:
     pinned = prev.get("signer", "")
-    root = prev.get("signerRoot", "")
+    history = prev.get("signerHistory") or []
     handovers = [h for h in HANDOVERS if h[:2] == (pkg, pinned)] if pinned else []
-    if not signer and blob is not None and (root or any(len(h) == 5 for h in handovers)):
+    if not signer and blob is not None and (history or any(len(h) == 5 for h in handovers)):
         return None
     if pinned and signer and signer != pinned:
         handover = next((h for h in handovers if h[2] == signer), None)
         if handover is None:
             return None
         if len(handover) == 5:
-            if handover[4] != (root or pinned) or blob is None:
+            if handover[4] != (history[0] if history else pinned) or blob is None:
                 return None
-            root = handover[4]
-        elif root:
+            history = history or [pinned]
+        elif history:
             return None
-    if root and blob is not None and not verify_rotation(blob, signer, root, pinned):
-        return None
-    return signer or pinned, root
+    if history and blob is not None:
+        history = verify_rotation(blob, signer, history)
+        if history is None:
+            return None
+    return signer or pinned, history
 
 
 def carry_history_across_rename(history: dict) -> None:
@@ -1041,7 +1045,7 @@ def main() -> int:
             )
             out.append(prev)
             continue
-        signer, signer_root = pin
+        signer, signer_history = pin
         if prev.get("signer") and signer != prev["signer"]:
             warn(f"{pkg}: signing certificate handed over as listed in HANDOVERS")
 
@@ -1092,7 +1096,7 @@ def main() -> int:
                 # Carried forward, never recomputed -- see module docstring.
                 "firstSeen": prev.get("firstSeen") or today,
                 "signer": signer,
-                **({"signerRoot": signer_root} if signer_root else {}),
+                **({"signerRoot": signer_history[0], "signerHistory": signer_history} if signer_history else {}),
                 # Absent for every app that publishes no prereleases, which is
                 # most of them. Clients treat a missing preview as "no nightly".
                 **({"preview": preview} if preview else {}),
