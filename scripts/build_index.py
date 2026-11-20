@@ -587,13 +587,6 @@ HANDOVERS = [
         "2026-10-07: the 3.x bridge listing removed; the id goes back to its author",
     ),
     (
-        "com.gios.brightjump",
-        "0af59ed72016b532363951d831a5fb2f3d339cd7c35ce204a5805c944c744056",
-        "2014ebe56c9d00cd177ed0d1402d29cb696cad5bc5327f11a2fd0496b1de7fe2",
-        "v3 key rotation",  # BrightJump
-        "0af59ed72016b532363951d831a5fb2f3d339cd7c35ce204a5805c944c744056",
-    ),
-    (
         "com.gios.lightauth",
         "4662590c434c98e8642244cbb1ebe5818ca63ae692eff8f3cab2f8407cf4d386",
         "22751a7f7838bce5cbf28745883860f2638e64b51d8332873cbe791b1aa922ec",
@@ -613,13 +606,6 @@ HANDOVERS = [
         "08ebc7680c3e0dd48f651d11a5030b7c257717fc6d16dd562b65a6f949498fa7",
         "v3 key rotation",  # BrightHotspot
         "fa0b678e4be352e2db7b52916d74b7dbf505e5057ba328ed7e85d2f3fd9b45e2",
-    ),
-    (
-        "com.gios.brightimport",
-        "e468c967e21a8f4634c8d7eecc20b6a879a79ce7a97b7e9ab1e185b938c2360c",
-        "dd273c6031749e99c388304f809bb59ff7785e920ff1386a90fdb1d23ddfa376",
-        "v3 key rotation",  # BrightImport
-        "e468c967e21a8f4634c8d7eecc20b6a879a79ce7a97b7e9ab1e185b938c2360c",
     ),
     (
         "com.gios.brightledger",
