@@ -615,8 +615,15 @@ def verify_rotation(blob: bytes, signer: str, root: str, prior: str) -> bool:
     except (OSError, subprocess.SubprocessError) as exc:
         warn(f"could not verify rotation lineage ({type(exc).__name__})")
         return False
-    history = re.findall(r"(?m)^Signer #[0-9]+ in lineage certificate SHA-256 digest: ([0-9a-f]{64})$", lineage)
-    return len(history) >= 2 and history[0] == root and history[-1] == signer and prior in history
+    blocks = re.split(r"(?m)^Signer #[0-9]+ in lineage certificate SHA-256 digest: ([0-9a-f]{64})$", lineage)
+    history = blocks[1::2]
+    if not (len(history) >= 2 and history[0] == root and history[-1] == signer and prior in history):
+        return False
+    return all(
+        re.findall(r"(?m)^Has installed data capability:\s*(true|false)$", caps) == ["true"]
+        and re.findall(r"(?m)^Has rollback capability\s*:\s*(true|false)$", caps) == ["false"]
+        for caps in blocks[2:-1:2]
+    )
 
 
 def resolve_signing_pin(pkg: str, signer: str, prev: dict, blob: bytes | None) -> tuple[str, str] | None:

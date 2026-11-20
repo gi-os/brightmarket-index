@@ -72,10 +72,26 @@ class VerifyRotationTest(unittest.TestCase):
             with self.subTest(history=history):
                 lineage = "".join(
                     f"Signer #{i} in lineage certificate SHA-256 digest: {cert}\n"
+                    "Has installed data capability: true\nHas rollback capability      : false\n"
                     for i, cert in enumerate(history, 1)
                 )
                 with patch.object(build_index.subprocess, "check_output", side_effect=[verified, lineage]):
                     self.assertIs(build_index.verify_rotation(APK, NEXT, ORIGINAL, CURRENT), expected)
+
+    def test_requires_update_capability_without_rollback_for_every_retired_signer(self):
+        verified = ("Verified using v3 scheme (APK Signature Scheme v3): true\n"
+                    f"Signer #1 certificate SHA-256 digest: {NEXT}\n")
+        for installed_data, rollback in [("false", "false"), ("true", "true")]:
+            with self.subTest(installed_data=installed_data, rollback=rollback):
+                lineage = (
+                    f"Signer #1 in lineage certificate SHA-256 digest: {ORIGINAL}\n"
+                    "Has installed data capability: true\nHas rollback capability      : false\n"
+                    f"Signer #2 in lineage certificate SHA-256 digest: {CURRENT}\n"
+                    f"Has installed data capability: {installed_data}\nHas rollback capability      : {rollback}\n"
+                    f"Signer #3 in lineage certificate SHA-256 digest: {NEXT}\n"
+                )
+                with patch.object(build_index.subprocess, "check_output", side_effect=[verified, lineage]):
+                    self.assertFalse(build_index.verify_rotation(APK, NEXT, ORIGINAL, CURRENT))
 
     def test_rejects_multiple_current_signers(self):
         verified = ("Verified using v3 scheme (APK Signature Scheme v3): true\n"
